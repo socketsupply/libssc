@@ -6,6 +6,9 @@
   "description": "Operator Framework client library written in C99.",
   "files": [
     "include/opc.h"
-  ]
+  ],
+  "dependencies": {
+    "jwerle/brief.mk": "0.1.0"
+  }
 }
 

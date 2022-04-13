@@ -1,0 +1,7 @@
+{
+  "name": "brief.mk",
+  "version": "0.1.0",
+  "description": "Brief command output for your Makefile commands",
+  "scripts": [ "brief.mk" ]
+}
+
