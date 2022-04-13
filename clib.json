@@ -1,0 +1,11 @@
+{
+  "name": "libopc",
+  "repo": "socketsupply/libopc",
+  "version": "0.0.0",
+  "description": "Operator Framework client library written in C99.",
+  "makefile": "Makefile",
+  "license": "MIT",
+  "src": [
+    "include/opc.h"
+  ]
+}
