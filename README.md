@@ -62,6 +62,19 @@ bpkg install socketsupply/libopc
 
 > TODO
 
+## Documentation
+
+Developers intending to contribute to the `libopc` library should be
+sure to check out the [Developers Guide](docs/developers.md) before
+doing so.
+
+Consumers of this library should be sure to review the porcelain [API
+Documentation](docs/api.md) before using this library.
+
+### See Also
+
+- [Operator Framework](https://github.com/socketsupply/operatorframework)
+
 ## License
 
 See [MIT](LICENSE).

@@ -29,6 +29,12 @@ If you have discovered an bug or want to open up a discussion, please
 [open an issue](https://github.com/socketsupply/libopc/issues/new) on
 this library's [canonical repository](https://github.com/socketsupply/libopc).
 
+Please be sure to review the following before committing or opening a
+pull request to the `libopc` project:
+
+- [Code of Conduct](../.github/CODE_OF_CONDUCT.md)
+- [Commit Format](../.github/COMMIT_FORMAT.md) (See [Commit Format Examples](../.github/COMMIT_FORMAT_EXAMPLES.md))
+
 ## 3. Coding Rules
 
 `libopc` uses the [_FFmpeg Coding Rules_][ffmpeg-coding-rules] developer
