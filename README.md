@@ -1,8 +1,7 @@
 libopc
 ======
 
-![tests](https://github.com/socketsupply/libopc/actions/workflows/tests/badge.svg)
-
+![tests](https://github.com/socketsupply/libopc/actions/workflows/tests.yml/badge.svg)
 
 > Operator Framework client library written in C99.
 
