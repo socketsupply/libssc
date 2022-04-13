@@ -4,8 +4,17 @@
   "version": "0.0.0",
   "license": "MIT",
   "description": "Operator Framework client library written in C99.",
+  "commands": {
+    "print-version": "./scripts/version.sh",
+    "indent": "indent -t2 -kr -nut src/**/*.c include/**/*.h",
+    "lint": "cpplint  include/**/*.h src/**/*.c"
+  },
   "files": [
     "include/opc.h"
+  ],
+  "scripts": [
+    "scripts/build.sh",
+    "scripts/version.sh"
   ],
   "dependencies": {
     "jwerle/brief.mk": "0.1.0"

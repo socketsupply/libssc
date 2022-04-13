@@ -26,7 +26,7 @@
 *.dll
 *.so
 *.so.*
-*.dylib
+*.DYLIB
 
 # Executables
 *.exe
@@ -50,3 +50,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Backup files
+*.c~
+*.h~
+*.o~
