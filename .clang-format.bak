@@ -1,0 +1,34 @@
+BasedOnStyle: WebKit
+UseTab: AlignWithSpaces
+TabWidth: 2
+IndentWidth: 2
+ColumnLimit: 80
+ContinuationIndentWidth: 2
+
+# Configure each individual brace in BraceWrapping
+BreakBeforeBraces: Custom
+# Control of individual brace wrapping cases
+BraceWrapping: {
+  IndentBraces: 'false'
+  AfterExternBlock: 'true'
+  AfterCaseLabel: 'true'
+  SplitEmptyRecord: 'false'
+  SplitEmptyFunction: 'false'
+  SplitEmptyNamespace: 'true'
+}
+
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterFunctionDefinitionName: true
+  AfterFunctionDeclarationName: true
+
+IndentCaseLabels: true
+AlignAfterOpenBracket: BlockIndent
+SeparateDefinitionBlocks: Always
+PointerAlignment: Right
+AllowShortFunctionsOnASingleLine: None
+SpaceAfterCStyleCast: true
+
+AlwaysBreakAfterDefinitionReturnType: All
+AlwaysBreakAfterReturnType: All
