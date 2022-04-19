@@ -14,8 +14,7 @@ jobs:
         sudo apt install -qq libcurl4-gnutls-dev
     - name: Run Tests
       run: |
-        make
-        sudo make test
+        make clean test NO_VALGRIND=1
 
   macos:
     name: macOS
@@ -28,5 +27,4 @@ jobs:
         : # noop
     - name: Run Tests
       run: |
-        make
-        sudo make test
+        make clean test NO_VALGRIND=1

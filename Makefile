@@ -17,9 +17,10 @@ STRIP = strip
 MKDIR = mkdir -p
 _MKDIR = mkdir -p
 
+MAKEFLAGS += --no-print-directory
+
 ## Configure brief.mk
-BRIEFC += AR CC CP LN MKDIR RM STRIP
-#-include deps/brief.mk/brief.mk
+-include ./mk/brief.mk
 
 ## Project settings
 LIBRARY_NAME ?= opc
@@ -46,18 +47,12 @@ BUILD_DIRECTORY ?= build
 BUILD_INCLUDE ?= $(BUILD_DIRECTORY)/include
 BUILD_LIB ?= $(BUILD_DIRECTORY)/lib
 
-## Tests
-TESTS_DEPS += $(wildcard deps/ok/*.c)
-TESTS_SRC += $(wildcard tests/**/*.c)
-TESTS_SRC += $(wildcard tests/*.c)
-TESTS = $(TESTS_SRC:.c=)
-
 ## Compiler
 CFLAGS += -Iinclude -Ideps
 ifeq ($(OS), Darwin)
-	LDFLAGS += -shared -lc -Wl,-install_name,$(TARGET_SO)
+	LDFLAGS += -shared -lc -Wl,-install_name,$(SO)
 else
-	LDFLAGS += -shared -Wl,-soname,$(TARGET_SO).$(LIBRARY_VERSION_MAJOR)
+	LDFLAGS += -shared -Wl,-soname,$(SO).$(LIBRARY_VERSION_MAJOR)
 endif
 
 ## Misc
@@ -71,21 +66,10 @@ ifeq ($(OS),Darwin)
 CLEAN_TARGETS += $(BUILD_LIB)/$(DYLIB)
 endif
 
-## Exports
-export SRC
-export CFLAGS
-export LDFLAGS
-
 ## Macro to ensure build directory structure is in place
 define ENSURE_BUILD_DIRECTORY_STRUCTURE
-@if ! test -d $(BUILD_DIRECTORY); then                          \
-	printf " ";                                                   \
-	printf $(BRIEF_FORMAT) "MKDIR"                                \
-	" $(BUILD_DIRECTORY)/{include/$(LIBRARY_NAME),lib}"           \
-	| tr '\n' ' ' && echo;                                        \
-	$(_MKDIR) $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME);         \
-	$(_MKDIR) $(BUILD_DIRECTORY)/lib;                             \
-fi
+@mkdir -p $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME) &&   \
+ mkdir -p $(BUILD_DIRECTORY)/lib;
 endef
 
 default: build
@@ -100,11 +84,11 @@ uninstall:
 ## Builds
 build: $(OBJS)
 build: $(BUILD_INCLUDE)/$(LIBRARY_NAME)
-build: $(BUILD_LIB)/$(STATIC)
-build: $(BUILD_LIB)/$(SO)
-build: $(BUILD_LIB)/$(SOLIB)
+build: $(STATIC)
+build: $(SO)
+build: $(SOLIB)
 ifeq ($(OS),Darwin)
-build: $(BUILD_LIB)/$(DYLIB)
+build: $(DYLIB)
 endif
 
 ## Builds objects
@@ -120,10 +104,11 @@ $(BUILD_LIB)/$(STATIC): $(OBJS)
 
 ## Copies header files
 .PHONY: $(BUILD_INCLUDE)/$(LIBRARY_NAME)
+$(BUILD_INCLUDE)/$(LIBRARY_NAME): BRIEF_ARGS = $(HEADERS) -> $@
 $(BUILD_INCLUDE)/$(LIBRARY_NAME): $(HEADERS)
 	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
-	$(MKDIR) $@
-	$(CP) $(HEADERS) $@
+	@cp -rf $(HEADERS) $@
+	@for header in $(HEADERS); do printf " " && printf $(BRIEF_FORMAT) "CP" "$$(printf " %s\t~>\t%s" "$$header" "$@")"; done
 
 ## Builds a shared object
 .PHONY: $(SO)
@@ -138,12 +123,24 @@ endif
 ## Links shared object to name with major version
 .PHONY: $(SOLIB)
 $(SOLIB): $(BUILD_LIB)/$(SOLIB)
+$(SOLIB): $(BUILD_LIB)/$(SOLIB).$(LIBRARY_VERSION_MINOR)
+$(SOLIB): $(BUILD_LIB)/$(SOLIB).$(LIBRARY_VERSION_MINOR).$(LIBRARY_VERSION_PATCH)
+$(SOLIB): $(BUILD_LIB)/$(SOLIB).$(LIBRARY_VERSION_MINOR).$(LIBRARY_VERSION_PATCH).$(LIBRARY_VERSION_REVISION)
 $(BUILD_LIB)/$(SOLIB): $(BUILD_LIB)/$(SO)
 	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
 	$(LN) $(shell basename $<) $@
-	$(LN) $(shell basename $<) $@.$(LIBRARY_VERSION_MINOR)
-	$(LN) $(shell basename $<) $@.$(LIBRARY_VERSION_MINOR).$(LIBRARY_VERSION_PATCH)
-	$(LN) $(shell basename $<) $@.$(LIBRARY_VERSION_MINOR).$(LIBRARY_VERSION_PATCH).$(LIBRARY_VERSION_REVISION)
+
+$(BUILD_LIB)/$(SOLIB).$(LIBRARY_VERSION_MINOR): $(BUILD_LIB)/$(SO)
+	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
+	$(LN) $(shell basename $<) $@
+
+$(BUILD_LIB)/$(SOLIB).$(LIBRARY_VERSION_MINOR).$(LIBRARY_VERSION_PATCH): $(BUILD_LIB)/$(SO)
+	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
+	$(LN) $(shell basename $<) $@
+
+$(BUILD_LIB)/$(SOLIB).$(LIBRARY_VERSION_MINOR).$(LIBRARY_VERSION_PATCH).$(LIBRARY_VERSION_REVISION): $(BUILD_LIB)/$(SO)
+	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
+	$(LN) $(shell basename $<) $@
 
 ## Builds dynamic libary
 ifeq ($(OS),Darwin)
@@ -154,20 +151,26 @@ $(BUILD_LIB)/$(DYLIB): $(OBJS)
 	$(CC) $(LDFLAGS) -dynamiclib -undefined suppress -flat_namespace $^ -o $@
 endif
 
-## Cleans test directory
-.PHONY: test/clean
-test/clean: BRIEF_ARGS = clean (test)
-test/clean:
-	if test -d test; then $(MAKE) clean -C test; fi
 ## Compiles and runs all test
+.PHONY: tests
+tests: test
 .PHONY: test
 test: build
-	$(MAKE) -C tests
+	@$(MAKE) -C tests
 
-.PHONY: $(TESTS_SRC)
-$(TESTS_SRC):
-	$(CC) $(CFLAGS) $@ -o $(@:.c=)
+## Cleans test directory
+.PHONY: tests/clean
+tests/clean: BRIEF_ARGS = clean (test)
+tests/clean:
+	@$(MAKE) -C tests clean
 
-clean: BRIEF_ARGS = $(CLEAN_TARGETS)
+.PHONY: examples/clean
+examples/clean: BRIEF_ARGS = clean (examples)
+examples/clean:
+	@:
+
+clean: tests/clean
+clean: examples/clean
 clean:
-	$(RM) $(CLEAN_TARGETS)
+	@rm -rf $(CLEAN_TARGETS)
+	@for target in $(CLEAN_TARGETS); do printf " " && printf $(BRIEF_FORMAT) "RM" " $$target"; done
