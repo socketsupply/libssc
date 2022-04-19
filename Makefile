@@ -39,7 +39,7 @@ HEADERS += $(wildcard include/**/*.h)
 ## Target static library
 STATIC := lib$(LIBRARY_NAME).a
 SOLIB := lib$(LIBRARY_NAME).so.$(LIBRARY_VERSION_MAJOR)
-DYLIB := lib$(LIBRARY_NAME).$(LIBRARY_VERSION_MAJOR).$(LIBRARY_VERSION_MINOR).dylib
+DYLIB := lib$(LIBRARY_NAME).dylib
 SO := lib$(LIBRARY_NAME).so
 
 ## Build configuration
