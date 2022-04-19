@@ -1,6 +1,6 @@
 RM ?= $(shell which rm)
 CWD ?= $(shell pwd)
-BUILD_LIBRARY_PATH = $(CWD)/../build/lib 2>/dev/null
+BUILD_LIBRARY_PATH = $(CWD)/../build/lib
 
 ## Commands
 CC ?= clang
