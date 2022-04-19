@@ -107,8 +107,12 @@ $(BUILD_LIB)/$(STATIC): $(OBJS)
 $(BUILD_INCLUDE)/$(LIBRARY_NAME): BRIEF_ARGS = $(HEADERS) -> $@
 $(BUILD_INCLUDE)/$(LIBRARY_NAME): $(HEADERS)
 	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
+ifndef NO_BRIEF
 	@cp -rf $(HEADERS) $@
 	@for header in $(HEADERS); do printf " " && printf $(BRIEF_FORMAT) "CP" "$$(printf " %s\t~>\t%s" "$$header" "$@")"; done
+else
+	cp -rf $(HEADERS) $@
+endif
 
 ## Builds a shared object
 .PHONY: $(SO)
@@ -172,5 +176,9 @@ examples/clean:
 clean: tests/clean
 clean: examples/clean
 clean:
+ifndef NO_BRIEF
 	@rm -rf $(CLEAN_TARGETS)
 	@for target in $(CLEAN_TARGETS); do printf " " && printf $(BRIEF_FORMAT) "RM" " $$target"; done
+else
+	rm -rf $(CLEAN_TARGETS)
+endif

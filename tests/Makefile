@@ -54,6 +54,10 @@ $(TARGETS): $(SRC)
 	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS) -D OK_EXPECTED=`cat $(@).c|grep 'ok('|wc -l`
 
 .PHONY: clean
-clean: BRIEF_ARGS = $(TARGETS)
 clean:
+ifndef NO_BRIEF
+	@rm -rf $(TARGETS)
 	@for target in $(TARGETS); do printf " " && printf $(BRIEF_FORMAT) "RM" " test/$$target"; done
+else
+	rm -rf $(TARGETS)
+endif
