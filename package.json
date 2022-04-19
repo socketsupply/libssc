@@ -1,0 +1,32 @@
+{
+  "name": "@socketsupply/libopc",
+  "version": "0.0.0",
+  "description": "Operator Framework client library written in C99.",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "make clean tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/socketsupply/libopc.git"
+  },
+  "keywords": [
+    "operator",
+    "framework",
+    "client",
+    "library",
+    "libopc"
+  ],
+  "author": "Joseph Werle <joseph@socketsupply.co>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/socketsupply/libopc/issues"
+  },
+  "homepage": "https://github.com/socketsupply/libopc#readme",
+  "devDependencies": {
+    "tap-parser": "^11.0.1"
+  }
+}

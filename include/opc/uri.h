@@ -9,23 +9,23 @@
  * @TODO(jwerle)
  */
 OPC_EXPORT OPCResult
-opc_uri_component_encode (OPCBuffer output, OPCBuffer input);
+opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input);
 
 /**
  * @TODO(jwerle)
  */
-OPC_EXPORT unsigned long
-opc_uri_component_encode_size (OPCBuffer input);
+OPC_EXPORT long
+opc_uri_component_encode_size (const OPCBuffer input);
 
 /**
  * @TODO(jwerle)
  */
 OPC_EXPORT OPCResult
-opc_uri_component_decode (OPCBuffer output, OPCBuffer input);
+opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input);
 
 /**
  * @TODO(jwerle)
  */
-OPC_EXPORT unsigned long
-opc_uri_component_decode_size (OPCBuffer input);
+OPC_EXPORT long
+opc_uri_component_decode_size (const OPCBuffer input);
 #endif

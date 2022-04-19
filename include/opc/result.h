@@ -19,4 +19,10 @@ typedef enum {
   OPC_UNKNOWN = OPC_MAX_ENUM
 } OPCResult;
 
+/**
+ * @TODO(jwerle)
+ */
+OPC_EXPORT const char *
+opc_result_string (OPCResult result);
+
 #endif

@@ -1,6 +1,7 @@
-RM ?= $(shell which rm)
 CWD ?= $(shell pwd)
-BUILD_LIBRARY_PATH = $(CWD)/../build/lib
+BUILD_LIBRARY_PATH = ../build/lib
+
+MAKEFLAGS += --no-print-directory
 
 ## Commands
 CC ?= clang
@@ -8,7 +9,9 @@ LN ?= ln -sf
 RM = rm -rf
 
 ifndef NO_VALGRIND
-VALGRIND ?= valgrind
+ifneq ($(shell which valgrind 2>/dev/null),)
+VALGRIND ?= valgrind -q
+endif
 endif
 
 ## test source files
@@ -33,7 +36,7 @@ ifeq (Darwin, $(shell uname))
 endif
 
 ## test dependency source files
-DEPS += $(wildcard ../deps/ok/*.c)
+DEPS +=
 
 ## we need to set the LD_LIBRARY_PATH environment variable
 ## so our test executables can load the built library at runtime
@@ -41,17 +44,20 @@ export LD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 export DYLD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 
 ## Configure brief.mk
+BRIEF_FORMAT ?= "  %s\t%s\n"
 -include ../mk/brief.mk
 
 default: $(TARGETS)
-	@for t in $^; do                                \
-	  printf '\n## %s\n' $$t;                       \
-		$(VALGRIND) ./$$t; \
-	  printf '...\n' $$t;                           \
-  done
 
 $(TARGETS): $(SRC)
+	@echo
 	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS) -D OK_EXPECTED=`cat $(@).c|grep 'ok('|wc -l`
+	@echo
+ifdef VALIDATE_WITH_TAP_PARSER
+	@$(VALGRIND) ./$@ | ../node_modules/.bin/tap-parser --tap
+else
+	@$(VALGRIND) ./$@
+endif
 
 .PHONY: clean
 clean:

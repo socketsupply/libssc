@@ -19,4 +19,14 @@
 #  define OPC_MAX_ENUM 0x7FFFFFFF
 #endif
 
+#ifndef OPC_PRINTF
+#include <stdio.h>
+#define OPC_PRINTF printf
+#endif
+
+#ifndef OPC_FPRINTF
+#include <stdio.h>
+#define OPC_FPRINTF fprintf
+#endif
+
 #endif

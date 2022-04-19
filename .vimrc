@@ -1,3 +1,5 @@
+let g:clang_format#auto_format=1
+
 au BufNewFile,BufRead *.h set filetype=c
 au BufNewFile,BufRead *.h set syntax=c
 

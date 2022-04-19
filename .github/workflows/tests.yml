@@ -21,10 +21,13 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-node@v3
     - name: System Setup
       shell: bash
       run: |
         : # noop
     - name: Run Tests
       run: |
-        make clean test NO_VALGRIND=1 NO_BRIEF=1
+        npm install
+        make libopc.dylib build/include/opc NO_BRIEF=1
+        make -C tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1

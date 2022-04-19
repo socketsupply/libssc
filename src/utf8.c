@@ -1,36 +1,58 @@
 #include <opc/opc.h>
 
-#define IN_URANGE(a, b, c)                                                     \
-	((unsigned int) a >= (unsigned int) b && (unsigned int) a <= (unsigned int) c)
+static const char UTF8_SAFE_CHARS[256] = {
+	/*      0 1 2 3  4 5 6 7  8 9 A B  C D E F */
+  /* 0 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* 1 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* 2 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* 3 */ 1,1,1,1, 1,1,1,1, 1,1,0,0, 0,0,0,0,
+  /* 4 */ 0,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+  /* 5 */ 1,1,1,1, 1,1,1,1, 1,1,1,0, 0,0,0,0,
+  /* 6 */ 0,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,
+  /* 7 */ 1,1,1,1, 1,1,1,1, 1,1,1,0, 0,0,0,0,
+  /* 8 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* 9 */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* A */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* B */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* C */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* D */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* E */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
+  /* F */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+};
 
 static OPCResult
-detect (unsigned char x, unsigned char y) {
-	if (IN_URANGE(x, 0xD800, 0xDBFF)) {
-		if (!IN_URANGE(y, 0xDC00, 0xDFFF)) {
-			return OPC_OUT_OF_BOUNDS;
-		}
-	}
-
+detect (unsigned char x) {
 	// alpha capital/small
-	if (IN_URANGE(x, 0x0041, 0x005A) || IN_URANGE(y, 0x061, 0x007A)) {
+	if (
+		opc_math_in_urange(x, 'a', 'z') ||
+		opc_math_in_urange(x, 'A', 'Z')
+	) {
 		return OPC_NOT_DETECTED;
 	}
 
 	// decimal digits
-	if (IN_URANGE(x, 0x0030, 0x0039)) {
+	if (opc_math_in_urange(x, 0x0030, 0x0039)) {
 		return OPC_NOT_DETECTED;
 	}
 
-	if ('-' == x || '_' == x || '.' == x || '!' == x || '~' == x || '*' == x || '(' == x || ')' == x) {
-		return 0;
+	// special characters
+	if (
+		'-' == x || '_' == x || '.' == x || '!' == x ||
+		'~' == x || '*' == x || '(' == x || ')' == x
+	) {
+		return OPC_NOT_DETECTED;
+	}
+
+	if (UTF8_SAFE_CHARS[x]) {
+		return OPC_NOT_DETECTED;
 	}
 
 	return OPC_DETECTED;
 }
 
 OPCResult
-opc_utf8_detect (OPCBuffer input) {
-	if (input.buffer == 0) {
+opc_utf8_detect (const OPCBuffer input) {
+	if (input.bytes == 0) {
 		return OPC_NULL_POINTER;
 	}
 
@@ -39,17 +61,12 @@ opc_utf8_detect (OPCBuffer input) {
 	}
 
 	for (int i = 0; i < input.size; ++i) {
-		if (i + 1 == input.size) {
-			return OPC_NOT_DETECTED;
-			break;
-		}
+		OPCResult result = detect(input.bytes[i]);
 
-		OPCResult result = detect(input.buffer[i], input.buffer[i + 1]);
-
-		if (result != OPC_DETECTED) {
+		if (result != OPC_NOT_DETECTED) {
 			return result;
 		}
 	}
 
-	return OPC_DETECTED;
+	return OPC_NOT_DETECTED;
 }

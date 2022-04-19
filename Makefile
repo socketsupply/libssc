@@ -160,7 +160,7 @@ endif
 tests: test
 .PHONY: test
 test: build
-	@$(MAKE) -C tests
+	@$(MAKE) -B -C tests
 
 ## Cleans test directory
 .PHONY: tests/clean

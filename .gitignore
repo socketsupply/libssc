@@ -58,3 +58,6 @@ dkms.conf
 tests/codec/uri
 build/
 tests/uri
+tests/string
+package-lock.json
+node_modules/

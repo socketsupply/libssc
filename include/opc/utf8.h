@@ -16,6 +16,6 @@
  *   * `OPC_DETECTED`     - UTF-8 was detected in input
  */
 OPC_EXPORT OPCResult
-opc_utf8_detect (OPCBuffer input);
+opc_utf8_detect (const OPCBuffer input);
 
 #endif

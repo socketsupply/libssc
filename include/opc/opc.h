@@ -2,6 +2,7 @@
 #define OPC_H
 
 #include "buffer.h"
+#include "error.h"
 #include "math.h"
 #include "platform.h"
 #include "result.h"
