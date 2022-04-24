@@ -32,126 +32,126 @@ static const char HEX2DEC[256] = {
 };
 
 OPCResult
-opc_uri_component_encode (
-	OPCBuffer *output,
-	const OPCBuffer input
-) {
-	unsigned long size = 0;
+opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
+  unsigned long size = 0;
 
-	if (output->bytes == 0 || input.bytes == 0) {
-		return OPC_NULL_POINTER;
-	}
+  if (output->bytes == 0 || input.bytes == 0) {
+    return OPC_NULL_POINTER;
+  }
 
-	for (int i = 0; i < input.size; ++i) {
-		if (size >= output->size) {
-			return OPC_OUT_OF_MEMORY;
-		}
+  for (int i = 0; i < input.size; ++i) {
+    if (size >= output->size) {
+      return OPC_OUT_OF_MEMORY;
+    }
 
-		const long status = opc_utf8_detect(opc_buffer_slice(&input, i, i + 1));
+    const long status = opc_utf8_detect(opc_buffer_slice(&input, i, i + 1));
 
-		if (status < OPC_OK) {
-			return status;
-		}
+    if (status < OPC_OK) {
+      return status;
+    }
 
-		if (status == OPC_NOT_DETECTED) {
-			output->bytes[size++] = input.bytes[i];
-		} else {
-			output->bytes[size++] = '%';
+    if (status == OPC_NOT_DETECTED) {
+      output->bytes[size++] = input.bytes[i];
+    } else {
+      output->bytes[size++] = '%';
 
-		  if (size >= output->size) {
-			  return OPC_OUT_OF_MEMORY;
-		  }
+      if (size >= output->size) {
+        return OPC_OUT_OF_MEMORY;
+      }
 
-			output->bytes[size++] = DEC2HEX[input.bytes[i] >> 4];
+      output->bytes[size++] = DEC2HEX[input.bytes[i] >> 4];
 
-		  if (size >= output->size) {
-			  return OPC_OUT_OF_MEMORY;
-		  }
+      if (size >= output->size) {
+        return OPC_OUT_OF_MEMORY;
+      }
 
-			output->bytes[size++] = DEC2HEX[input.bytes[i] & 0x0f];
-		}
-	}
+      output->bytes[size++] = DEC2HEX[input.bytes[i] & 0x0f];
+    }
+  }
 
-	output->size = size;
+  output->size = size;
 
-	return OPC_OK;
+  return OPC_OK;
 }
 
 long
 opc_uri_component_encode_size (const OPCBuffer input) {
-	unsigned long size = 0;
+  unsigned long size = 0;
 
-	if (input.bytes == 0 || input.size == 0) {
-		return 0;
-	}
+  if (input.bytes == 0 || input.size == 0) {
+    return 0;
+  }
 
-	for (int i = 0; i < input.size; ++i) {
-		long status = opc_utf8_detect(opc_buffer_slice(&input, i, i + 1));
+  for (int i = 0; i < input.size; ++i) {
+    long status = opc_utf8_detect(opc_buffer_slice(&input, i, i + 1));
 
-		switch (status) {
-			case OPC_NOT_DETECTED: size++; break;
-			case OPC_DETECTED: size = size + 3; break; // %XX
-			default: return status;
-		}
-	}
+    switch (status) {
+      case OPC_NOT_DETECTED:
+        size++;
+        break;
+      case OPC_DETECTED:
+        size = size + 3; // %XX
+        break;
+      default:
+        return status;
+    }
+  }
 
-	return (long) size;
+  return (long) size;
 }
 
 OPCResult
-opc_uri_component_decode (
-	OPCBuffer *output,
-	const OPCBuffer input
-) {
-	unsigned long size = 0;
+opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
+  unsigned long size = 0;
 
-	if (output->bytes == 0 || input.bytes == 0) {
-		return OPC_NULL_POINTER;
-	}
+  if (output->bytes == 0 || input.bytes == 0) {
+    return OPC_NULL_POINTER;
+  }
 
-	for (int i = 0; i < input.size; ++i) {
-		if (input.bytes[i] == 0) break;
+  for (int i = 0; i < input.size; ++i) {
+    if (input.bytes[i] == 0)
+      break;
 
-		if (size >= output->size) {
-			return OPC_OUT_OF_MEMORY;
-		}
+    if (size >= output->size) {
+      return OPC_OUT_OF_MEMORY;
+    }
 
-		if (input.bytes[i] == '%') {
-			unsigned long x = HEX2DEC[input.bytes[i + 1]];
-			unsigned long y = HEX2DEC[input.bytes[i + 2]];
+    if (input.bytes[i] == '%') {
+      unsigned long x = HEX2DEC[input.bytes[i + 1]];
+      unsigned long y = HEX2DEC[input.bytes[i + 2]];
 
-			i = i + 2;
+      i = i + 2;
 
-			output->bytes[size++] = (x << 4) + y;
-		} else {
-			output->bytes[size++] = input.bytes[i];
-		}
-	}
+      output->bytes[size++] = (x << 4) + y;
+    } else {
+      output->bytes[size++] = input.bytes[i];
+    }
+  }
 
-	output->size = size;
+  output->size = size;
 
-	return OPC_OK;
+  return OPC_OK;
 }
 
 long
 opc_uri_component_decode_size (const OPCBuffer input) {
-	unsigned long size = 0;
-	unsigned long length = input.size;
-	int i = 0;
+  unsigned long size = 0;
+  unsigned long length = input.size;
+  int i = 0;
 
-	if (input.bytes == 0 || input.size == 0) {
-		return 0;
-	}
+  if (input.bytes == 0 || input.size == 0) {
+    return 0;
+  }
 
-	while (length-- && i < input.size) {
-		if (input.bytes[i] == '%') {
-			i = i + 3;
-		} else {
-			i = i + 1;
-		}
+  while (length-- && i < input.size) {
+    if (input.bytes[i] == '%') {
+      i = i + 3;
+    } else {
+      i = i + 1;
+    }
 
-		size = size + 1;
-	}
+    size = size + 1;
+  }
 
-	return size;
+  return size;
 }

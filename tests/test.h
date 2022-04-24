@@ -1,10 +1,10 @@
 #ifndef OPC_TEST_H
 #define OPC_TEST_H
 
-#include <stdlib.h>
+#include <opc/opc.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <opc/opc.h>
+#include <stdlib.h>
 
 #define STRINGX(value) #value
 #define STRING(value) STRINGX(value)
@@ -20,7 +20,7 @@ static int ok_expected_;
  * @TODO
  */
 void
-ok(const char *format, ...) {
+ok (const char *format, ...) {
   va_list args;
 
   va_start(args, format);
@@ -40,7 +40,7 @@ ok(const char *format, ...) {
  * @TODO
  */
 void
-notok(const char *format, ...) {
+notok (const char *format, ...) {
   va_list args;
 
   va_start(args, format);
@@ -60,7 +60,7 @@ notok(const char *format, ...) {
  * @TODO
  */
 void
-okskip(const char *format, ...) {
+okskip (const char *format, ...) {
   va_list args;
 
   va_start(args, format);
@@ -80,7 +80,7 @@ okskip(const char *format, ...) {
  * @TODO
  */
 void
-oktodo(const char *format, ...) {
+oktodo (const char *format, ...) {
   va_list args;
 
   va_start(args, format);
@@ -100,20 +100,22 @@ oktodo(const char *format, ...) {
  * @TODO
  */
 void
-ok_done(void) {
+ok_done (void) {
   if (0 != ok_expected_ && ok_passed_ != ok_expected_) {
     if (ok_expected_ > ok_passed_) {
       fprintf(stderr, "expected number of success conditions not met.\n");
     } else {
-      fprintf(stderr,
+      fprintf(
+        stderr,
         "expected number of success conditions is less than the "
-        "number of given success conditions.\n");
+        "number of given success conditions.\n"
+      );
     }
     exit(1);
   }
 
   if (ok_expected_ == 0) {
-     printf("1..%d\n", ok_count_);
+    printf("1..%d\n", ok_count_);
   }
 
   printf("# tests %d\n", ok_count_);
@@ -124,7 +126,7 @@ ok_done(void) {
  * @TODO
  */
 void
-ok_expect(int expected) {
+ok_expect (int expected) {
   ok_expected_ = expected;
 }
 
@@ -132,7 +134,7 @@ ok_expect(int expected) {
  * @TODO
  */
 int
-ok_expected() {
+ok_expected () {
   return ok_expected_;
 }
 
@@ -140,7 +142,7 @@ ok_expected() {
  * @TODO
  */
 int
-ok_count() {
+ok_count () {
   return ok_count_;
 }
 
@@ -148,12 +150,12 @@ ok_count() {
  * @TODO
  */
 int
-ok_passed() {
+ok_passed () {
   return ok_passed_;
 }
 
 void
-ok_reset() {
+ok_reset () {
   ok_count_ = 0;
   ok_passed_ = 0;
   ok_expected_ = 0;
@@ -162,46 +164,47 @@ ok_reset() {
 /**
  * @TODO
  */
-#define test(name, expected)               \
-	void runner ();                          \
-	int main (void) {                        \
-    printf("TAP version 14\n");            \
-    printf("# %s\n", name);                \
-    if (expected > 0) {                    \
-      printf("1..%d\n", expected);         \
-      ok_expect(expected);                 \
-    }                                      \
-		runner();                              \
-		ok_done();                             \
-		if (expected > 0) {                    \
-      return ok_expected() - ok_passed();  \
-    }                                      \
-    return ok_count() - ok_passed();       \
-	}                                        \
-	void runner ()
+#define test(name, expected)                                                   \
+  void runner();                                                               \
+  int main(void) {                                                             \
+    printf("TAP version 14\n");                                                \
+    printf("# %s\n", name);                                                    \
+    if (expected > 0) {                                                        \
+      printf("1..%d\n", expected);                                             \
+      ok_expect(expected);                                                     \
+    }                                                                          \
+    runner();                                                                  \
+    ok_done();                                                                 \
+    if (expected > 0) {                                                        \
+      return ok_expected() - ok_passed();                                      \
+    }                                                                          \
+    return ok_count() - ok_passed();                                           \
+  }                                                                            \
+  void runner()
 
 /**
  * @TODO
  */
-#define xtest(name, expected)              \
-	void runner ();                          \
-	int main (void) {                        \
-    printf("TAP version 14\n");            \
-    printf("# %s\n", name);                \
-    printf("1..0\n");                      \
-    return 0;                              \
-	}                                        \
-	void runner ()
+#define xtest(name, expected)                                                  \
+  void runner();                                                               \
+  int main(void) {                                                             \
+    printf("TAP version 14\n");                                                \
+    printf("# %s\n", name);                                                    \
+    printf("1..0\n");                                                          \
+    return 0;                                                                  \
+  }                                                                            \
+  void runner()
 
 /**
  * @TODO
  */
-#define assert(condition, ...) {                    \
-	if ((condition)) {                                \
-    ok(STRINGX(condition), ##__VA_ARGS__);          \
-  } else {                                          \
-    notok(STRING(condition) ": %s", ##__VA_ARGS__); \
-  }                                                 \
-}
+#define assert(condition, ...)                                                 \
+  {                                                                            \
+    if ((condition)) {                                                         \
+      ok(STRINGX(condition), ##__VA_ARGS__);                                   \
+    } else {                                                                   \
+      notok(STRING(condition) ": %s", ##__VA_ARGS__);                          \
+    }                                                                          \
+  }
 
 #endif

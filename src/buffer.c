@@ -6,22 +6,17 @@ opc_buffer_slice (
   unsigned long start,
   unsigned long end
 ) {
-	unsigned long size = opc_math_clamp(end - start, 0, self->size);
-	unsigned long offset = opc_math_clamp(start, 0, self->size);
-	unsigned char *bytes = self->bytes + offset;
+  unsigned long size = opc_math_clamp(end - start, 0, self->size);
+  unsigned long offset = opc_math_clamp(start, 0, self->size);
+  unsigned char *bytes = self->bytes + offset;
 
-	return (OPCBuffer) { bytes, size };
+  return (OPCBuffer) { bytes, size };
 }
 
 OPCResult
-opc_buffer_compare (
-  const OPCBuffer left,
-  const OPCBuffer right
-) {
+opc_buffer_compare (const OPCBuffer left, const OPCBuffer right) {
   return opc_string_compare_with_size(
-    opc_string((left).bytes),
-    (left).size,
-    opc_string((right).bytes),
+    opc_string((left).bytes), (left).size, opc_string((right).bytes),
     (right).size
   );
 }
