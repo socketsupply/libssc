@@ -11,7 +11,7 @@ test("uri", 4) {
   OPCBuffer input = opc_buffer_slice(&memory, output.size, 64);
   char *string = "betty aime le fromage français";
 
-  opc_buffer_write_string(&input, opc_buffer_bytes(string), 0);
+  opc_buffer_write_string(&input, string, 0);
 
   assert(opc_uri_component_encode(&output, input) == OPC_OK);
   assert(opc_uri_component_decode(&output, output) == OPC_OK);

@@ -53,6 +53,7 @@ ifeq ($(OS), Darwin)
 	LDFLAGS += -shared -lc -Wl,-install_name,$(SO)
 else
 	LDFLAGS += -shared -Wl,-soname,$(SO).$(LIBRARY_VERSION_MAJOR)
+	CFLAGS += -fPIC
 endif
 
 ## Misc

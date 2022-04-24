@@ -3,6 +3,8 @@
 
 #include "buffer.h"
 #include "error.h"
+#include "init.h"
+#include "log.h"
 #include "math.h"
 #include "platform.h"
 #include "result.h"

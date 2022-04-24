@@ -10,7 +10,26 @@
     "lint": "cpplint  include/**/*.h src/**/*.c"
   },
   "files": [
-    "include/opc.h"
+    "include/buffer.h",
+    "include/error.h",
+    "include/init.h",
+    "include/math.h",
+    "include/opc.h",
+    "include/platform.h",
+    "include/result.h",
+    "include/string.h",
+    "include/uri.h",
+    "include/utf8.h",
+    "src/buffer.c",
+    "src/error.c",
+    "src/init.c",
+    "src/log.c",
+    "src/math.c",
+    "src/result.c",
+    "src/string.c",
+    "src/system.c",
+    "src/uri.c",
+    "src/utf8.c"
   ],
   "scripts": [
     "scripts/build.sh",

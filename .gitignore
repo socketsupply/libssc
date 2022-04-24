@@ -61,3 +61,4 @@ tests/uri
 tests/string
 package-lock.json
 node_modules/
+tests/math

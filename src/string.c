@@ -1,20 +1,21 @@
 #include <opc/opc.h>
 
-unsigned long
-opc_string_size (const char *string) {
-  const char *pointer = string;
+OPCSize
+opc_string_size (const OPCString string) {
+  const OPCString pointer = string;
+  OPCString ref = string;
 
-  while (string != 0 && *string) {
-    ++string;
+  while (ref != 0 && *ref) {
+    ++ref;
   }
 
-  return string - pointer;
+  return ref - pointer;
 }
 
 int
 opc_string_compare (
-  const char *left,
-  const char *right
+  const OPCString left,
+  const OPCString right
 ) {
   if (left == 0 && right == 0) {
     return 0;
@@ -43,10 +44,10 @@ opc_string_compare (
 
 int
 opc_string_compare_with_size (
-  const char *left,
-  unsigned long left_size,
-  const char *right,
-  unsigned long right_size
+  const OPCString left,
+  OPCSize left_size,
+  const OPCString right,
+  OPCSize right_size
 ) {
   if (left == 0 && right == 0) {
     return 0;
@@ -75,4 +76,13 @@ opc_string_compare_with_size (
   }
 
   return 0;
+}
+
+const OPCString
+opc_string_slice (const OPCString self, OPCSize offset) {
+  if (self == 0) {
+    return 0;
+  }
+
+  return self + offset;
 }

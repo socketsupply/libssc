@@ -3,12 +3,12 @@
 OPCBuffer
 opc_buffer_slice (
   const OPCBuffer *self,
-  unsigned long start,
-  unsigned long end
+  OPCSize start,
+  OPCSize end
 ) {
-  unsigned long size = opc_math_clamp(end - start, 0, self->size);
-  unsigned long offset = opc_math_clamp(start, 0, self->size);
-  unsigned char *bytes = self->bytes + offset;
+  OPCSize size = opc_math_clamp(end - start, 0, self->size);
+  OPCSize offset = opc_math_clamp(start, 0, self->size);
+  OPCString bytes = self->bytes + offset;
 
   return (OPCBuffer) { bytes, size };
 }
@@ -21,33 +21,33 @@ opc_buffer_compare (const OPCBuffer left, const OPCBuffer right) {
   );
 }
 
-unsigned long
+OPCSize
 opc_buffer_write (
   OPCBuffer *self,
-  const unsigned char *string,
-  const unsigned long offset,
-  const unsigned long size
+  const OPCBufferBytes bytes,
+  const OPCSize offset,
+  const OPCSize size
 ) {
-  unsigned long written = 0;
+  OPCSize written = 0;
 
   if (offset + size >= self->size) {
     return 0;
   }
 
-  for (int i = offset; i < offset + size; ++i) {
-    self->bytes[i] = string[i - offset];
+  for (OPCSize i = offset; i < offset + size; ++i) {
+    self->bytes[i] = bytes[i - offset];
     written = written + 1;
   }
 
   return written;
 }
 
-unsigned long
+OPCSize
 opc_buffer_write_string (
   OPCBuffer *self,
-  const unsigned char *string,
-  const unsigned long offset
+  const OPCString string,
+  const OPCSize offset
 ) {
-  unsigned long size = opc_string_size(string);
-  return opc_buffer_write(self, string, offset, size);
+  OPCSize size = opc_string_size(string);
+  return opc_buffer_write(self, opc_buffer_bytes(string), offset, size);
 }

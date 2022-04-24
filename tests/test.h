@@ -49,7 +49,6 @@ notok (const char *format, ...) {
     format = (const char *) "";
   }
 
-  ok_count_++;
   printf("not ok %d - ", ++ok_count_);
   vprintf(format, args);
   printf("\n");
@@ -167,6 +166,7 @@ ok_reset () {
 #define test(name, expected)                                                   \
   void runner();                                                               \
   int main(void) {                                                             \
+    opc_init();                                                                \
     printf("TAP version 14\n");                                                \
     printf("# %s\n", name);                                                    \
     if (expected > 0) {                                                        \
@@ -203,8 +203,13 @@ ok_reset () {
     if ((condition)) {                                                         \
       ok(STRINGX(condition), ##__VA_ARGS__);                                   \
     } else {                                                                   \
-      notok(STRING(condition) ": %s", ##__VA_ARGS__);                          \
+      notok(STRING(condition), ##__VA_ARGS__);                                 \
     }                                                                          \
   }
+
+/**
+ * @TODO
+ */
+#define assert_equal(left, right, ...) assert(left == right, ##__VA_ARGS__)
 
 #endif

@@ -2,7 +2,7 @@
 
 struct Error {
   OPCResult code;
-  const char *message;
+  const OPCString message;
 };
 
 static struct Error errors[] = {
@@ -13,7 +13,7 @@ static struct Error errors[] = {
   { OPC_OUT_OF_BOUNDS, "Read out of bounds" }
 };
 
-const char *
+const OPCString
 opc_error_string (OPCResult error) {
   unsigned long count = sizeof(errors) / sizeof(struct Error);
 
