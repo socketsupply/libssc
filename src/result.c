@@ -1,7 +1,7 @@
 #include <opc/opc.h>
 
 struct Result {
-  OPCResult code;
+  const OPCResult code;
   const char *string;
 };
 
@@ -20,7 +20,7 @@ static struct Result results[] = {
 // clang-format on
 
 const char *
-opc_result_string (OPCResult result) {
+opc_result_string (const OPCResult result) {
   unsigned long count = sizeof(results) / sizeof(struct Result);
 
   for (int i = 0; i < count; ++i) {

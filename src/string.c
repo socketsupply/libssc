@@ -1,6 +1,6 @@
 #include <opc/opc.h>
 
-OPCSize
+OPCUSize
 opc_string_size (const OPCString string) {
   const OPCString pointer = string;
   OPCString ref = string;
@@ -42,9 +42,9 @@ opc_string_compare (const OPCString left, const OPCString right) {
 int
 opc_string_compare_with_size (
   const OPCString left,
-  OPCSize left_size,
+  const OPCUSize left_size,
   const OPCString right,
-  OPCSize right_size
+  const OPCUSize right_size
 ) {
   if (left == 0 && right == 0) {
     return 0;
@@ -72,7 +72,7 @@ opc_string_compare_with_size (
 }
 
 const OPCString
-opc_string_slice (const OPCString self, OPCSize offset) {
+opc_string_slice (const OPCString self, const OPCUSize offset) {
   if (self == 0) {
     return 0;
   }

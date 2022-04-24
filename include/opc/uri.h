@@ -14,7 +14,7 @@ opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input);
 /**
  * @TODO(jwerle)
  */
-OPC_EXPORT long
+OPC_EXPORT OPCSize
 opc_uri_component_encode_size (const OPCBuffer input);
 
 /**
@@ -26,6 +26,6 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input);
 /**
  * @TODO(jwerle)
  */
-OPC_EXPORT long
+OPC_EXPORT OPCSize
 opc_uri_component_decode_size (const OPCBuffer input);
 #endif

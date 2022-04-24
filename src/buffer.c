@@ -1,9 +1,9 @@
 #include <opc/opc.h>
 
 OPCBuffer
-opc_buffer_slice (const OPCBuffer *self, OPCSize start, OPCSize end) {
-  OPCSize size = opc_math_clamp(end - start, 0, self->size);
-  OPCSize offset = opc_math_clamp(start, 0, self->size);
+opc_buffer_slice (const OPCBuffer *self, OPCUSize start, OPCUSize end) {
+  OPCUSize size = opc_math_clamp(end - start, 0, self->size);
+  OPCUSize offset = opc_math_clamp(start, 0, self->size);
   OPCString bytes = self->bytes + offset;
 
   return (OPCBuffer) { bytes, size };
@@ -19,20 +19,20 @@ opc_buffer_compare (const OPCBuffer left, const OPCBuffer right) {
   );
 }
 
-OPCSize
+OPCUSize
 opc_buffer_write (
   OPCBuffer *self,
   const OPCBufferBytes bytes,
-  const OPCSize offset,
-  const OPCSize size
+  const OPCUSize offset,
+  const OPCUSize size
 ) {
-  OPCSize written = 0;
+  OPCUSize written = 0;
 
   if (offset + size >= self->size) {
     return 0;
   }
 
-  for (OPCSize i = offset; i < offset + size; ++i) {
+  for (OPCUSize i = offset; i < offset + size; ++i) {
     self->bytes[i] = bytes[i - offset];
     written = written + 1;
   }
@@ -40,12 +40,12 @@ opc_buffer_write (
   return written;
 }
 
-OPCSize
+OPCUSize
 opc_buffer_write_string (
   OPCBuffer *self,
   const OPCString string,
-  const OPCSize offset
+  const OPCUSize offset
 ) {
-  OPCSize size = opc_string_size(string);
+  OPCUSize size = opc_string_size(string);
   return opc_buffer_write(self, opc_buffer_bytes(string), offset, size);
 }

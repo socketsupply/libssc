@@ -54,7 +54,8 @@
 /**
  * @TODO
  */
-typedef unsigned long long OPCSize;
+typedef unsigned long long OPCUSize;
+typedef long long OPCSize;
 
 /**
  * @TODO

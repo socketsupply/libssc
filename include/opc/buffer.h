@@ -17,7 +17,7 @@ typedef struct OPCBuffer OPCBuffer;
 
 struct OPCBuffer {
   OPCBufferBytes bytes;
-  OPCSize size;
+  OPCUSize size;
 };
 
 /**
@@ -53,7 +53,7 @@ struct OPCBuffer {
  * @param bytes The bytes
  */
 #define opc_buffer_from_bytes(bytes, size)                                     \
-  ((OPCBuffer) { (OPCBufferBytes) (bytes), (OPCSize) size })
+  ((OPCBuffer) { (OPCBufferBytes) (bytes), (OPCUSize) size })
 
 /**
  * @TODO
@@ -66,7 +66,7 @@ struct OPCBuffer {
  * @TODO(jwerle)
  */
 OPC_EXPORT OPCBuffer
-opc_buffer_slice (const OPCBuffer *input, OPCSize start, OPCSize end);
+opc_buffer_slice (const OPCBuffer *input, OPCUSize start, OPCUSize end);
 
 /**
  * @TODO
@@ -79,22 +79,22 @@ opc_buffer_compare (const OPCBuffer left, const OPCBuffer right);
 /**
  * @TODO
  */
-OPC_EXPORT OPCSize
+OPC_EXPORT OPCUSize
 opc_buffer_write (
   OPCBuffer *left,
   const OPCBufferBytes string,
-  const OPCSize offset,
-  const OPCSize size
+  const OPCUSize offset,
+  const OPCUSize size
 );
 
 /**
  * @TODO
  */
-OPC_EXPORT OPCSize
+OPC_EXPORT OPCUSize
 opc_buffer_write_string (
   OPCBuffer *left,
   const OPCString string,
-  const OPCSize offset
+  const OPCUSize offset
 );
 
 #endif

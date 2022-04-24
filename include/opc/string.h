@@ -35,7 +35,7 @@ typedef char *OPCString;
  * @param string The string size to compute
  * @return Number of bytes in string
  */
-OPC_EXPORT OPCSize
+OPC_EXPORT OPCUSize
 opc_string_size (const OPCString string);
 
 /**
@@ -59,15 +59,15 @@ opc_string_compare (const OPCString left, const OPCString right);
 OPC_EXPORT int
 opc_string_compare_with_size (
   const OPCString left,
-  OPCSize left_size,
+  const OPCUSize left_size,
   const OPCString right,
-  OPCSize right_size
+  const OPCUSize right_size
 );
 
 /**
  * @TODO
  */
 OPC_EXPORT const OPCString
-opc_string_slice (const OPCString self, OPCSize offset);
+opc_string_slice (const OPCString self, const OPCUSize offset);
 
 #endif

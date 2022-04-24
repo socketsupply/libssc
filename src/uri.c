@@ -36,7 +36,7 @@ static const char HEX2DEC[256] = {
 
 OPCResult
 opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
-  unsigned long size = 0;
+  OPCSize size = 0;
 
   if (output->bytes == 0 || input.bytes == 0) {
     return OPC_NULL_POINTER;
@@ -77,9 +77,9 @@ opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
   return OPC_OK;
 }
 
-long
+OPCSize
 opc_uri_component_encode_size (const OPCBuffer input) {
-  unsigned long size = 0;
+  OPCSize size = 0;
 
   if (input.bytes == 0 || input.size == 0) {
     return 0;
@@ -105,7 +105,7 @@ opc_uri_component_encode_size (const OPCBuffer input) {
 
 OPCResult
 opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
-  unsigned long size = 0;
+  OPCSize size = 0;
 
   if (output->bytes == 0 || input.bytes == 0) {
     return OPC_NULL_POINTER;
@@ -120,8 +120,8 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
     }
 
     if (input.bytes[i] == '%') {
-      unsigned long x = HEX2DEC[input.bytes[i + 1]];
-      unsigned long y = HEX2DEC[input.bytes[i + 2]];
+      OPCSize x = HEX2DEC[input.bytes[i + 1]];
+      OPCSize y = HEX2DEC[input.bytes[i + 2]];
 
       i = i + 2;
 
@@ -136,10 +136,10 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
   return OPC_OK;
 }
 
-long
+OPCSize
 opc_uri_component_decode_size (const OPCBuffer input) {
-  unsigned long size = 0;
-  unsigned long length = input.size;
+  OPCSize size = 0;
+  OPCSize length = input.size;
   int i = 0;
 
   if (input.bytes == 0 || input.size == 0) {

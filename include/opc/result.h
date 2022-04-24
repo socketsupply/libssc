@@ -22,7 +22,7 @@ typedef enum {
 /**
  * @TODO(jwerle)
  */
-OPC_EXPORT const char *
-opc_result_string (OPCResult result);
+OPC_EXPORT const char * // OPCString
+opc_result_string (const OPCResult result);
 
 #endif

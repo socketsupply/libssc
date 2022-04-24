@@ -1,7 +1,7 @@
 #include <opc/opc.h>
 
 struct Error {
-  OPCResult code;
+  const OPCResult code;
   const OPCString message;
 };
 

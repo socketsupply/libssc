@@ -6,6 +6,7 @@
   "description": "Operator Framework client library written in C99.",
   "commands": {
     "print-version": "./scripts/version.sh",
+    "format": "clang-format -i include/**/*.h src/*.c tests/*.c",
     "indent": "indent -t2 -kr -nut src/**/*.c include/**/*.h",
     "lint": "cpplint  include/**/*.h src/**/*.c"
   },
