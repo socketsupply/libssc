@@ -8,12 +8,13 @@
 /**
  * @TODO
  */
-typedef unsigned char * OPCBufferBytes;
+typedef unsigned char *OPCBufferBytes;
 
 /**
  * @TODO(jwerle)
  */
 typedef struct OPCBuffer OPCBuffer;
+
 struct OPCBuffer {
   OPCBufferBytes bytes;
   OPCSize size;
@@ -59,17 +60,13 @@ struct OPCBuffer {
  * @param buffer
  */
 #define opc_buffer_print(self)                                                 \
-  { opc_string_printf("%.*s\n", (int) (self).size, opc_string((self).bytes)); }
+  opc_string_printf("%.*s\n", (int) (self).size, opc_string((self).bytes))
 
 /**
  * @TODO(jwerle)
  */
 OPC_EXPORT OPCBuffer
-opc_buffer_slice (
-  const OPCBuffer *input,
-  OPCSize start,
-  OPCSize end
-);
+opc_buffer_slice (const OPCBuffer *input, OPCSize start, OPCSize end);
 
 /**
  * @TODO
@@ -77,10 +74,7 @@ opc_buffer_slice (
  * @param right
  */
 OPC_EXPORT OPCResult
-opc_buffer_compare (
-  const OPCBuffer left,
-  const OPCBuffer right
-);
+opc_buffer_compare (const OPCBuffer left, const OPCBuffer right);
 
 /**
  * @TODO

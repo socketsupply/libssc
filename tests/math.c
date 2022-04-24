@@ -1,4 +1,4 @@
-#include "./test.h"
+#include <opc/test.h>
 
 static const unsigned long long UMAX = -1;
 

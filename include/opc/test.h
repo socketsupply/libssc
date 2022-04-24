@@ -110,6 +110,7 @@ ok_done (void) {
         "number of given success conditions.\n"
       );
     }
+
     exit(1);
   }
 
@@ -153,6 +154,9 @@ ok_passed () {
   return ok_passed_;
 }
 
+/**
+ * @TODO
+ */
 void
 ok_reset () {
   ok_count_ = 0;

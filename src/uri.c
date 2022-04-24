@@ -1,5 +1,6 @@
 #include <opc/opc.h>
 
+// clang-format off
 static const char DEC2HEX[16 + 1] = {
 	'0', '1', '2', '3',
 	'4', '5', '6', '7',
@@ -30,6 +31,8 @@ static const char HEX2DEC[256] = {
   /* E */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
   /* F */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1
 };
+
+// clang-format on
 
 OPCResult
 opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {

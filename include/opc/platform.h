@@ -39,16 +39,16 @@
  * @TODO
  */
 #ifndef OPC_PRINTF
-#include <stdio.h>
-#define OPC_PRINTF printf
+#  include <stdio.h>
+#  define OPC_PRINTF printf
 #endif
 
 /**
  * @TODO
  */
 #ifndef OPC_FPRINTF
-#include <stdio.h>
-#define OPC_FPRINTF fprintf
+#  include <stdio.h>
+#  define OPC_FPRINTF fprintf
 #endif
 
 /**

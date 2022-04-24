@@ -1,4 +1,4 @@
-#include "./test.h"
+#include <opc/test.h>
 
 test("string", 0) {
   assert(opc_string_size(opc_string("hello")) == 5);
@@ -12,16 +12,17 @@ test("string", 0) {
   assert_equal(
     0,
     opc_string_compare_with_size(
-      opc_string("hello world"), 5,
-      opc_string("hello moon"), 5
+      opc_string("hello world"), 5, opc_string("hello moon"), 5
     )
   );
 
   assert_equal(
     0,
     opc_string_compare_with_size(
-      opc_string_slice(opc_string("hello world"), 6), 5,
-      opc_string_slice(opc_string("goodbye world"), 8), 5
+      opc_string_slice(opc_string("hello world"), 6),
+      5,
+      opc_string_slice(opc_string("goodbye world"), 8),
+      5
     )
   );
 }

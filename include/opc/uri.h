@@ -1,8 +1,8 @@
 #ifndef OPC_URI_H
 #define OPC_URI_H
 
-#include "platform.h"
 #include "buffer.h"
+#include "platform.h"
 #include "result.h"
 
 /**

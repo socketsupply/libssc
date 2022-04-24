@@ -1,11 +1,7 @@
 #include <opc/opc.h>
 
 OPCBuffer
-opc_buffer_slice (
-  const OPCBuffer *self,
-  OPCSize start,
-  OPCSize end
-) {
+opc_buffer_slice (const OPCBuffer *self, OPCSize start, OPCSize end) {
   OPCSize size = opc_math_clamp(end - start, 0, self->size);
   OPCSize offset = opc_math_clamp(start, 0, self->size);
   OPCString bytes = self->bytes + offset;
@@ -16,7 +12,9 @@ opc_buffer_slice (
 OPCResult
 opc_buffer_compare (const OPCBuffer left, const OPCBuffer right) {
   return opc_string_compare_with_size(
-    opc_string((left).bytes), (left).size, opc_string((right).bytes),
+    opc_string((left).bytes),
+    (left).size,
+    opc_string((right).bytes),
     (right).size
   );
 }

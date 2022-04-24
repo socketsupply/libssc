@@ -1,5 +1,6 @@
 #include <opc/opc.h>
 
+// clang-format off
 static const char UTF8_SAFE_CHARS[256] = {
   /*      0 1 2 3  4 5 6 7  8 9 A B  C D E F */
   /* 0 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -20,6 +21,8 @@ static const char UTF8_SAFE_CHARS[256] = {
   /* F */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
+// clang-format on
+
 static OPCResult
 detect (unsigned char x) {
   // alpha capital/small
@@ -33,10 +36,12 @@ detect (unsigned char x) {
   }
 
   // special characters
+  // clang-format off
   if (
 		'-' == x || '_' == x || '.' == x || '!' == x ||
 		'~' == x || '*' == x || '(' == x || ')' == x
 	) {
+    // clang-format on
     return OPC_NOT_DETECTED;
   }
 

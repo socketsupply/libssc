@@ -28,44 +28,37 @@ typedef enum {
 /**
  * @TODO
  */
-#define opc_log_alert(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_ALERT, __FILE__, __VA_ARGS__)
+#define opc_log_alert(...) opc_log(OPC_LOG_LEVEL_ALERT, __FILE__, __VA_ARGS__)
 
 /**
  * @TODO
  */
-#define opc_log_crit(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_CRITICAL, __FILE__, __VA_ARGS__)
+#define opc_log_crit(...) opc_log(OPC_LOG_LEVEL_CRITICAL, __FILE__, __VA_ARGS__)
 
 /**
  * @TODO
  */
-#define opc_log_error(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_ERROR, __FILE__, __VA_ARGS__)
+#define opc_log_error(...) opc_log(OPC_LOG_LEVEL_ERROR, __FILE__, __VA_ARGS__)
 
 /**
  * @TODO
  */
-#define opc_log_warn(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_WARNING, __FILE__, __VA_ARGS__)
+#define opc_log_warn(...) opc_log(OPC_LOG_LEVEL_WARNING, __FILE__, __VA_ARGS__)
 
 /**
  * @TODO
  */
-#define opc_log_notice(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_NOTICE, __FILE__, __VA_ARGS__)
+#define opc_log_notice(...) opc_log(OPC_LOG_LEVEL_NOTICE, __FILE__, __VA_ARGS__)
 
 /**
  * @TODO
  */
-#define opc_log_info(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_INFO, __FILE__, __VA_ARGS__)
+#define opc_log_info(...) opc_log(OPC_LOG_LEVEL_INFO, __FILE__, __VA_ARGS__)
 
 /**
  * @TODO
  */
-#define opc_log_debug(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_DEBUG, __FILE__, __VA_ARGS__)
+#define opc_log_debug(...) opc_log(OPC_LOG_LEVEL_DEBUG, __FILE__, __VA_ARGS__)
 
 /**
  * @TODO

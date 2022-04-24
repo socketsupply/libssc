@@ -1,4 +1,4 @@
-#include "./test.h"
+#include <opc/test.h>
 
 unsigned char stack[4096] = { 0 };
 

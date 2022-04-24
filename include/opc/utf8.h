@@ -1,8 +1,8 @@
 #ifndef OPC_UTF8_H
 #define OPC_UTF8_H
 
-#include "platform.h"
 #include "buffer.h"
+#include "platform.h"
 #include "result.h"
 
 /**

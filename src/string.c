@@ -13,10 +13,7 @@ opc_string_size (const OPCString string) {
 }
 
 int
-opc_string_compare (
-  const OPCString left,
-  const OPCString right
-) {
+opc_string_compare (const OPCString left, const OPCString right) {
   if (left == 0 && right == 0) {
     return 0;
   }
@@ -61,11 +58,7 @@ opc_string_compare_with_size (
     return 1;
   }
 
-  for (
-    int i = 0;
-    (left[i] != 0 || right[i] != 0) && i < left_size && i < right_size;
-    ++i
-  ) {
+  for (int i = 0; i < left_size && i < right_size; ++i) {
     if (left[i] < right[i]) {
       return -1;
     }

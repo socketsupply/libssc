@@ -48,11 +48,7 @@ opc_math_uclamp (
  * @return An signed value between `min` and `max`
  */
 OPC_EXPORT long long
-opc_math_clamp (
-  long long value,
-  long long min,
-  long long max
-);
+opc_math_clamp (long long value, long long min, long long max);
 
 /**
  * Detects if an unsigned value is between `lo` and `hi`.

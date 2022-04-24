@@ -11,6 +11,7 @@
 #define WHITE_LABEL_FORMAT "[\x1B[37m%s\x1B[0m]: (%s:%d) "
 #define PLAIN_LABEL_FORMAT "[%s]: (%s:%d) "
 
+// clang-format off
 static OPCString log_level_strings[] = {
   "OPC_LOG_LEVEL_EMERGENCY",
   "OPC_LOG_LEVEL_ALERT",
@@ -54,6 +55,7 @@ static OPCSize log_level_clocks[] = {
   0, // INFO
   0 // DEBUG
 };
+// clang-format on
 
 #ifdef OPC_LOG_LEVEL_DEFAULT
 static OPCLogLevel log_level = OPC_LOG_LEVEL_DEFAULT;
@@ -123,7 +125,7 @@ opc_log (
   ...
 ) {
 #ifdef __ANDROID__
-#error TODO
+#  error TODO
 #else
   LOG(location, log_level_formats[level], log_level_names[level]);
 #endif

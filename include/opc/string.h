@@ -7,12 +7,12 @@
 /**
  * @TODO
  */
-typedef char * OPCString;
+typedef char *OPCString;
 
 /**
  * @TODO
  */
-#define opc_string(value) (OPCString) (value)
+#define opc_string(value) (OPCString)(value)
 
 /**
  * @TODO
@@ -48,7 +48,8 @@ OPC_EXPORT int
 opc_string_compare (const OPCString left, const OPCString right);
 
 /**
- * Compares `left` string of `left_size` length and `right` string of `right_size` length.
+ * Compares `left` string of `left_size` length and `right` string of
+ * `right_size` length.
  * @param left
  * @param left_size
  * @param right

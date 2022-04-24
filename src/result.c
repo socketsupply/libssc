@@ -5,6 +5,7 @@ struct Result {
   const char *string;
 };
 
+// clang-format off
 static struct Result results[] = {
   { OPC_OUT_OF_BOUNDS, "OUT_OF_BOUNDS" },
   { OPC_OUT_OF_MEMORY, "OUF_OF_MEMORY" },
@@ -15,6 +16,8 @@ static struct Result results[] = {
   { OPC_NOT_DETECTED, "OPC_NOT_DETECTED" },
   { OPC_UNKNOWN, "OPC_UNKNOWN" }
 };
+
+// clang-format on
 
 const char *
 opc_result_string (OPCResult result) {

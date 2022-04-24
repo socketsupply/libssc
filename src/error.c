@@ -5,6 +5,7 @@ struct Error {
   const OPCString message;
 };
 
+// clang-format off
 static struct Error errors[] = {
   { 0, "No error." },
   { OPC_ERROR, "An error occurred." },
@@ -12,6 +13,8 @@ static struct Error errors[] = {
   { OPC_OUT_OF_MEMORY, "Ran out of memory." },
   { OPC_OUT_OF_BOUNDS, "Read out of bounds" }
 };
+
+// clang-format on
 
 const OPCString
 opc_error_string (OPCResult error) {
