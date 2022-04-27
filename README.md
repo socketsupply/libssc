@@ -3,7 +3,7 @@ libopc
 
 ![tests](https://github.com/socketsupply/libopc/actions/workflows/tests.yml/badge.svg)
 
-> Operator Framework client library written in C99.
+> Operator Framework Client Library (written in C99).
 
 ## Installation
 
