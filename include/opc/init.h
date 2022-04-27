@@ -18,12 +18,24 @@ typedef enum {
  * @TODO
  */
 OPC_EXPORT void
-opc_init ();
+opc_init (int argc, const char **argv);
 
 /**
  * @TODO
  */
 OPC_EXPORT OPCInitState
 opc_init_state ();
+
+/**
+ * @TODO
+ */
+int
+opc_init_argc ();
+
+/**
+ * @TODO
+ */
+const char **
+opc_init_argv ();
 
 #endif

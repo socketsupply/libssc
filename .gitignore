@@ -62,3 +62,6 @@ tests/string
 package-lock.json
 node_modules/
 tests/math
+tests/result
+tests/pp
+tests/error

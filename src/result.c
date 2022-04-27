@@ -2,14 +2,14 @@
 
 struct Result {
   const OPCResult code;
-  const char *string;
+  const OPCString string;
 };
 
 // clang-format off
 static struct Result results[] = {
-  { OPC_OUT_OF_BOUNDS, "OUT_OF_BOUNDS" },
-  { OPC_OUT_OF_MEMORY, "OUF_OF_MEMORY" },
-  { OPC_NULL_POINTER, "NULL_POINTER" },
+  { OPC_OUT_OF_BOUNDS, "OPC_OUT_OF_BOUNDS" },
+  { OPC_OUT_OF_MEMORY, "OPC_OUT_OF_MEMORY" },
+  { OPC_NULL_POINTER, "OPC_NULL_POINTER" },
   { OPC_ERROR, "OPC_ERROR" },
   { OPC_OK, "OPC_OK" },
   { OPC_DETECTED, "OPC_DETECTED" },
@@ -19,7 +19,7 @@ static struct Result results[] = {
 
 // clang-format on
 
-const char *
+const OPCString
 opc_result_string (const OPCResult result) {
   unsigned long count = sizeof(results) / sizeof(struct Result);
 
@@ -29,5 +29,5 @@ opc_result_string (const OPCResult result) {
     }
   }
 
-  return results[count - 2].string;
+  return results[count - 1].string;
 }

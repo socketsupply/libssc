@@ -67,6 +67,10 @@ ifeq ($(OS),Darwin)
 CLEAN_TARGETS += $(BUILD_LIB)/$(DYLIB)
 endif
 
+## Tests
+TEST_SOURCES = $(wildcard tests/*.c)
+TEST_TARGETS = $(TEST_SOURCES:.c=)
+
 ## Macro to ensure build directory structure is in place
 define ENSURE_BUILD_DIRECTORY_STRUCTURE
 @mkdir -p $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME) &&   \
@@ -158,10 +162,11 @@ endif
 
 ## Compiles and runs all test
 .PHONY: tests
-tests: test
-.PHONY: test
-test: build
-	@$(MAKE) -B -C tests
+test: tests
+tests: $(TEST_TARGETS)
+
+$(TEST_TARGETS): $(STATIC) $(BUILD_INCLUDE)/$(LIBRARY_NAME) $(TEST_SOURCES)
+	@$(MAKE) -B -C tests `basename $@`
 
 ## Cleans test directory
 .PHONY: tests/clean

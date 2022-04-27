@@ -9,6 +9,8 @@ test("string", 0) {
   assert(opc_string_compare(opc_string("hello"), opc_string("world")) == -1);
   assert(opc_string_compare(opc_string("world"), opc_string("hello")) == 1);
 
+  assert(opc_string_equals(opc_string("hello"), opc_string("hello")));
+
   assert_equal(
     0,
     opc_string_compare_with_size(

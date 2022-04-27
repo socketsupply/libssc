@@ -5,7 +5,15 @@
 #include "string.h"
 
 /**
- * @TODO
+ * Log line format used after formatted log level prefix for all
+ * `opg_log_*` functions.
+ */
+#ifndef OPC_LOG_LINE_FORMAT
+#define OPC_LOG_LINE_FORMAT "(%s) <%s:%llu>: "
+#endif
+
+/**
+ * Enumerated log levels
  */
 typedef enum {
   OPC_LOG_LEVEL_NONE = -1,
@@ -20,95 +28,167 @@ typedef enum {
 } OPCLogLevel;
 
 /**
- * @TODO
+ * Logs `[EMERG]: ...` with message to stderr.
  */
 #define opc_log_emerg(...)                                                     \
-  opc_log(OPC_LOG_LEVEL_EMERGENCY, __FILE__, __VA_ARGS__)
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_EMERGENCY,                                                   \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Logs `[ALERT]: ...` with message to stderr.
  */
-#define opc_log_alert(...) opc_log(OPC_LOG_LEVEL_ALERT, __FILE__, __VA_ARGS__)
+#define opc_log_alert(...)                                                     \
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_ALERT,                                                       \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Logs `[CRIT]: ...` with message to stderr.
  */
-#define opc_log_crit(...) opc_log(OPC_LOG_LEVEL_CRITICAL, __FILE__, __VA_ARGS__)
+#define opc_log_crit(...)                                                      \
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_CRITICAL,                                                    \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Logs `[ERR]: ...` with message to stderr.
  */
-#define opc_log_error(...) opc_log(OPC_LOG_LEVEL_ERROR, __FILE__, __VA_ARGS__)
+#define opc_log_error(...)                                                     \
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_ERROR,                                                       \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Logs `[WARNING]: ...` with message to stderr.
  */
-#define opc_log_warn(...) opc_log(OPC_LOG_LEVEL_WARNING, __FILE__, __VA_ARGS__)
+#define opc_log_warn(...)                                                      \
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_WARNING,                                                     \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Logs `[NOTICE]: ...` with message to stderr.
  */
-#define opc_log_notice(...) opc_log(OPC_LOG_LEVEL_NOTICE, __FILE__, __VA_ARGS__)
+#define opc_log_notice(...)                                                    \
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_NOTICE,                                                      \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Logs `[INFO]: ...` with message to stderr.
  */
-#define opc_log_info(...) opc_log(OPC_LOG_LEVEL_INFO, __FILE__, __VA_ARGS__)
+#define opc_log_info(...)                                                      \
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_INFO,                                                        \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Logs `[DEBUG]: ...` with message to stderr.
  */
-#define opc_log_debug(...) opc_log(OPC_LOG_LEVEL_DEBUG, __FILE__, __VA_ARGS__)
+#define opc_log_debug(...)                                                     \
+  opc_log(                                                                     \
+    OPC_LOG_LEVEL_DEBUG,                                                       \
+    opc_string(__FILE__),                                                      \
+    opc_usize(__LINE__),                                                       \
+    opc_string(__PRETTY_FUNCTION__),                                           \
+    __VA_ARGS__                                                                \
+  )
 
 /**
- * @TODO
+ * Sets the current log level.
+ * @param level One of `OPCLogLevel` values
  */
 OPC_EXPORT void
 opc_log_set_level (const OPCLogLevel level);
 
 /**
- * @TODO
+ * Gets the current log level that is one of `OPCLogLevel`.
+ * @return The current `OPCLogLevel` value.
  */
-OPC_EXPORT OPCLogLevel
+OPC_EXPORT const OPCLogLevel
 opc_log_get_level ();
 
 /**
- * @TODO
+ * Gets the current log level `OPCLogLevel` string value.
+ * @return The current `OPCLogLevel` string value.
  */
-OPC_EXPORT OPCString
+OPC_EXPORT const OPCString
 opc_log_get_level_string ();
 
 /**
- * @TODO
+ * Gets the current log level name.
+ * @return The current `OPCLogLevel` string name.
  */
-OPC_EXPORT OPCString
+OPC_EXPORT const OPCString
 opc_log_get_level_name ();
 
 /**
- * @TODO
+ * Sets the current stream pointer where logs are written to.
+ * @param pointer An opaque file stream pointer (eg: `FILE *`)
  */
 OPC_EXPORT void
 opc_log_set_file_stream_pointer (void *pointer);
 
 /**
- * @TODO
+ * Enables colors in log output.
  */
 OPC_EXPORT void
 opc_log_enable_colors ();
 
 /**
- * @TODO
+ * Disables colors in log output.
  */
 OPC_EXPORT void
 opc_log_disable_colors ();
 
 /**
- * @TODO
+ * Writes a log for a given `OPCLogLevel` with callsite information.
+ * @notice This function is called by the
+ *         `opc_log_{emerg,alert,crit,error,warn,notice,info,debug}()` family
+ *         of function macros that include the callsite details so the caller
+ *         does not need to provide them.
+ * @param level The `OPCLogLevel` value for this log write
+ * @param location The file location of the call site
+ * @param line The file line number of the call site
+ * @param function The function name of the call site
+ * @param format Format string for formatted variadic values
+ * @param ... Variadic values to be formatted in output
  */
 OPC_EXPORT void
 opc_log (
   const OPCLogLevel level,
   const OPCString location,
+  const OPCUSize line,
+  const OPCString function,
   const OPCString format,
   ...
 );

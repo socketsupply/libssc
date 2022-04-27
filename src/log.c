@@ -2,14 +2,14 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#define RED_LABEL_FORMAT "[\x1B[31m%s\x1B[0m]: (%s:%d) "
-#define GREEN_LABEL_FORMAT "[\x1B[32m%s\x1B[0m]: (%s:%d) "
-#define YELLOW_LABEL_FORMAT "[\x1B[33m%s\x1B[0m]: (%s:%d) "
-#define BLUE_LABEL_FORMAT "[\x1B[34m%s\x1B[0m]: (%s:%d) "
-#define MAGENTA_LABEL_FORMAT "[\x1B[35m%s\x1B[0m]: (%s:%d) "
-#define CYAN_LABEL_FORMAT "[\x1B[36m%s\x1B[0m]: (%s:%d) "
-#define WHITE_LABEL_FORMAT "[\x1B[37m%s\x1B[0m]: (%s:%d) "
-#define PLAIN_LABEL_FORMAT "[%s]: (%s:%d) "
+#define RED_LABEL_FORMAT "[\x1B[31m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
+#define GREEN_LABEL_FORMAT "[\x1B[32m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
+#define YELLOW_LABEL_FORMAT "[\x1B[33m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
+#define BLUE_LABEL_FORMAT "[\x1B[34m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
+#define MAGENTA_LABEL_FORMAT "[\x1B[35m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
+#define CYAN_LABEL_FORMAT "[\x1B[36m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
+#define WHITE_LABEL_FORMAT "[\x1B[37m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
+#define PLAIN_LABEL_FORMAT "[%s]: " OPC_LOG_LINE_FORMAT
 
 // clang-format off
 static OPCString log_level_strings[] = {
@@ -66,19 +66,29 @@ static OPCLogLevel log_level = OPC_LOG_LEVEL_INFO;
 static void *file_stream_pointer = 0;
 static OPCBoolean colors_enabled = OPC_TRUE;
 
-#define LOG(location, label_format, label)                                     \
+#define LOG(location, line, function, label_format, label)                     \
   if (file_stream_pointer != 0) {                                              \
     va_list args;                                                              \
     va_start(args, format);                                                    \
+                                                                               \
     if (colors_enabled) {                                                      \
-      fprintf(file_stream_pointer, label_format, label, location, __LINE__);   \
+      OPC_FPRINTF(                                                             \
+        file_stream_pointer, label_format, label, function, location, line     \
+      );                                                                       \
     } else {                                                                   \
-      fprintf(                                                                 \
-        file_stream_pointer, PLAIN_LABEL_FORMAT, label, location, __LINE__     \
+      OPC_FPRINTF(                                                             \
+        file_stream_pointer,                                                   \
+        PLAIN_LABEL_FORMAT,                                                    \
+        label,                                                                 \
+        function,                                                              \
+        location,                                                              \
+        line                                                                   \
       );                                                                       \
     }                                                                          \
-    vfprintf(file_stream_pointer, format, args);                               \
-    fprintf(file_stream_pointer, "\n");                                        \
+                                                                               \
+    OPC_VFPRINTF(file_stream_pointer, format, args);                           \
+    OPC_FPRINTF(file_stream_pointer, "\n");                                    \
+                                                                               \
     va_end(args);                                                              \
   }
 
@@ -121,12 +131,14 @@ void
 opc_log (
   const OPCLogLevel level,
   const OPCString location,
+  const OPCUSize line,
+  const OPCString function,
   const OPCString format,
   ...
 ) {
 #ifdef __ANDROID__
 #  error TODO
 #else
-  LOG(location, log_level_formats[level], log_level_names[level]);
+  LOG(location, line, function, log_level_formats[level], log_level_names[level]);
 #endif
 }

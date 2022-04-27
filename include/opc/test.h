@@ -6,18 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STRINGX(value) #value
-#define STRING(value) STRINGX(value)
-
 /**
- * @TODO
+ * Tests stats
  */
-static int ok_count_;
-static int ok_passed_;
-static int ok_expected_;
+static int ok_count;
+static int ok_passed;
+static int ok_expected;
 
 /**
- * @TODO
+ * Simple `ok()` emission for a passed test.
  */
 void
 ok (const char *format, ...) {
@@ -25,19 +22,19 @@ ok (const char *format, ...) {
 
   va_start(args, format);
 
-  if (NULL == format) {
+  if (!format) {
     format = (const char *) "";
   }
 
-  ok_passed_++;
-  printf("ok %d - ", ++ok_count_);
+  ok_passed++;
+  printf("ok %d - ", ++ok_count);
   vprintf(format, args);
   printf("\n");
   va_end(args);
 }
 
 /**
- * @TODO
+ * Simple `notok()` emission for a failed test.
  */
 void
 notok (const char *format, ...) {
@@ -45,18 +42,18 @@ notok (const char *format, ...) {
 
   va_start(args, format);
 
-  if (NULL == format) {
+  if (!format) {
     format = (const char *) "";
   }
 
-  printf("not ok %d - ", ++ok_count_);
+  printf("not ok %d - ", ++ok_count);
   vprintf(format, args);
   printf("\n");
   va_end(args);
 }
 
 /**
- * @TODO
+ * Simple skipped `ok()` with '#SKIP' emission for a pending test.
  */
 void
 okskip (const char *format, ...) {
@@ -64,19 +61,19 @@ okskip (const char *format, ...) {
 
   va_start(args, format);
 
-  if (NULL == format) {
+  if (!format) {
     format = (const char *) "";
   }
 
-  printf("ok %d - ", ++ok_count_);
+  printf("ok %d - ", ++ok_count);
   vprintf(format, args);
-  printf(" #skip");
+  printf(" #SKIP");
   printf("\n");
   va_end(args);
 }
 
 /**
- * @TODO
+ * Simple skipped `ok()` with '#TODO' emission for a pending test.
  */
 void
 oktodo (const char *format, ...) {
@@ -84,11 +81,11 @@ oktodo (const char *format, ...) {
 
   va_start(args, format);
 
-  if (NULL == format) {
+  if (!format) {
     format = (const char *) "";
   }
 
-  printf("not ok %d - ", ++ok_count_);
+  printf("not ok %d - ", ++ok_count);
   vprintf(format, args);
   printf(" #TODO");
   printf("\n");
@@ -96,12 +93,13 @@ oktodo (const char *format, ...) {
 }
 
 /**
- * @TODO
+ * Marks tests suite as done.
  */
 void
 ok_done (void) {
-  if (0 != ok_expected_ && ok_passed_ != ok_expected_) {
-    if (ok_expected_ > ok_passed_) {
+  int rc = 0;
+  if (0 != ok_expected && ok_passed != ok_expected) {
+    if (ok_expected > ok_passed) {
       fprintf(stderr, "expected number of success conditions not met.\n");
     } else {
       fprintf(
@@ -111,109 +109,150 @@ ok_done (void) {
       );
     }
 
-    exit(1);
+    rc = 1;
   }
 
-  if (ok_expected_ == 0) {
-    printf("1..%d\n", ok_count_);
+  if (ok_expected == 0) {
+    printf("1..%d\n", ok_count);
   }
 
-  printf("# tests %d\n", ok_count_);
-  printf("# pass %d\n", ok_passed_);
+  printf("# tests %d\n", ok_count);
+  printf("# fail %d\n", ok_count - ok_passed);
+  printf("# pass %d\n", ok_passed);
+
+  exit(rc);
 }
 
 /**
- * @TODO
+ * A simple TAP test runner context.
+ * @param test_name The name of the test
+ * @param expected_pass_count The expected number of passed tests where 0 means
+ * no expectation
  */
-void
-ok_expect (int expected) {
-  ok_expected_ = expected;
-}
-
-/**
- * @TODO
- */
-int
-ok_expected () {
-  return ok_expected_;
-}
-
-/**
- * @TODO
- */
-int
-ok_count () {
-  return ok_count_;
-}
-
-/**
- * @TODO
- */
-int
-ok_passed () {
-  return ok_passed_;
-}
-
-/**
- * @TODO
- */
-void
-ok_reset () {
-  ok_count_ = 0;
-  ok_passed_ = 0;
-  ok_expected_ = 0;
-}
-
-/**
- * @TODO
- */
-#define test(name, expected)                                                   \
-  void runner();                                                               \
-  int main(void) {                                                             \
-    opc_init();                                                                \
+#define test(test_name, expected_pass_count)                                   \
+  void runner(                                                                 \
+    const char *_test_name, const unsigned int _expected_pass_count            \
+  );                                                                           \
+  int main(const int argc, const char **argv) {                                \
+    opc_init(argc, argv);                                                      \
     printf("TAP version 14\n");                                                \
-    printf("# %s\n", name);                                                    \
-    if (expected > 0) {                                                        \
-      printf("1..%d\n", expected);                                             \
-      ok_expect(expected);                                                     \
+    printf("# %s\n", test_name);                                               \
+    if (expected_pass_count > 0) {                                             \
+      printf("1..%d\n", expected_pass_count);                                  \
+      ok_expected = expected_pass_count;                                       \
     }                                                                          \
-    runner();                                                                  \
+    runner(test_name, expected_pass_count);                                    \
     ok_done();                                                                 \
-    if (expected > 0) {                                                        \
-      return ok_expected() - ok_passed();                                      \
+    if (expected_pass_count > 0) {                                             \
+      return ok_expected - ok_passed;                                          \
     }                                                                          \
-    return ok_count() - ok_passed();                                           \
+    return ok_count - ok_passed;                                               \
   }                                                                            \
-  void runner()
+  void runner(const char *_test_name, const unsigned int _expected_pass_count)
 
 /**
- * @TODO
+ * A simple macro to skip tests instead of running them marked by the leading
+ * `x` character in `test()`
  */
-#define xtest(name, expected)                                                  \
-  void runner();                                                               \
+#define xtest(test_name, expected_pass_count)                                  \
+  void runner(                                                                 \
+    const char *_test_name, const unsigned int _expected_pass_count            \
+  );                                                                           \
   int main(void) {                                                             \
     printf("TAP version 14\n");                                                \
-    printf("# %s\n", name);                                                    \
+    printf("# %s\n", test_name);                                               \
     printf("1..0\n");                                                          \
     return 0;                                                                  \
   }                                                                            \
-  void runner()
+  void runner(const char *_test_name, const unsigned int _expected_pass_count)
 
 /**
- * @TODO
+ * A simple assertion that emits `ok ...` or `not ok ...`
+ * @param condition The condition to test
  */
 #define assert(condition, ...)                                                 \
-  {                                                                            \
-    if ((condition)) {                                                         \
-      ok(STRINGX(condition), ##__VA_ARGS__);                                   \
-    } else {                                                                   \
-      notok(STRING(condition), ##__VA_ARGS__);                                 \
+  if ((condition)) {                                                           \
+    ok("%s", OPC_PP_STRINGX(condition));                                       \
+  } else {                                                                     \
+    notok("%s", OPC_PP_STRINGX(condition));                                    \
+  }
+
+/**
+ * A simple assertion that emits `ok ...` or `not ok ...` along with a caught
+ * error that is printed as a TAP error
+ * @param condition The condition to test
+ */
+#define assert_ok(condition, ...)                                              \
+  if ((condition)) {                                                           \
+    ok("%s", OPC_PP_STRINGX(condition));                                       \
+  } else {                                                                     \
+    opc_catch(err) {                                                           \
+      notok(                                                                   \
+        "%s [%s %s]",                                                          \
+        OPC_PP_STRINGX(condition),                                             \
+        opc_callsite_function_name(),                                          \
+        opc_callsite_file_location()                                           \
+      );                                                                       \
+      printf("  ---\n");                                                       \
+      printf("  message: (%s): %s\n", err.function, err.message);              \
+      printf("  severity: fail\n");                                            \
+      printf("  at:\n");                                                       \
+      printf("    file: %s\n", err.location);                                  \
+      printf("    line: %llu\n", err.line);                                    \
+      printf("  ---\n");                                                       \
     }                                                                          \
   }
 
 /**
- * @TODO
+ * A simple negated assertion that emits `ok ...` or `not ok ...` along with a
+ * caught error that is printed as a TAP error
+ * @param condition The condition to test
  */
-#define assert_equal(left, right, ...) assert(left == right, ##__VA_ARGS__)
+#define assert_notok(condition, ...)                                           \
+  if (!(condition)) {                                                          \
+    ok("%s", OPC_PP_STRINGX(condition));                                       \
+  } else {                                                                     \
+    opc_catch(err) {                                                           \
+      notok(                                                                   \
+        "%s [%s %s]",                                                          \
+        OPC_PP_STRINGX(condition),                                             \
+        opc_callsite_function_name(),                                          \
+        opc_callsite_file_location()                                           \
+      );                                                                       \
+      printf("  ---\n");                                                       \
+      printf("  message: (%s): %s\n", err.function, err.message);              \
+      printf("  severity: fail\n");                                            \
+      printf("  at:\n");                                                       \
+      printf("    file: %s\n", err.location);                                  \
+      printf("    line: %llu\n", err.line);                                    \
+      printf("  ---\n");                                                       \
+    }                                                                          \
+  }
+
+/**
+ * A simple assertion that emits `ok ...` or `not ok ...` based on the given
+ * `left` and `right` values inequality being true.
+ * @param left Left operand
+ * @param right Right operand
+ */
+#define assert_equal(left, right, ...)                                         \
+  if ((left) == (right)) {                                                     \
+    ok("%s equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));           \
+  } else {                                                                     \
+    notok("%s not equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));    \
+  }
+
+/**
+ * A simple assertion that emits `ok ...` or `not ok ...` based on the given `left` and `right`
+ * values equality being true.
+ * @param left Left operand
+ * @param right Right operand
+ */
+#define assert_not_equal(left, right, ...)                                     \
+  if ((left) != (right)) {                                                     \
+    ok("%s not equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));       \
+  } else {                                                                     \
+    notok("%s equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));        \
+  }
 
 #endif

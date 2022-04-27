@@ -54,7 +54,90 @@
 /**
  * @TODO
  */
+#ifndef OPC_SPRINTF
+#  include <stdio.h>
+#  define OPC_SPRINTF sprintf
+#endif
+
+/**
+ * @TODO
+ */
+#ifndef OPC_SNPRINTF
+#  include <stdio.h>
+#  define OPC_SNPRINTF snprintf
+#endif
+
+/**
+ * @TODO
+ */
+#ifndef OPC_VFPRINTF
+#  include <stdarg.h>
+#  define OPC_VFPRINTF vfprintf
+#endif
+
+/**
+ * @TODO
+ */
+#ifndef OPC_VSPRINTF
+#  include <stdarg.h>
+#  define OPC_VSPRINTF vsprintf
+#endif
+
+/**
+ * @TODO
+ */
+#ifndef OPC_VSNPRINTF
+#  include <stdarg.h>
+#  define OPC_VSNPRINTF vsnprintf
+#endif
+
+/**
+ * @TODO
+ */
+#define opc_argc opc_init_argc
+
+/**
+ * @TODO
+ */
+#define opc_argv opc_init_argv
+
+/**
+ * @TODO
+ */
+#define opc_bytes(value) (OPCBytes) (value)
+
+/**
+ * @TODO
+ */
+#define opc_size(value) (OPCSize) (value)
+
+/**
+ * @TODO
+ */
+#define opc_usize(value) (OPCUSize) (value)
+
+/**
+ * @TODO
+ */
+#define opc_bool(value) ((value) ? OPC_TRUE : OPC_FALSE)
+
+/**
+ * @TODO
+ */
+#define opc_main()                                                             \
+  int start();                                                                 \
+  int main(int argc, const char **argv) {                                      \
+    opc_init(argc, argv);                                                      \
+    return start();                                                            \
+  }                                                                            \
+  int start()
+
+/**
+ * @TODO
+ */
 typedef unsigned long long OPCUSize;
+typedef unsigned char *OPCBytes;
+typedef unsigned char OPCByte;
 typedef long long OPCSize;
 
 /**

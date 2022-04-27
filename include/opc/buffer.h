@@ -8,7 +8,6 @@
 /**
  * @TODO
  */
-typedef unsigned char *OPCBufferBytes;
 
 /**
  * @TODO(jwerle)
@@ -16,7 +15,7 @@ typedef unsigned char *OPCBufferBytes;
 typedef struct OPCBuffer OPCBuffer;
 
 struct OPCBuffer {
-  OPCBufferBytes bytes;
+  OPCBytes bytes;
   OPCUSize size;
 };
 
@@ -25,27 +24,27 @@ struct OPCBuffer {
  * @param bytes
  * @return An `OPCBuffer` structure
  */
-#define opc_buffer(bytes) ((OPCBuffer) { (OPCBufferBytes) (bytes), 0 })
+#define opc_buffer(bytes) ((OPCBuffer) { (OPCBytes) (bytes), 0 })
 
 /**
  * Converts `value` to a suitable `OPCBuffer` bytes
  * @param value Bytes pointer
  */
-#define opc_buffer_bytes(value) (OPCBufferBytes)(value)
+#define opc_buffer_bytes(value) opc_bytes(value)
 
 /**
  * @TODO
  * @param
  */
 #define opc_buffer_from(bytes)                                                 \
-  ((OPCBuffer) { (OPCBufferBytes) bytes, sizeof(bytes) })
+  ((OPCBuffer) { (OPCBytes) bytes, sizeof(bytes) })
 
 /**
  * @TODO
  * @param string The string
  */
 #define opc_buffer_from_string(string)                                         \
-  ((OPCBuffer) { (OPCBufferBytes) (string),                                    \
+  ((OPCBuffer) { (OPCBytes) (string),                                    \
                  opc_string_size((char *) (string)) })
 
 /**
@@ -53,7 +52,7 @@ struct OPCBuffer {
  * @param bytes The bytes
  */
 #define opc_buffer_from_bytes(bytes, size)                                     \
-  ((OPCBuffer) { (OPCBufferBytes) (bytes), (OPCUSize) size })
+  ((OPCBuffer) { (OPCBytes) (bytes), (OPCUSize) size })
 
 /**
  * @TODO
@@ -66,23 +65,23 @@ struct OPCBuffer {
  * @TODO(jwerle)
  */
 OPC_EXPORT OPCBuffer
-opc_buffer_slice (const OPCBuffer *input, OPCUSize start, OPCUSize end);
+opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end);
 
 /**
  * @TODO
  * @param left
  * @param right
  */
-OPC_EXPORT OPCResult
-opc_buffer_compare (const OPCBuffer left, const OPCBuffer right);
+OPC_EXPORT const OPCResult
+opc_buffer_compare (const OPCBuffer self, const OPCBuffer right);
 
 /**
  * @TODO
  */
-OPC_EXPORT OPCUSize
+OPC_EXPORT const OPCUSize
 opc_buffer_write (
-  OPCBuffer *left,
-  const OPCBufferBytes string,
+  OPCBuffer *self,
+  const OPCBytes bytes,
   const OPCUSize offset,
   const OPCUSize size
 );
@@ -90,11 +89,22 @@ opc_buffer_write (
 /**
  * @TODO
  */
-OPC_EXPORT OPCUSize
+OPC_EXPORT const OPCUSize
 opc_buffer_write_string (
-  OPCBuffer *left,
+  OPCBuffer *self,
   const OPCString string,
   const OPCUSize offset
+);
+
+/**
+ * @TODO
+ */
+OPC_EXPORT const OPCSize
+opc_buffer_fill (
+  OPCBuffer *self,
+  const OPCByte byte,
+  const OPCUSize offset,
+  const OPCSize end
 );
 
 #endif

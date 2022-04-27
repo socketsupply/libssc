@@ -54,16 +54,16 @@ $(TARGETS): $(SRC)
 	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS) -D OK_EXPECTED=`cat $(@).c|grep 'ok('|wc -l`
 	@echo
 ifdef VALIDATE_WITH_TAP_PARSER
-	@$(VALGRIND) ./$@ | ../node_modules/.bin/tap-parser --tap
+	@{ $(VALGRIND) ./$@ | ../node_modules/.bin/tap-parser --tap; } || { rm -rf $@ && false; }
 else
-	@$(VALGRIND) ./$@
+	@{ $(VALGRIND) ./$@; } || { rm -rf $@ && false; }
 endif
 
 .PHONY: clean
 clean:
 ifndef NO_BRIEF
 	@rm -rf $(TARGETS)
-	@for target in $(TARGETS); do printf " " && printf $(BRIEF_FORMAT) "RM" " test/$$target"; done
+	@for target in "$(TARGETS)"; do if test -f "$$target"; then printf " " && printf $(BRIEF_FORMAT) "RM" " test/$$target"; fi; done
 else
-	rm -rf $(TARGETS)
+	$(RM) -rf $(TARGETS)
 endif

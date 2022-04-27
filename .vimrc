@@ -29,12 +29,14 @@ fun s:c()
   hi def link   Comment          Comment
 
   " Natspec
+  syn match     NatspecTag       /@see\>/ contained
   syn match     NatspecTag       /@dev\>/ contained
   syn match     NatspecTag       /@title\>/ contained
   syn match     NatspecTag       /@author\>/ contained
   syn match     NatspecTag       /@notice\>/ contained
   syn match     NatspecTag       /@param\>/ contained
   syn match     NatspecTag       /@return\>/ contained
+  syn match     NatspecTag       /@example\>/ contained
   syn match     NatspecParam     /\(@param\s*\)\@<=\<[a-zA-Z_][0-9a-zA-Z_]*/
   syn region    NatspecBlock     start=/\/\/\// end=/$/ contains=Todo,NatspecTag,NatspecParam,@Spell
   syn region    NatspecBlock     start=/\/\*\{2}/ end=/\*\// contains=Todo,NatspecTag,NatspecParam,@Spell

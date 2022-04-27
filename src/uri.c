@@ -38,16 +38,20 @@ OPCResult
 opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
   OPCSize size = 0;
 
-  if (output->bytes == 0 || input.bytes == 0) {
-    return OPC_NULL_POINTER;
+  if (output->bytes == 0) {
+    return opc_throw(OPC_NULL_POINTER, "Output bytes pointer cannot be NULL.");
+  }
+
+  if (input.bytes == 0) {
+    return opc_throw(OPC_NULL_POINTER, "Input bytes pointer cannot be NULL.");
   }
 
   for (int i = 0; i < input.size; ++i) {
     if (size >= output->size) {
-      return OPC_OUT_OF_MEMORY;
+      return opc_throw(OPC_OUT_OF_MEMORY, "Output bytes out of memory.");
     }
 
-    const long status = opc_utf8_detect(opc_buffer_slice(&input, i, i + 1));
+    const long status = opc_utf8_detect(opc_buffer_slice(input, i, i + 1));
 
     if (status < OPC_OK) {
       return status;
@@ -59,20 +63,20 @@ opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
       output->bytes[size++] = '%';
 
       if (size >= output->size) {
-        return OPC_OUT_OF_MEMORY;
+        return opc_throw(OPC_OUT_OF_MEMORY, "Output bytes out of memory.");
       }
 
       output->bytes[size++] = DEC2HEX[input.bytes[i] >> 4];
 
       if (size >= output->size) {
-        return OPC_OUT_OF_MEMORY;
+        return opc_throw(OPC_OUT_OF_MEMORY, "Output bytes out of memory.");
       }
 
       output->bytes[size++] = DEC2HEX[input.bytes[i] & 0x0f];
     }
   }
 
-  output->size = size;
+  //output->size = size;
 
   return OPC_OK;
 }
@@ -86,7 +90,7 @@ opc_uri_component_encode_size (const OPCBuffer input) {
   }
 
   for (int i = 0; i < input.size; ++i) {
-    long status = opc_utf8_detect(opc_buffer_slice(&input, i, i + 1));
+    long status = opc_utf8_detect(opc_buffer_slice(input, i, i + 1));
 
     switch (status) {
       case OPC_NOT_DETECTED:
@@ -131,7 +135,7 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
     }
   }
 
-  output->size = size;
+  //output->size = size;
 
   return OPC_OK;
 }

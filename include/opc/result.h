@@ -2,12 +2,14 @@
 #define OPC_RESULT_H
 
 #include "platform.h"
+#include "string.h"
 
 /**
  * Enumerated result types for various `libopc` function
  * return values.
  */
 typedef enum {
+  OPC_INVALID_ARGUMENT = -5,
   OPC_OUT_OF_BOUNDS = -4,
   OPC_OUT_OF_MEMORY = -3,
   OPC_NULL_POINTER = -2,
@@ -22,7 +24,7 @@ typedef enum {
 /**
  * @TODO(jwerle)
  */
-OPC_EXPORT const char * // OPCString
+OPC_EXPORT const OPCString
 opc_result_string (const OPCResult result);
 
 #endif
