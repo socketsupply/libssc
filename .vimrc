@@ -36,6 +36,8 @@ fun s:c()
   syn match     NatspecTag       /@notice\>/ contained
   syn match     NatspecTag       /@param\>/ contained
   syn match     NatspecTag       /@return\>/ contained
+  syn match     NatspecTag       /@throws\>/ contained
+  syn match     NatspecTag       /@returns\>/ contained
   syn match     NatspecTag       /@example\>/ contained
   syn match     NatspecParam     /\(@param\s*\)\@<=\<[a-zA-Z_][0-9a-zA-Z_]*/
   syn region    NatspecBlock     start=/\/\/\// end=/$/ contains=Todo,NatspecTag,NatspecParam,@Spell

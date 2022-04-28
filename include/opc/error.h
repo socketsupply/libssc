@@ -137,9 +137,8 @@ struct OPCError {
  */
 // @TODO(jwerle): use lock
 #define opc_catch(error)                                                       \
-  for (OPCError error = { .code = -1 };                                        \
-       error.code == -1 && opc_error_catch(&error) != OPC_OK;)
-
+  for (OPCError error = { .code = OPC_UNKNOWN };                               \
+       error.code == OPC_UNKNOWN && opc_error_catch(&error) != OPC_OK;)
 /**
  * Returns the built-in error string for the error result.
  * @param error An `OPCResult` error code.

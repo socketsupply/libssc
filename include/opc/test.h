@@ -37,6 +37,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Tests stats
  */
@@ -104,10 +108,51 @@ okskip (const char *format, ...) {
 }
 
 /**
+ * Simple skipped `notok()` with '#SKIP' emission for a pending test.
+ */
+void
+notokskip (const char *format, ...) {
+  va_list args;
+
+  va_start(args, format);
+
+  if (!format) {
+    format = (const char *) "";
+  }
+
+  printf("not ok %d - ", ++ok_count);
+  vprintf(format, args);
+  printf(" #SKIP");
+  printf("\n");
+  va_end(args);
+}
+
+/**
  * Simple skipped `ok()` with '#TODO' emission for a pending test.
  */
 void
 oktodo (const char *format, ...) {
+  va_list args;
+
+  va_start(args, format);
+
+  if (!format) {
+    format = (const char *) "";
+  }
+
+  printf("ok %d - ", ++ok_count);
+  vprintf(format, args);
+  printf(" #TODO");
+  printf("\n");
+  va_end(args);
+}
+
+
+/**
+ * Simple skipped `notok()` with '#TODO' emission for a pending test.
+ */
+void
+notoktodo (const char *format, ...) {
   va_list args;
 
   va_start(args, format);
@@ -127,7 +172,7 @@ oktodo (const char *format, ...) {
  * Marks tests suite as done.
  */
 void
-ok_done (void) {
+okdone (void) {
   int rc = 0;
   if (0 != ok_expected && ok_passed != ok_expected) {
     if (ok_expected > ok_passed) {
@@ -173,7 +218,7 @@ ok_done (void) {
       ok_expected = expected_pass_count;                                       \
     }                                                                          \
     runner(test_name, expected_pass_count);                                    \
-    ok_done();                                                                 \
+    okdone();                                                                  \
     if (expected_pass_count > 0) {                                             \
       return ok_expected - ok_passed;                                          \
     }                                                                          \
@@ -200,12 +245,13 @@ ok_done (void) {
 /**
  * A simple assertion that emits `ok ...` or `not ok ...`
  * @param condition The condition to test
+ * @param ...
  */
 #define assert(condition, ...)                                                 \
   if ((condition)) {                                                           \
-    ok("%s", OPC_PP_STRINGX(condition));                                       \
+    ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
   } else {                                                                     \
-    notok("%s", OPC_PP_STRINGX(condition));                                    \
+    notok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                           \
   }
 
 /**
@@ -214,8 +260,8 @@ ok_done (void) {
  * @param condition The condition to test
  */
 #define assert_ok(condition, ...)                                              \
-  if ((condition)) {                                                           \
-    ok("%s", OPC_PP_STRINGX(condition));                                       \
+  if ((condition) == OPC_OK) {                                                 \
+    ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
   } else {                                                                     \
     opc_catch(err) {                                                           \
       notok(                                                                   \
@@ -240,8 +286,8 @@ ok_done (void) {
  * @param condition The condition to test
  */
 #define assert_notok(condition, ...)                                           \
-  if (!(condition)) {                                                          \
-    ok("%s", OPC_PP_STRINGX(condition));                                       \
+  if ((condition) != OPC_OK) {                                                 \
+    ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
   } else {                                                                     \
     opc_catch(err) {                                                           \
       notok(                                                                   \
@@ -274,8 +320,8 @@ ok_done (void) {
   }
 
 /**
- * A simple assertion that emits `ok ...` or `not ok ...` based on the given `left` and `right`
- * values equality being true.
+ * A simple assertion that emits `ok ...` or `not ok ...` based on the given
+ * `left` and `right` values equality being true.
  * @param left Left operand
  * @param right Right operand
  */
@@ -286,4 +332,7 @@ ok_done (void) {
     notok("%s equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));        \
   }
 
+#ifdef __cplusplus
+}
+#endif
 #endif

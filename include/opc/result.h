@@ -53,6 +53,12 @@ typedef enum {
 } OPCResult;
 
 /**
+ * An identity for `OPC_OK`
+ * @return `OPC_OK`
+ */
+#define opc_ok() (OPCResult) (OPC_OK)
+
+/**
  * @TODO(jwerle)
  */
 OPC_EXPORT const OPCString
