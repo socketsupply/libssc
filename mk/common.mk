@@ -29,13 +29,4 @@
 # SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
 ##
 
-BRIEF_FORMAT ?= "  %s   \t%s\n"
-BRIEF_ECHO ?= printf $(BRIEF_FORMAT) "$(1)" "$(2)" | tr '\n' ' ' && echo
-BRIEFC += AR CC CP LN MKDIR NPM RM STRIP
-
-ifndef NO_BRIEF
--include ../../deps/brief.mk/brief.mk
--include ../deps/brief.mk/brief.mk
--include ./deps/brief.mk/brief.mk
--include ../brief.mk/brief.mk
-endif
+MAKEFLAGS += --no-print-directory

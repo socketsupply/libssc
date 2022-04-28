@@ -74,8 +74,8 @@ DEPS +=
 export LD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 export DYLD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 
-## Configure brief.mk
-#BRIEF_FORMAT ?= "  %s\t%s\n"
+## Makefile includes
+-include ../mk/common.mk
 -include ../mk/brief.mk
 
 default: $(TARGETS)

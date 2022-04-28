@@ -68,3 +68,6 @@ tests/error
 tests/ipc
 tests/test
 tests/xtest
+man/*.1
+man/*.2
+man/libopc.3

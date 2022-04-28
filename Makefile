@@ -41,10 +41,16 @@ RM = rm -rf
 STRIP = strip
 MKDIR = mkdir -p
 _MKDIR = mkdir -p
+MAN = marked-man
+NPM ?= npm
 
-MAKEFLAGS += --no-print-directory
+MARKEDMAN_BIN = ./node_modules/.bin/marked-man
 
 ## Configure brief.mk
+BRIEFC += MAN
+
+## Makfile incluedes
+-include ./mk/common.mk
 -include ./mk/brief.mk
 
 ## Project settings
@@ -66,6 +72,10 @@ STATIC := lib$(LIBRARY_NAME).a
 SOLIB := lib$(LIBRARY_NAME).so.$(LIBRARY_VERSION_MAJOR)
 DYLIB := lib$(LIBRARY_NAME).dylib
 SO := lib$(LIBRARY_NAME).so
+
+## man 3 files
+MAN_SOURCES = $(wildcard man/*.md)
+MAN_TARGETS = $(MAN_SOURCES:.md=)
 
 ## Build configuration
 BUILD_DIRECTORY ?= build
@@ -102,6 +112,8 @@ define ENSURE_BUILD_DIRECTORY_STRUCTURE
  mkdir -p $(BUILD_DIRECTORY)/lib;
 endef
 
+export PATH := $(CWD)/node_modules/.bin:$(PATH)
+
 default: build
 	@:
 
@@ -120,6 +132,13 @@ build: $(SOLIB)
 ifeq ($(OS),Darwin)
 build: $(DYLIB)
 endif
+build: man
+
+node_modules:
+	$(NPM) install >/dev/null
+
+$(MARKEDMAN_BIN): node_modules
+	@:
 
 ## Builds objects
 .c.o:
@@ -185,6 +204,19 @@ $(BUILD_LIB)/$(DYLIB): $(OBJS)
 	$(CC) $(LDFLAGS) -dynamiclib -undefined suppress -flat_namespace $^ -o $@
 endif
 
+.PHONY: man
+man: $(MAN_TARGETS)
+
+.PHONY: man/clean
+man/clean: BRIEF_ARGS = clean (man)
+man/clean:
+	$(RM) $(MAN_TARGETS)
+
+$(MAN_TARGETS): $(MARKEDMAN_BIN)
+$(MAN_TARGETS): $(MAN_SOURCES)
+	@rm -f $@
+	$(MAN) $^ > $@
+
 ## Compiles and runs all test
 .PHONY: tests
 test: tests
@@ -204,6 +236,7 @@ examples/clean: BRIEF_ARGS = clean (examples)
 examples/clean:
 	$(MAKE) -C examples/hello-world clean
 
+clean: man/clean
 clean: tests/clean
 clean: examples/clean
 clean:

@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/socketsupply/libopc#readme",
   "devDependencies": {
+    "marked-man": "^0.7.0",
     "tap-parser": "^11.0.1"
   }
 }

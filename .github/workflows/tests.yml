@@ -14,7 +14,7 @@ jobs:
         sudo apt install -qq libcurl4-gnutls-dev
     - name: Run Tests
       run: |
-        make clean test NO_VALGRIND=1 NO_BRIEF=1
+        make clean tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
 
   macos:
     name: macOS
@@ -29,5 +29,4 @@ jobs:
     - name: Run Tests
       run: |
         npm install
-        make libopc.dylib build/include/opc NO_BRIEF=1
-        make -C tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        make clean tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
