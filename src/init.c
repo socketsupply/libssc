@@ -41,12 +41,18 @@ opc_init_state () {
 }
 
 void
-opc_init (const int argc, const char **argv) {
+opc_init_library (
+  void *stdin_stream,
+  void *stdout_stream,
+  void *stderr_stream,
+  const int argc,
+  const char **argv
+) {
   if (init_state == OPC_INIT_NONE) {
     init_state = OPC_INIT_PENDING;
     init_argc = argc;
     init_argv = argv;
-    opc_log_set_file_stream_pointer(stderr);
+    opc_log_set_file_stream_pointer(stderr_stream);
     init_state = OPC_INIT_READY;
   }
 }

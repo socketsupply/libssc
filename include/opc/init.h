@@ -46,35 +46,61 @@ typedef enum {
 } OPCInitState;
 
 /**
- * @TODO
+ * An alias to `opc_init_argc()`.
  */
 #define opc_argc opc_init_argc
 
 /**
- * @TODO
+ * An alias to `opc_init_argv()`.
  */
 #define opc_argv opc_init_argv
 
 /**
- * @TODO
+ * Initializes the `libopc` library with command line arguments suitable for
+ * custom configuration provided by the shell caller. The default `stdin`,
+ * `stdout`, and `stderr` file stream pointers are used. Callers who want to use
+ * custom file stream pointers should call `opc_init_library()` directly
+ * instead.
+ * @param argc The argument count as given to `main()`
+ * @param argv The argument vector pointer as given to `main()`
  */
-OPC_EXPORT void
-opc_init (int argc, const char **argv);
+#define opc_init(argc, argv) opc_init_library(stdin, stdout, stderr, argc, argv)
 
 /**
- * @TODO
+ * Initializes the `libopc` library with command line arguments suitable for
+ * custom configuration provided by the shell caller.
+ * @param stdin_stream The stdin stream pointer
+ * @param stdout_stream The stdout stream pointer
+ * @param stderr_stream The stdout stream pointer
+ * @param argc The argument count as given to `main()`
+ * @param argv The argument vector pointer as given to `main()`
+ */
+OPC_EXPORT void
+opc_init_library (
+  void *stdin_stream,
+  void *stdout_stream,
+  void *stderr_stream,
+  const int argc,
+  const char **argv
+);
+
+/**
+ * Returns the current library initialization state.
+ * @return The current initialization state
  */
 OPC_EXPORT OPCInitState
 opc_init_state ();
 
 /**
- * @TODO
+ * Returns the initialized argument count given to `opc_init()`.
+ * @return The argument count
  */
-int
+const int
 opc_init_argc ();
 
 /**
- * @TODO
+ * Returns the initialized arguments vector pointer given to `opc_init()`.
+ * @return A pointer to the argument vector
  */
 const char **
 opc_init_argv ();

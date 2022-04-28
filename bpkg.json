@@ -5,6 +5,7 @@
   "license": "MIT",
   "description": "Operator Framework client library written in C99.",
   "commands": {
+    "generate-man-template": "./scripts/generate-man-template.sh $@",
     "update-manifests": "./scripts/update-manifest-files.sh",
     "print-version": "./scripts/version.sh",
     "shellcheck": "command shellcheck scripts/*.sh",
@@ -52,6 +53,7 @@
     "scripts/version.ps1"
   ],
   "dependencies": {
-    "jwerle/brief.mk": "0.1.0"
+    "jwerle/brief.mk": "0.1.0",
+    "jwerle/mush": "0.1.0"
   }
 }

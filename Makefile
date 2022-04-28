@@ -215,7 +215,7 @@ man/clean:
 $(MAN_TARGETS): $(MARKEDMAN_BIN)
 $(MAN_TARGETS): $(MAN_SOURCES)
 	@rm -f $@
-	$(MAN) $^ > $@
+	$(MAN) $@.md > $@
 
 ## Compiles and runs all test
 .PHONY: tests
