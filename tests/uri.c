@@ -52,9 +52,9 @@ test("uri", 0) {
   OPCBuffer input = opc_buffer_slice(memory, output.size, source_size);
 
   // write source to input buffer
-  opc_log_info("%d", input.size);
-  opc_log_info("%d\n", opc_buffer_write_string(&input, source, 0));
-  //assert(opc_buffer_write_string(&input, source, 0) > 0);
+  //opc_log_info("%d", input.size);
+  //opc_log_info("%d\n", opc_buffer_write_string(&input, source, 0));
+  assert(opc_buffer_write_string(&input, source, 0) > 0);
 
   // verify successful encode of input into output
   assert_ok(opc_uri_component_encode(&output, input));

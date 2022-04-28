@@ -249,9 +249,9 @@ okdone (void) {
  */
 #define assert(condition, ...)                                                 \
   if ((condition)) {                                                           \
-    ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
+    ok("%s", OPC_PP_STRINGX(condition));                                       \
   } else {                                                                     \
-    notok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                           \
+    notok("%s", OPC_PP_STRINGX(condition));                                    \
   }
 
 /**

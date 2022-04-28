@@ -48,6 +48,16 @@ typedef enum {
 /**
  * @TODO
  */
+#define opc_argc opc_init_argc
+
+/**
+ * @TODO
+ */
+#define opc_argv opc_init_argv
+
+/**
+ * @TODO
+ */
 OPC_EXPORT void
 opc_init (int argc, const char **argv);
 

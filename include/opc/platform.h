@@ -125,16 +125,6 @@
 /**
  * @TODO
  */
-#define opc_argc opc_init_argc
-
-/**
- * @TODO
- */
-#define opc_argv opc_init_argv
-
-/**
- * @TODO
- */
 #define opc_bytes(value) (OPCBytes) (value)
 
 /**
@@ -178,5 +168,13 @@ typedef enum {
   OPC_FALSE = 0,
   OPC_TRUE = 1
 } OPCBoolean;
+
+/**
+ * @TODO
+ */
+typedef enum {
+  OPC_OFF = 0,
+  OPC_ON = 1
+} OPCBit;
 
 #endif

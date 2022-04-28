@@ -55,9 +55,100 @@ The following outlines indentation requirements for files in the project:
 
 ### Naming Conventions
 
-> TODO
+This section describes various naming conventions used in `libopc`.
+
+#### Namespacing
+
+All types, structs, functions, variables, and macros exported for public
+usage should be namespaced with `opc_`, `OPC`, or `OPC_` depending on
+the defined interface.
+
+#### Types
+
+All exported types should be
+[PascalCamelCase](https://en.wikipedia.org/wiki/Camel_case) and
+prefixed with the `OPC` namespace.
+
+**Example:**
+
+```c
+typedef unsigned char * OPCByte
+```
+
+#### Structs
+
+All exported structs should be
+[PascalCamelCase](https://en.wikipedia.org/wiki/Camel_case) and
+prefixed with the `OPC` namespace.
+
+**Example:**
+
+```c
+struct OPCBuffer {
+  OPCBytes bytes;
+  OPCUSize size;
+};
+```
+
+#### Functions
+
+All exported functions and preprocessor functions should be
+[snake_case](https://en.wikipedia.org/wiki/Snake_case) and prefixed with
+the `opc_` namespace.
+
+**Example:**
+
+```c
+#define opc_buffer(bytes) ((OPCBuffer) { (OPCBytes) (bytes), 0 })
+```
+
+```c
+OPC_EXPORT const OPCResult
+opc_buffer_compare (const OPCBuffer self, const OPCBuffer right);
+```
+
+#### Variables
+
+All globally (`static`) exported, externally (`extern`) linked, or
+preprocessor macro variables should be
+[snake_case](https://en.wikipedia.org/wiki/Snake_case) and prefixed with the
+`opc_` namespace.
+
+**Example:**
+
+```c
+static OPCBoolean opc_some_boolean = OPC_FALSE;
+```
+
+```c
+extern OPCString *opc_some_extern_string = 0;
+
+
+```c
+#define opc_argc opc_init_argc
+#define opc_argv opc_init_argv
+```
+
+#### Preprocessor Macros
+
+All preprocessor macros should be
+[SCREAMING_SNAKE_CASE](https://en.wikipedia.org/wiki/Snake_case) and prefixed
+with the `OPC_` namespace.
+
+**Example:**
+
+```c
+#define OPC_VSNPRINTF vsnprintf
+```
+
+```c
+#define OPC_PP_STRING(value) OPC_PP_STRINGX(value)
+#define OPC_PP_STRINGX(value) #value
+```
 
 ## 4. Development
+
+> TODO
 
 ## 5. Tests
 
@@ -66,6 +157,38 @@ Tests are single context executables that emit
 [`<opc/test.h>`](../include/opc/test.h) header file that provides
 various macros and functions for making assertions that output TAP
 compliant logs.
+
+### Running Tests
+
+The runner for each test can be invoke with a `make` target from the
+root of the repository.
+
+```sh
+make tests/$TARGET
+```
+
+where `$TARGET` is the test to run which corresponds to a single `.c`
+file in the `tests/` directory.
+
+**Example:**
+
+_Run `string` and `uri` tests:_
+
+```sh
+make tests/string tests/uri
+```
+
+_Run many tests with brace expansion:_
+
+```sh
+make tests/{string,ipc,uri,error}
+```
+
+_All tests can be run by simply invoking:_
+
+```sh
+make tests
+```
 
 ### `<opc/test.h>` API
 
