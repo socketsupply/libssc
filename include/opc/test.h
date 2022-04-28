@@ -62,9 +62,11 @@ ok (const char *format, ...) {
   }
 
   ok_passed++;
-  printf("ok %d - ", ++ok_count);
-  vprintf(format, args);
-  printf("\n");
+
+  OPC_PRINTF("ok %d - ", ++ok_count);
+  OPC_VPRINTF(format, args);
+  OPC_PRINTF("\n");
+
   va_end(args);
 }
 
@@ -81,9 +83,10 @@ notok (const char *format, ...) {
     format = (const char *) "";
   }
 
-  printf("not ok %d - ", ++ok_count);
-  vprintf(format, args);
-  printf("\n");
+  OPC_PRINTF("not ok %d - ", ++ok_count);
+  OPC_VPRINTF(format, args);
+  OPC_PRINTF("\n");
+
   va_end(args);
 }
 
@@ -100,10 +103,11 @@ okskip (const char *format, ...) {
     format = (const char *) "";
   }
 
-  printf("ok %d - ", ++ok_count);
-  vprintf(format, args);
-  printf(" #SKIP");
-  printf("\n");
+  OPC_PRINTF("ok %d - ", ++ok_count);
+  OPC_VPRINTF(format, args);
+  OPC_PRINTF(" #SKIP");
+  OPC_PRINTF("\n");
+
   va_end(args);
 }
 
@@ -120,10 +124,11 @@ notokskip (const char *format, ...) {
     format = (const char *) "";
   }
 
-  printf("not ok %d - ", ++ok_count);
-  vprintf(format, args);
-  printf(" #SKIP");
-  printf("\n");
+  OPC_PRINTF("not ok %d - ", ++ok_count);
+  OPC_VPRINTF(format, args);
+  OPC_PRINTF(" #SKIP");
+  OPC_PRINTF("\n");
+
   va_end(args);
 }
 
@@ -140,13 +145,13 @@ oktodo (const char *format, ...) {
     format = (const char *) "";
   }
 
-  printf("ok %d - ", ++ok_count);
-  vprintf(format, args);
-  printf(" #TODO");
-  printf("\n");
+  OPC_PRINTF("ok %d - ", ++ok_count);
+  OPC_VPRINTF(format, args);
+  OPC_PRINTF(" #TODO");
+  OPC_PRINTF("\n");
+
   va_end(args);
 }
-
 
 /**
  * Simple skipped `notok()` with '#TODO' emission for a pending test.
@@ -161,10 +166,11 @@ notoktodo (const char *format, ...) {
     format = (const char *) "";
   }
 
-  printf("not ok %d - ", ++ok_count);
-  vprintf(format, args);
-  printf(" #TODO");
-  printf("\n");
+  OPC_PRINTF("not ok %d - ", ++ok_count);
+  OPC_VPRINTF(format, args);
+  OPC_PRINTF(" #TODO");
+  OPC_PRINTF("\n");
+
   va_end(args);
 }
 
@@ -176,9 +182,9 @@ okdone (void) {
   int rc = 0;
   if (0 != ok_expected && ok_passed != ok_expected) {
     if (ok_expected > ok_passed) {
-      fprintf(stderr, "expected number of success conditions not met.\n");
+      OPC_FPRINTF(stderr, "expected number of success conditions not met.\n");
     } else {
-      fprintf(
+      OPC_FPRINTF(
         stderr,
         "expected number of success conditions is less than the "
         "number of given success conditions.\n"
@@ -189,14 +195,14 @@ okdone (void) {
   }
 
   if (ok_expected == 0) {
-    printf("1..%d\n", ok_count);
+    OPC_PRINTF("1..%d\n", ok_count);
   }
 
-  printf("# tests %d\n", ok_count);
-  printf("# fail %d\n", ok_count - ok_passed);
-  printf("# pass %d\n", ok_passed);
+  OPC_PRINTF("# tests %d\n", ok_count);
+  OPC_PRINTF("# fail %d\n", ok_count - ok_passed);
+  OPC_PRINTF("# pass %d\n", ok_passed);
 
-  exit(rc);
+  OPC_EXIT(rc);
 }
 
 /**
@@ -211,10 +217,10 @@ okdone (void) {
   );                                                                           \
   int main(const int argc, const char **argv) {                                \
     opc_init(argc, argv);                                                      \
-    printf("TAP version 14\n");                                                \
-    printf("# %s\n", test_name);                                               \
+    OPC_PRINTF("TAP version 14\n");                                            \
+    OPC_PRINTF("# %s\n", test_name);                                           \
     if (expected_pass_count > 0) {                                             \
-      printf("1..%d\n", expected_pass_count);                                  \
+      OPC_PRINTF("1..%d\n", expected_pass_count);                              \
       ok_expected = expected_pass_count;                                       \
     }                                                                          \
     runner(test_name, expected_pass_count);                                    \
@@ -235,9 +241,9 @@ okdone (void) {
     const char *_test_name, const unsigned int _expected_pass_count            \
   );                                                                           \
   int main(void) {                                                             \
-    printf("TAP version 14\n");                                                \
-    printf("# %s\n", test_name);                                               \
-    printf("1..0\n");                                                          \
+    OPC_PRINTF("TAP version 14\n");                                            \
+    OPC_PRINTF("# %s\n", test_name);                                           \
+    OPC_PRINTF("1..0\n");                                                      \
     return 0;                                                                  \
   }                                                                            \
   void runner(const char *_test_name, const unsigned int _expected_pass_count)
@@ -270,13 +276,13 @@ okdone (void) {
         opc_callsite_function_name(),                                          \
         opc_callsite_file_location()                                           \
       );                                                                       \
-      printf("  ---\n");                                                       \
-      printf("  message: (%s): %s\n", err.function, err.message);              \
-      printf("  severity: fail\n");                                            \
-      printf("  at:\n");                                                       \
-      printf("    file: %s\n", err.location);                                  \
-      printf("    line: %llu\n", err.line);                                    \
-      printf("  ---\n");                                                       \
+      OPC_PRINTF("  ---\n");                                                   \
+      OPC_PRINTF("  message: (%s): %s\n", err.function, err.message);          \
+      OPC_PRINTF("  severity: fail\n");                                        \
+      OPC_PRINTF("  at:\n");                                                   \
+      OPC_PRINTF("    file: %s\n", err.location);                              \
+      OPC_PRINTF("    line: %llu\n", err.line);                                \
+      OPC_PRINTF("  ---\n");                                                   \
     }                                                                          \
   }
 
@@ -296,13 +302,13 @@ okdone (void) {
         opc_callsite_function_name(),                                          \
         opc_callsite_file_location()                                           \
       );                                                                       \
-      printf("  ---\n");                                                       \
-      printf("  message: (%s): %s\n", err.function, err.message);              \
-      printf("  severity: fail\n");                                            \
-      printf("  at:\n");                                                       \
-      printf("    file: %s\n", err.location);                                  \
-      printf("    line: %llu\n", err.line);                                    \
-      printf("  ---\n");                                                       \
+      OPC_PRINTF("  ---\n");                                                   \
+      OPC_PRINTF("  message: (%s): %s\n", err.function, err.message);          \
+      OPC_PRINTF("  severity: fail\n");                                        \
+      OPC_PRINTF("  at:\n");                                                   \
+      OPC_PRINTF("    file: %s\n", err.location);                              \
+      OPC_PRINTF("    line: %llu\n", err.line);                                \
+      OPC_PRINTF("  ---\n");                                                   \
     }                                                                          \
   }
 

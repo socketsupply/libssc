@@ -69,6 +69,14 @@
 /**
  * @TODO
  */
+#ifndef OPC_EXIT
+#  include <stdlib.h>
+#  define OPC_EXIT exit
+#endif
+
+/**
+ * @TODO
+ */
 #ifndef OPC_PRINTF
 #  include <stdio.h>
 #  define OPC_PRINTF printf
@@ -96,6 +104,14 @@
 #ifndef OPC_SNPRINTF
 #  include <stdio.h>
 #  define OPC_SNPRINTF snprintf
+#endif
+
+/**
+ * @TODO
+ */
+#ifndef OPC_VPRINTF
+#  include <stdarg.h>
+#  define OPC_VPRINTF vprintf
 #endif
 
 /**

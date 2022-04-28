@@ -32,6 +32,4 @@
 #include <opc/test.h>
 
 test("error", 0) {
-  assert_notok(opc_throw(OPC_ERROR, "oops"));
-  assert_notok(opc_ok());
 }
