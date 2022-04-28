@@ -32,6 +32,8 @@
 
 dirname="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 root="$(realpath "$dirname"/..)"
+
+scripts=()
 files=()
 src=()
 
@@ -40,6 +42,11 @@ src+=($("$(which ls)" "$root"/include/**/*.h))
 # shellcheck disable=SC2207
 src+=($("$(which ls)" "$root"/src/*.c))
 
+# shellcheck disable=SC2207
+scripts+=($("$(which ls)" "$root"/scripts/*.sh))
+# shellcheck disable=SC2207
+scripts+=($("$(which ls)" "$root"/scripts/*.ps1))
+
 for src in "${src[@]}"; do
   files+=("\"${src/$root\//}\"")
 done
@@ -47,7 +54,17 @@ done
 files_for_json="$(echo "${files[@]}" | sed 's/ /, /g' | sort)"
 
 jq ".files |= [$files_for_json]" bpkg.json > bpkg.json.tmp
-jq ".src |= [$files_for_json]" clib.json > clib.json.tmp
-
 mv bpkg.json.tmp "$root/bpkg.json"
+
+jq ".src |= [$files_for_json]" clib.json > clib.json.tmp
 mv clib.json.tmp "$root/clib.json"
+
+files=()
+for script in "${scripts[@]}"; do
+  files+=("\"${script/$root\//}\"")
+done
+
+scripts_for_json="$(echo "${files[@]}" | sed 's/ /, /g' | sort)"
+
+jq ".scripts |= [$scripts_for_json]" bpkg.json > bpkg.json.tmp
+mv bpkg.json.tmp "$root/bpkg.json"
