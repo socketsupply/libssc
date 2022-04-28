@@ -122,6 +122,7 @@ static OPCBoolean opc_some_boolean = OPC_FALSE;
 
 ```c
 extern OPCString *opc_some_extern_string = 0;
+```
 
 
 ```c
