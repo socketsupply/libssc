@@ -49,11 +49,9 @@ test("uri", 0) {
 
   OPCBuffer memory = opc_buffer_from(stack);
   OPCBuffer output = opc_buffer_slice(memory, 0, expected_size);
-  OPCBuffer input = opc_buffer_slice(memory, output.size, source_size);
+  OPCBuffer input = opc_buffer_slice(memory, output.size + 1, output.size + source_size + 1);
 
   // write source to input buffer
-  //opc_log_info("%d", input.size);
-  //opc_log_info("%d\n", opc_buffer_write_string(&input, source, 0));
   assert(opc_buffer_write_string(&input, source, 0) > 0);
 
   // verify successful encode of input into output
@@ -62,11 +60,10 @@ test("uri", 0) {
   // verify output buffer matches expected
   assert_ok(opc_buffer_compare(output, opc_buffer_from_string(expected)));
 
-  opc_log_info("%s", opc_string(output.bytes));
-
   // control
   assert(
-    0 == strncmp(opc_string(output.bytes), EXPECTED_STRING, sizeof(EXPECTED_STRING))
+    0 ==
+    strncmp(opc_string(output.bytes), EXPECTED_STRING, sizeof(EXPECTED_STRING))
   );
 
   // verify encoded output was decoded and equal to input

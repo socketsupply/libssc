@@ -34,7 +34,7 @@
 OPCBuffer
 opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end) {
   OPCUSize size = opc_math_uclamp(end - start, 0, self.size);
-  OPCUSize offset = opc_math_uclamp(start, 0, self.size);
+  OPCUSize offset = opc_math_uclamp(start, 0, self.size - size);
   OPCString bytes = self.bytes + offset;
 
   return (OPCBuffer) { bytes, size };

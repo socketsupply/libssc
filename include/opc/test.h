@@ -277,11 +277,11 @@ okdone (void) {
         opc_callsite_file_location()                                           \
       );                                                                       \
       OPC_PRINTF("  ---\n");                                                   \
-      OPC_PRINTF("  message: (%s): %s\n", err.function, err.message);          \
+      OPC_PRINTF("  message: %s\n", err.string);                               \
       OPC_PRINTF("  severity: fail\n");                                        \
       OPC_PRINTF("  at:\n");                                                   \
-      OPC_PRINTF("    file: %s\n", err.location);                              \
-      OPC_PRINTF("    line: %llu\n", err.line);                                \
+      OPC_PRINTF("    file: %s\n", __FILE__);                                  \
+      OPC_PRINTF("    line: %d\n", __LINE__);                                  \
       OPC_PRINTF("  ---\n");                                                   \
     }                                                                          \
   }
@@ -303,11 +303,11 @@ okdone (void) {
         opc_callsite_file_location()                                           \
       );                                                                       \
       OPC_PRINTF("  ---\n");                                                   \
-      OPC_PRINTF("  message: (%s): %s\n", err.function, err.message);          \
+      OPC_PRINTF("  message: %s\n", err.string);                               \
       OPC_PRINTF("  severity: fail\n");                                        \
       OPC_PRINTF("  at:\n");                                                   \
-      OPC_PRINTF("    file: %s\n", err.location);                              \
-      OPC_PRINTF("    line: %llu\n", err.line);                                \
+      OPC_PRINTF("    file: %s\n", __FILE__);                                  \
+      OPC_PRINTF("    line: %d\n", __LINE__);                                  \
       OPC_PRINTF("  ---\n");                                                   \
     }                                                                          \
   }
