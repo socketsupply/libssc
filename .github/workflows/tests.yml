@@ -14,6 +14,7 @@ jobs:
         sudo apt install -qq libcurl4-gnutls-dev
     - name: Run Tests
       run: |
+        npm install
         make clean tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
 
   macos:
