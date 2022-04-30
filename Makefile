@@ -219,7 +219,7 @@ $(MAN_TARGETS): $(MAN_SOURCES)
 test: tests
 tests: $(TEST_TARGETS)
 
-$(TEST_TARGETS): $(STATIC) $(BUILD_INCLUDE)/$(LIBRARY_NAME) $(TEST_SOURCES)
+$(TEST_TARGETS): build $(TEST_SOURCES)
 	@$(MAKE) -B -C tests `basename $@`
 
 ## Cleans test directory
