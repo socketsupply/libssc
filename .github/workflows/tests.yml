@@ -12,11 +12,13 @@ jobs:
       shell: bash
       run: |
         sudo apt update -y
-        sudo apt install -y -qq libcurl4-openssl-dev
+        sudo apt install -y -qq curl cpplint libcurl4-openssl-dev
     - name: Run Tests
       run: |
         npm install
         make clean tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        curl -Lo- get.bpkg.sh | bash
+        bpkg run lint
 
   macos:
     name: macOS
@@ -27,8 +29,10 @@ jobs:
     - name: System Setup
       shell: bash
       run: |
-        : # noop
+        brew install openssl curl cpplint
     - name: Run Tests
       run: |
         npm install
         make clean tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        curl -Lo- get.bpkg.sh | bash
+        bpkg run lint
