@@ -128,17 +128,17 @@ opc_log_set_level (const OPCLogLevel level) {
   log_level = level;
 }
 
-OPCLogLevel
+const OPCLogLevel
 opc_log_get_level () {
   return log_level;
 }
 
-OPCString
+const OPCString
 opc_log_get_level_string () {
   return log_level_strings[log_level];
 }
 
-OPCString
+const OPCString
 opc_log_get_level_name () {
   return log_level_strings[log_level];
 }

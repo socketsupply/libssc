@@ -34,7 +34,10 @@ OS = $(shell uname)
 CWD = $(shell pwd)
 
 ## Commands
-CC ?= clang
+ifneq ($(shell which clang 2>/dev/null),)
+CC = clang
+endif
+
 CP = cp -rf
 LN ?= ln -sf
 RM = rm -rf
@@ -61,9 +64,13 @@ LIBRARY_VERSION_PATCH = 0
 LIBRARY_VERSION_REVISION = $(shell scripts/version.sh)
 LIBRARY_DATE_COMPILED := $(shell date)
 
+## Dependencies
+DEPS += $(wildcard deps/flag/*.c)
+
 ## Targets
 SRC += $(wildcard src/**/*.c)
 SRC += $(wildcard src/*.c)
+SRC += $(DEPS)
 OBJS := $(SRC:.c=.o)
 HEADERS += $(wildcard include/**/*.h)
 

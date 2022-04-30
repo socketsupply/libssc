@@ -49,7 +49,9 @@
  * @TODO
  */
 #ifndef _WIN32
-#  define _POSIX_C_SOURCE 1
+#  ifndef _POSIX_C_SOURCE
+#    define _POSIX_C_SOURCE 1
+#  endif
 #endif
 
 /**

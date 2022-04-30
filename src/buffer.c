@@ -35,12 +35,12 @@ OPCBuffer
 opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end) {
   OPCUSize size = opc_math_uclamp(end - start, 0, self.size);
   OPCUSize offset = opc_math_uclamp(start, 0, self.size - size);
-  OPCString bytes = self.bytes + offset;
+  OPCBytes bytes = self.bytes + offset;
 
   return (OPCBuffer) { bytes, size };
 }
 
-OPCResult
+const OPCResult
 opc_buffer_compare (const OPCBuffer self, const OPCBuffer right) {
   return opc_string_compare_with_size(
     opc_string(self.bytes),
@@ -50,7 +50,7 @@ opc_buffer_compare (const OPCBuffer self, const OPCBuffer right) {
   );
 }
 
-OPCUSize
+const OPCUSize
 opc_buffer_write (
   OPCBuffer *self,
   const OPCBytes bytes,
@@ -70,7 +70,7 @@ opc_buffer_write (
   return written;
 }
 
-OPCUSize
+const OPCUSize
 opc_buffer_write_string (
   OPCBuffer *self,
   const OPCString string,

@@ -152,9 +152,9 @@ opc_error_catch (OPCError *error) {
     error->line = global_error.line;
     error->code = global_error.code;
     error->string = opc_string(error->bytes);
-    error->message = buffer.bytes + global_error.meta.header_size;
-    error->location = buffer.bytes + OPC_ERROR_LOCATION_BYTES_OFFSET;
-    error->function = buffer.bytes + OPC_ERROR_FUNCTION_BYTES_OFFSET;
+    error->message = opc_string(buffer.bytes + global_error.meta.header_size);
+    error->location = opc_string(buffer.bytes + OPC_ERROR_LOCATION_BYTES_OFFSET);
+    error->function = opc_string(buffer.bytes + OPC_ERROR_FUNCTION_BYTES_OFFSET);
   }
 
   opc_error_reset();
@@ -165,7 +165,7 @@ void
 opc_error_reset () {
   global_error.code = OPC_OK;
   global_error.line = 0;
-  global_error.string = global_error.bytes;
+  global_error.string = opc_string(global_error.bytes);
   global_error.message = "";
   global_error.function = "unknown";
   global_error.location = "unknown";
