@@ -10,7 +10,6 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v1
     - uses: actions/setup-node@v3
-    - run: pip install cpplint
     - name: System Setup
       shell: bash
       run: |
@@ -19,7 +18,8 @@ jobs:
     - name: Run Tests
       run: |
         npm install
-        make clean tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        pip install cpplint
+        make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
         curl -Lo- get.bpkg.sh | bash
         bpkg run lint
 
@@ -30,7 +30,6 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
     - uses: actions/setup-python@v1
-    - run: pip install cpplint
     - name: System Setup
       shell: bash
       run: |
@@ -38,7 +37,8 @@ jobs:
     - name: Run Tests
       run: |
         npm install
-        make clean tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        pip install cpplint
+        make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
         export PRFEFIX=/usr/local
         curl -Lo- get.bpkg.sh | bash
         bpkg run lint

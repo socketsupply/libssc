@@ -74,9 +74,9 @@ $(TARGETS): $(SRC) $(LIBRARY_SOURCES) Makefile
 	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS)
 	@echo
 ifdef VALIDATE_WITH_TAP_PARSER
-	@{ $(VALGRIND) ./$@ | ../node_modules/.bin/tap-parser --tap; } || { rm -rf $@ && false; }
+	@{ $(VALGRIND) ./$@ | ../node_modules/.bin/tap-parser --tap; } || { rm -rf $@ && exit 1; }
 else
-	@{ $(VALGRIND) ./$@; } || { rm -rf $@ && false; }
+	@{ $(VALGRIND) ./$@; } || { rm -rf $@ && exit 1; }
 endif
 
 .PHONY: clean
