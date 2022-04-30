@@ -170,6 +170,8 @@ opc_log (
 #ifdef __ANDROID__
 #  error TODO
 #else
-  LOG(location, line, function, log_level_formats[level], log_level_names[level]);
+  LOG(
+    location, line, function, log_level_formats[level], log_level_names[level]
+  );
 #endif
 }

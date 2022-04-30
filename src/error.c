@@ -153,8 +153,10 @@ opc_error_catch (OPCError *error) {
     error->code = global_error.code;
     error->string = opc_string(error->bytes);
     error->message = opc_string(buffer.bytes + global_error.meta.header_size);
-    error->location = opc_string(buffer.bytes + OPC_ERROR_LOCATION_BYTES_OFFSET);
-    error->function = opc_string(buffer.bytes + OPC_ERROR_FUNCTION_BYTES_OFFSET);
+    error->location =
+      opc_string(buffer.bytes + OPC_ERROR_LOCATION_BYTES_OFFSET);
+    error->function =
+      opc_string(buffer.bytes + OPC_ERROR_FUNCTION_BYTES_OFFSET);
   }
 
   opc_error_reset();

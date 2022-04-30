@@ -43,7 +43,7 @@ typedef struct OPCBuffer OPCBuffer;
 struct OPCBuffer {
   OPCBytes bytes;
   OPCUSize size;
-  const OPCBytes parent;
+  OPCBytes parent;
   OPCUSize offset;
 };
 
@@ -53,19 +53,17 @@ struct OPCBuffer {
  * @param bytes Bytes pointer
  * @param [size = 0] Optional size of byets
  * @param [parent = 0] Optional parent to bytes
+ * @param [offset = 0] Optional byte offset in parent bytes
  * @return An `OPCBuffer` structure
  */
 #define opc_buffer(bytes, ...)                                                 \
-  ((OPCBuffer) { (OPCBytes) (bytes), ##__VA_ARGS__ })
-
-/**
- * Converts `bytes` to a suitable `OPCBuffer` bytes
- * @param bytes Bytes pointer
- * @param [size = 0] Optional size of byets
- * @param [parent = 0] Optional parent to bytes
- * @return An `OPCBuffer` structure
- */
-#define opc_buffer_bytes(bytes, ...) opc_bytes(bytes, ##__VA_ARGS__)
+  (OPCBuffer)({                                                                \
+    OPCBuffer buf = { (OPCBytes) (bytes), ##__VA_ARGS__ };                     \
+    if (!buf.size) {                                                           \
+      buf.size = sizeof((bytes));                                              \
+    }                                                                          \
+    (buf);                                                                     \
+  })
 
 /**
  * Converts static `value` to an `OPCBuffer` with `size` computed statically.
@@ -82,16 +80,6 @@ struct OPCBuffer {
 #define opc_buffer_from_string(string)                                         \
   ((OPCBuffer) { (OPCBytes) (string), opc_string_size((char *) (string)), 0 })
 
-/**
- * Converts `bytes` to an `OPCBuffer` with required `size` and optional `parent`
- * properties.
- * @param bytes Bytes pointer
- * @param size  Size of byets
- * @param [parent = 0] Optional parent to bytes
- * @return An `OPCBuffer` structure
- */
-#define opc_buffer_from_bytes(bytes, size, ...)                                \
-  opc_buffer_bytes(bytes, size, ##__VA_ARGS__)
 
 /**
  * Prints a buffer to stdout.

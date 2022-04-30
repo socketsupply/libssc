@@ -69,9 +69,9 @@ detect (unsigned char x) {
   // special characters
   // clang-format off
   if (
-		'-' == x || '_' == x || '.' == x || '!' == x ||
-		'~' == x || '*' == x || '(' == x || ')' == x
-	) {
+    '-' == x || '_' == x || '.' == x || '!' == x ||
+    '~' == x || '*' == x || '(' == x || ')' == x
+  ) {
     // clang-format on
     return OPC_NOT_DETECTED;
   }

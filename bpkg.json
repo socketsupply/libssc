@@ -11,7 +11,7 @@
     "shellcheck": "command shellcheck scripts/*.sh",
     "format": "clang-format -i include/**/*.h src/*.c tests/*.c example/**/*.c",
     "indent": "indent -t2 -kr -nut src/**/*.c include/**/*.h",
-    "lint": "cpplint  include/**/*.h src/**/*.c"
+    "lint": "cpplint  include/**/*.h src/*.c"
   },
   "files": [
     "include/opc/buffer.h",

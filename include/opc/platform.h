@@ -32,6 +32,9 @@
 #ifndef OPC_PLATFORM_H
 #define OPC_PLATFORM_H
 
+#include <stdio.h>
+#include <stdarg.h>
+
 /**
  * Define `OPC_EXPORT` and `OPC_INLINE` macros
  */
@@ -84,7 +87,6 @@
  * Define `OPC_PRINTF` if compiler has not.
  */
 #ifndef OPC_PRINTF
-#  include <stdio.h>
 #  define OPC_PRINTF printf
 #endif
 
@@ -92,7 +94,6 @@
  * Define `OPC_FPRINTF` if compiler has not.
  */
 #ifndef OPC_FPRINTF
-#  include <stdio.h>
 #  define OPC_FPRINTF fprintf
 #endif
 
@@ -100,7 +101,6 @@
  * Define `OPC_SPRINTF` if compiler has not.
  */
 #ifndef OPC_SPRINTF
-#  include <stdio.h>
 #  define OPC_SPRINTF sprintf
 #endif
 
@@ -108,7 +108,6 @@
  * Define `OPC_SNPRINTF` if compiler has not.
  */
 #ifndef OPC_SNPRINTF
-#  include <stdio.h>
 #  define OPC_SNPRINTF snprintf
 #endif
 
@@ -116,7 +115,6 @@
  * Define `OPC_VPRINTF` if compiler has not.
  */
 #ifndef OPC_VPRINTF
-#  include <stdarg.h>
 #  define OPC_VPRINTF vprintf
 #endif
 
@@ -124,7 +122,6 @@
  * Define `OPC_VFPRINTF` if compiler has not.
  */
 #ifndef OPC_VFPRINTF
-#  include <stdarg.h>
 #  define OPC_VFPRINTF vfprintf
 #endif
 
@@ -132,7 +129,6 @@
  * Define `OPC_VSPRINTF` if compiler has not.
  */
 #ifndef OPC_VSPRINTF
-#  include <stdarg.h>
 #  define OPC_VSPRINTF vsprintf
 #endif
 
@@ -140,7 +136,6 @@
  * Define `OPC_VSNPRINTF` if compiler has not.
  */
 #ifndef OPC_VSNPRINTF
-#  include <stdarg.h>
 #  define OPC_VSNPRINTF vsnprintf
 #endif
 

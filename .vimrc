@@ -35,6 +35,7 @@ fun s:c()
   syn match     NatspecTag       /@author\>/ contained
   syn match     NatspecTag       /@notice\>/ contained
   syn match     NatspecTag       /@param\>/ contained
+  syn match     NatspecTag       /@prop\>/ contained
   syn match     NatspecTag       /@return\>/ contained
   syn match     NatspecTag       /@throws\>/ contained
   syn match     NatspecTag       /@returns\>/ contained

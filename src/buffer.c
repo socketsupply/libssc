@@ -37,7 +37,7 @@ opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end) {
   OPCUSize offset = opc_math_uclamp(start, 0, self.size - size);
   OPCBytes bytes = self.bytes + offset;
 
-  return (OPCBuffer) { bytes, size, (const OPCBytes) (self.bytes), offset };
+  return opc_buffer(bytes, size, self.bytes, offset);
 }
 
 const OPCResult
@@ -77,7 +77,7 @@ opc_buffer_write_string (
   const OPCUSize offset
 ) {
   OPCUSize size = opc_string_size(string);
-  return opc_buffer_write(self, opc_buffer_bytes(string), offset, size);
+  return opc_buffer_write(self, opc_bytes(string), offset, size);
 }
 
 const OPCUSize
@@ -115,7 +115,7 @@ opc_buffer_fill (
     );
   }
 
-  if (end > self->size) {
+  if (end >= 0 && end > self->size) {
     return opc_throw(
       OPC_OUT_OF_BOUNDS, "End offset cannot be larger than output buffer size."
     );
