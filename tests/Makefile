@@ -47,7 +47,6 @@ CFLAGS += -Werror
 CFLAGS += -I ../build/include -I ../deps
 CFLAGS += -L $(BUILD_LIBRARY_PATH)
 CFLAGS += -l opc
-CFLAGS += -O0
 
 ifeq (Darwin, $(shell uname))
   CFLAGS += -framework Foundation
