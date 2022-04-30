@@ -8,11 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-python@v1
+    - uses: actions/setup-node@v3
+    - run: pip install cpplint
     - name: System Setup
       shell: bash
       run: |
         sudo apt update -y
-        sudo apt install -y -qq curl cpplint libcurl4-openssl-dev
+        sudo apt install -y -qq curl libcurl4-openssl-dev
     - name: Run Tests
       run: |
         npm install
@@ -26,10 +29,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
+    - uses: actions/setup-python@v1
+    - run: pip install cpplint
     - name: System Setup
       shell: bash
       run: |
-        brew install openssl curl cpplint
+        brew install openssl curl
     - name: Run Tests
       run: |
         npm install
