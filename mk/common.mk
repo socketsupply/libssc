@@ -44,6 +44,7 @@ RM = rm -rf
 STRIP = strip
 MKDIR = mkdir -p
 _MKDIR = mkdir -p
+INSTALL = install
 ifneq ($(GCC),)
 CC = gcc
 else

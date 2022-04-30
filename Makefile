@@ -39,6 +39,8 @@ BRIEFC += MAN
 include ./mk/common.mk
 -include ./mk/brief.mk
 
+PREFIX ?= /usr/local
+
 ## Build configuration
 BUILD_DIRECTORY ?= build
 BUILD_INCLUDE ?= $(BUILD_DIRECTORY)/include
@@ -57,7 +59,7 @@ OBJS := $(SRC:.c=.o)
 HEADERS += $(wildcard include/**/*.h)
 
 ## Target headers
-TARGET_HEADERS = $(foreach target,$(HEADERS),$(BUILD_DIRECTORY)/$(target))
+HEADER_TARGETS = $(foreach target,$(HEADERS),$(BUILD_DIRECTORY)/$(target))
 
 ## Target static library
 STATIC := lib$(LIBRARY_NAME).a
@@ -66,8 +68,19 @@ DYLIB := lib$(LIBRARY_NAME).dylib
 SO := lib$(LIBRARY_NAME).so
 
 ## man 3 files
-MAN_SOURCES = $(wildcard man/*.md)
-MAN_TARGETS = $(foreach target,$(MAN_SOURCES:.md=),$(BUILD_DIRECTORY)/$(target))
+MAN3_SOURCES = $(wildcard man/man3/*.3.md)
+MAN3_TARGETS = $(foreach target,$(MAN3_SOURCES:.md=),$(BUILD_DIRECTORY)/man/man3/$(shell basename $(target)))
+
+LIBRARY_INSTALL_TARGETS += $(PREFIX)/lib/$(STATIC)
+LIBRARY_INSTALL_TARGETS += $(PREFIX)/lib/$(SOLIB)
+LIBRARY_INSTALL_TARGETS += $(PREFIX)/lib/$(SO)
+ifeq ($(OS), Darwin)
+LIBRARY_INSTALL_TARGETS += $(PREFIX)/lib/$(DYLIB)
+endif
+
+MAN3_INSTALL_TARGETS += $(foreach target,$(MAN3_TARGETS),$(PREFIX)/man/man3/$(shell basename $(target)))
+
+HEADER_INSTALL_TARGETS += $(foreach target,$(HEADER_TARGETS),$(PREFIX)/include/$(LIBRARY_NAME)/$(shell basename $(target)))
 
 ## Compiler
 CFLAGS += -std=c99
@@ -98,9 +111,17 @@ TEST_TARGETS = $(TEST_SOURCES:.c=)
 
 ## Macro to ensure build directory structure is in place
 define ENSURE_BUILD_DIRECTORY_STRUCTURE
-@mkdir -p $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME);
-@mkdir -p $(BUILD_DIRECTORY)/lib;
-@mkdir -p $(BUILD_DIRECTORY)/man;
+@test -d $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME) || mkdir -p $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME);
+@test -d $(BUILD_DIRECTORY)/lib || mkdir -p $(BUILD_DIRECTORY)/lib;
+@test -d $(BUILD_DIRECTORY)/man/man1 || mkdir -p $(BUILD_DIRECTORY)/man/man1;
+@test -d $(BUILD_DIRECTORY)/man/man3 || mkdir -p $(BUILD_DIRECTORY)/man/man3;
+endef
+
+define ENSURE_PREFIX_DIRECTORY_STRUCTURE
+@test -d $(PREFIX)/include/$(LIBRARY_NAME) || mkdir -p $(PREFIX)/include/$(LIBRARY_NAME);
+@test -d $(PREFIX)/lib || mkdir -p $(PREFIX)/lib;
+@test -d $(PREFIX)/man/man1 || mkdir -p $(PREFIX)/man/man1;
+@test -d $(PREFIX)/man/man3 || mkdir -p $(PREFIX)/man/man3;
 endef
 
 export PATH := $(CWD)/node_modules/.bin:$(PATH)
@@ -108,13 +129,40 @@ export PATH := $(CWD)/node_modules/.bin:$(PATH)
 default: build
 	@:
 
-install: build
+install: build install-headers install-library install-man
+install-headers: $(HEADER_INSTALL_TARGETS)
+install-library: $(LIBRARY_INSTALL_TARGETS)
+install-man: install-man3
+install-man3: $(MAN3_INSTALL_TARGETS)
 
-uninstall:
-	@echo "Not implemented"
+uninstall: uninstall-headers uninstall-library uninstall-man
+uninstall-headers: BRIEF_ARGS = $(PREFIX)/include/$(LIBRARY_NAME)
+uninstall-headers:
+	$(RM) $(PREFIX)/include/$(LIBRARY_NAME)
+
+uninstall-library: BRIEF_ARGS = $(PREFIX)/lib/{$(foreach target,$(LIBRARY_INSTALL_TARGETS),$(shell basename $(target)))}
+uninstall-library:
+	$(RM) $(LIBRARY_INSTALL_TARGETS)
+
+uninstall-man: uninstall-man3
+uninstall-man3: BRIEF_ARGS = $(PREFIX)/man/man3/{$(foreach target,$(MAN3_INSTALL_TARGETS),$(shell basename $(target)))}
+uninstall-man3:
+	$(RM) $(MAN3_INSTALL_TARGETS)
+
+$(HEADER_INSTALL_TARGETS): $(HEADER_TARGETS)
+	$(ENSURE_PREFIX_DIRECTORY_STRUCTURE)
+	$(CP) $(subst $(PREFIX),$(BUILD_DIRECTORY),$@) $@
+
+$(LIBRARY_INSTALL_TARGETS): $(LIBRARY_TARGETS)
+	$(ENSURE_PREFIX_DIRECTORY_STRUCTURE)
+	$(INSTALL) -b $(subst $(PREFIX),$(BUILD_DIRECTORY),$@) $@
+
+$(MAN3_INSTALL_TARGETS): $(MAN3_TARGETS)
+	$(ENSURE_PREFIX_DIRECTORY_STRUCTURE)
+	$(CP) $(subst $(PREFIX),$(BUILD_DIRECTORY),$@) $@
 
 ## All build dependencies
-build: $(OBJS)
+build: $(OBJS) $(HEADER_TARGETS)
 build: build/lib
 build: build/man
 
@@ -128,7 +176,7 @@ build/lib: $(DYLIB)
 endif
 
 ## Build man pages
-build/man: $(MAN_TARGETS)
+build/man: $(MAN3_TARGETS)
 
 ## Install nodejs modules for tooling
 node_modules:
@@ -151,11 +199,11 @@ $(BUILD_LIB)/$(STATIC): $(OBJS)
 
 ## Copies header files
 .PHONY: $(BUILD_INCLUDE)/$(LIBRARY_NAME)
-$(BUILD_INCLUDE)/$(LIBRARY_NAME): $(TARGET_HEADERS)
+$(BUILD_INCLUDE)/$(LIBRARY_NAME): $(HEADER_TARGETS)
 
-$(TARGET_HEADERS): $(HEADERS)
+$(HEADER_TARGETS): $(HEADERS)
 	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
-	$(CP) $(subst $(BUILD_DIRECTORY),".",$@) $@
+	$(CP) $(subst $(BUILD_DIRECTORY),.,$@) $@
 
 ## Builds a shared object
 .PHONY: $(SO)
@@ -199,25 +247,26 @@ $(BUILD_LIB)/$(DYLIB): $(OBJS)
 endif
 
 .PHONY: man
-man: $(MAN_TARGETS)
+man: $(MAN3_TARGETS)
 
 .PHONY: man/clean
 man/clean: BRIEF_ARGS = build/man
 man/clean:
-	$(RM) $(BUILD_DIRECTORY)/$(MAN_TARGETS)
+	$(RM) $(BUILD_DIRECTORY)/$(MAN3_TARGETS)
 
-$(MAN_TARGETS): $(MARKEDMAN_BIN)
-$(MAN_TARGETS): BRIEF_ARGS = $(BUILD_DIRECTORY)/$@
-$(MAN_TARGETS): $(MAN_SOURCES)
+$(MAN3_TARGETS): $(MARKEDMAN_BIN)
+$(MAN3_TARGETS): BRIEF_ARGS = $(BUILD_DIRECTORY)/$@
+$(MAN3_TARGETS): $(MAN3_SOURCES)
+	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
 	@rm -f $@
-	$(MAN) $(subst $(BUILD_DIRECTORY),".",$@).md > $@
+	$(MAN) $(subst $(BUILD_DIRECTORY),.,$@).md > $@
 
 ## Compiles and runs all test
 .PHONY: tests
 test: tests
 tests: $(TEST_TARGETS)
 
-$(TEST_TARGETS): build $(TEST_SOURCES)
+$(TEST_TARGETS): $(TEST_SOURCES) $(SRC) $(HEADERS) $(HEADER_TARGETS) tests/Makefile Makefile build
 	@$(MAKE) -B -C tests `basename $@`
 
 ## Cleans test directory

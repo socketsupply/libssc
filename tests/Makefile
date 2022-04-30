@@ -39,6 +39,10 @@ BUILD_LIBRARY_PATH = ../build/lib
 SRC += $(wildcard *.c)
 SRC += $(wildcard **/*.c)
 
+LIBRARY_SOURCES += $(wildcard ../build/include/**/*.h)
+LIBRARY_SOURCES += $(wildcard ../include/**/*.h)
+LIBRARY_SOURCES += $(wildcard ../src/*.c)
+
 ## test target names which is just the
 ## source file without the .c extension
 TARGETS = $(SRC:.c=)
@@ -65,7 +69,7 @@ export DYLD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 
 default: $(TARGETS)
 
-$(TARGETS): $(SRC)
+$(TARGETS): $(SRC) $(LIBRARY_SOURCES) Makefile
 	@echo
 	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS)
 	@echo

@@ -192,6 +192,8 @@ okdone (void) {
     }
 
     rc = 1;
+  } else if (ok_passed != ok_count) {
+    rc = 1;
   }
 
   if (ok_expected == 0) {
