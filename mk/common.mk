@@ -39,8 +39,12 @@ RM = rm -rf
 STRIP = strip
 MKDIR = mkdir -p
 _MKDIR = mkdir -p
+ifneq ($(GCC),)
+CC = gcc
+else
 ifneq ($(shell which clang 2>/dev/null),)
 CC = clang
+endif
 endif
 
 ifndef NO_VALGRIND

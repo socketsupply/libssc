@@ -33,10 +33,11 @@
 #define OPC_PLATFORM_H
 
 /**
- * @TODO
+ * Define `OPC_EXPORT` and `OPC_INLINE` macros
  */
 #if defined(_WIN32)
 #  define OPC_EXPORT __declspec(dllimport)
+#  define OPC_INLINE
 #elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR) >= 303
 #  define OPC_EXPORT __attribute__((visibility("default")))
 #  define OPC_INLINE inline
@@ -46,30 +47,33 @@
 #endif
 
 /**
- * @TODO
+ * Define source types
  */
 #ifndef _WIN32
 #  ifndef _POSIX_C_SOURCE
 #    define _POSIX_C_SOURCE 1
 #  endif
+#  ifndef _DARWIN_C_SOURCE
+#    define _DARWIN_C_SOURCE
+#  endif
 #endif
 
 /**
- * @TODO
+ * Computed alignment size, a platform "word".
  */
 #ifndef OPC_ALIGNMENT
 #  define OPC_ALIGNMENT sizeof(unsigned long) // platform word
 #endif
 
 /**
- * @TODO
+ * Define max enum value size.
  */
 #ifndef OPC_MAX_ENUM
 #  define OPC_MAX_ENUM 0x7FFFFFFF
 #endif
 
 /**
- * @TODO
+ * Define `OPC_EXIT` if compiler has not.
  */
 #ifndef OPC_EXIT
 #  include <stdlib.h>
@@ -77,7 +81,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_PRINTF` if compiler has not.
  */
 #ifndef OPC_PRINTF
 #  include <stdio.h>
@@ -85,7 +89,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_FPRINTF` if compiler has not.
  */
 #ifndef OPC_FPRINTF
 #  include <stdio.h>
@@ -93,7 +97,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_SPRINTF` if compiler has not.
  */
 #ifndef OPC_SPRINTF
 #  include <stdio.h>
@@ -101,7 +105,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_SNPRINTF` if compiler has not.
  */
 #ifndef OPC_SNPRINTF
 #  include <stdio.h>
@@ -109,7 +113,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_VPRINTF` if compiler has not.
  */
 #ifndef OPC_VPRINTF
 #  include <stdarg.h>
@@ -117,7 +121,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_VFPRINTF` if compiler has not.
  */
 #ifndef OPC_VFPRINTF
 #  include <stdarg.h>
@@ -125,7 +129,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_VSPRINTF` if compiler has not.
  */
 #ifndef OPC_VSPRINTF
 #  include <stdarg.h>
@@ -133,7 +137,7 @@
 #endif
 
 /**
- * @TODO
+ * Define `OPC_VSNPRINTF` if compiler has not.
  */
 #ifndef OPC_VSNPRINTF
 #  include <stdarg.h>
@@ -141,27 +145,27 @@
 #endif
 
 /**
- * @TODO
+ * Cast to library bytes.
  */
 #define opc_bytes(value) (OPCBytes) (value)
 
 /**
- * @TODO
+ * Cast to library signed size value.
  */
 #define opc_size(value) (OPCSize) (value)
 
 /**
- * @TODO
+ * Cast to library unsigned size value.
  */
 #define opc_usize(value) (OPCUSize) (value)
 
 /**
- * @TODO
+ * Cast to library boolean.
  */
 #define opc_bool(value) ((value) ? OPC_TRUE : OPC_FALSE)
 
 /**
- * @TODO
+ * Helper macro for a libary main function which calls `opc_init()`.
  */
 #define opc_main()                                                             \
   int start();                                                                 \
@@ -172,15 +176,19 @@
   int start()
 
 /**
- * @TODO
+ * Library platform types.
  */
 typedef unsigned long long OPCUSize;
+typedef long long OPCSize;
 typedef unsigned char *OPCBytes;
 typedef unsigned char OPCByte;
-typedef long long OPCSize;
+typedef unsigned int OPCUInt;
+typedef int OPCInt;
+typedef double OPCDouble;
+typedef float OPCFloat;
 
 /**
- * @TODO
+ * Libary booleans.
  */
 typedef enum {
   OPC_FALSE = 0,
@@ -188,7 +196,7 @@ typedef enum {
 } OPCBoolean;
 
 /**
- * @TODO
+ * Libary bits.
  */
 typedef enum {
   OPC_OFF = 0,

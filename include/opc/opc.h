@@ -35,6 +35,9 @@
 extern "C" {
 #endif
 
+// this should be included first
+#include "platform.h"
+
 #include "buffer.h"
 #include "callsite.h"
 #include "error.h"
@@ -42,7 +45,6 @@ extern "C" {
 #include "ipc.h"
 #include "log.h"
 #include "math.h"
-#include "platform.h"
 #include "pp.h"
 #include "print.h"
 #include "result.h"
