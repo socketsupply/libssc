@@ -68,7 +68,7 @@ default: $(TARGETS)
 
 $(TARGETS): $(SRC)
 	@echo
-	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS) -D OK_EXPECTED=`cat $(@).c|grep 'ok('|wc -l`
+	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS)
 	@echo
 ifdef VALIDATE_WITH_TAP_PARSER
 	@{ $(VALGRIND) ./$@ | ../node_modules/.bin/tap-parser --tap; } || { rm -rf $@ && false; }

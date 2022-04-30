@@ -82,7 +82,8 @@ BUILD_LIB ?= $(BUILD_DIRECTORY)/lib
 CFLAGS += -std=c99
 CFLAGS += -Iinclude -Ideps
 ifeq ($(OS), Darwin)
-	LDFLAGS += -shared -lc -Wl,-install_name,$(SO)
+	LDFLAGS += -shared -lc -Wl,-install_name,$(DYLIB)
+	LDFLAGS += -dynamiclib -undefined suppress -flat_namespace
 else
 	LDFLAGS += -shared -Wl,-soname,$(SO).$(LIBRARY_VERSION_MAJOR)
 	CFLAGS += -fPIC
@@ -198,7 +199,7 @@ ifeq ($(OS),Darwin)
 $(DYLIB): $(BUILD_LIB)/$(DYLIB)
 $(BUILD_LIB)/$(DYLIB): $(OBJS)
 	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
-	$(CC) $(LDFLAGS) -dynamiclib -undefined suppress -flat_namespace $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $@
 endif
 
 .PHONY: man
