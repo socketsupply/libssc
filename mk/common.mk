@@ -29,4 +29,22 @@
 # SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
 ##
 
+## Make
 MAKEFLAGS += --no-print-directory
+
+## Commands
+CP = cp -rf
+LN = ln -sf
+RM = rm -rf
+STRIP = strip
+MKDIR = mkdir -p
+_MKDIR = mkdir -p
+ifneq ($(shell which clang 2>/dev/null),)
+CC = clang
+endif
+
+ifndef NO_VALGRIND
+ifneq ($(shell which valgrind 2>/dev/null),)
+VALGRIND ?= valgrind -q
+endif
+endif

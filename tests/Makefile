@@ -32,19 +32,6 @@
 CWD ?= $(shell pwd)
 BUILD_LIBRARY_PATH = ../build/lib
 
-MAKEFLAGS += --no-print-directory
-
-## Commands
-CC ?= clang
-LN ?= ln -sf
-RM = rm -rf
-
-ifndef NO_VALGRIND
-ifneq ($(shell which valgrind 2>/dev/null),)
-VALGRIND ?= valgrind -q
-endif
-endif
-
 ## test source files
 SRC += $(wildcard *.c)
 SRC += $(wildcard **/*.c)
@@ -54,13 +41,13 @@ SRC += $(wildcard **/*.c)
 TARGETS = $(SRC:.c=)
 
 ## test compiler flags
+CFLAGS += -std=c99
 CFLAGS += -Wall
 CFLAGS += -Werror
-CFLAGS += -I ../build/include
-CFLAGS += -I ../deps
+CFLAGS += -I ../build/include -I ../deps
 CFLAGS += -L $(BUILD_LIBRARY_PATH)
 CFLAGS += -l opc
-CFLAGS += -g
+CFLAGS += -O0
 
 ifeq (Darwin, $(shell uname))
   CFLAGS += -framework Foundation

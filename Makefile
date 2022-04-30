@@ -33,17 +33,6 @@
 OS = $(shell uname)
 CWD = $(shell pwd)
 
-## Commands
-ifneq ($(shell which clang 2>/dev/null),)
-CC = clang
-endif
-
-CP = cp -rf
-LN ?= ln -sf
-RM = rm -rf
-STRIP = strip
-MKDIR = mkdir -p
-_MKDIR = mkdir -p
 MAN = marked-man
 NPM ?= npm
 
@@ -90,6 +79,7 @@ BUILD_INCLUDE ?= $(BUILD_DIRECTORY)/include
 BUILD_LIB ?= $(BUILD_DIRECTORY)/lib
 
 ## Compiler
+CFLAGS += -std=c99
 CFLAGS += -Iinclude -Ideps
 ifeq ($(OS), Darwin)
 	LDFLAGS += -shared -lc -Wl,-install_name,$(SO)
