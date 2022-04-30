@@ -30,14 +30,19 @@
 ##
 
 ## Configure brief.mk (before including)
+MAN = marked-man
+NPM ?= npm
+
 BRIEFC += MAN
 
 ## Makfile includes
 include ./mk/common.mk
 -include ./mk/brief.mk
 
-MAN = marked-man
-NPM ?= npm
+## Build configuration
+BUILD_DIRECTORY ?= build
+BUILD_INCLUDE ?= $(BUILD_DIRECTORY)/include
+BUILD_LIB ?= $(BUILD_DIRECTORY)/lib
 
 MARKEDMAN_BIN = ./node_modules/.bin/marked-man
 
@@ -51,6 +56,9 @@ SRC += $(DEPS)
 OBJS := $(SRC:.c=.o)
 HEADERS += $(wildcard include/**/*.h)
 
+## Target headers
+TARGET_HEADERS = $(foreach target,$(HEADERS),$(BUILD_DIRECTORY)/$(target))
+
 ## Target static library
 STATIC := lib$(LIBRARY_NAME).a
 SOLIB := lib$(LIBRARY_NAME).so.$(LIBRARY_VERSION_MAJOR)
@@ -59,12 +67,7 @@ SO := lib$(LIBRARY_NAME).so
 
 ## man 3 files
 MAN_SOURCES = $(wildcard man/*.md)
-MAN_TARGETS = $(MAN_SOURCES:.md=)
-
-## Build configuration
-BUILD_DIRECTORY ?= build
-BUILD_INCLUDE ?= $(BUILD_DIRECTORY)/include
-BUILD_LIB ?= $(BUILD_DIRECTORY)/lib
+MAN_TARGETS = $(foreach target,$(MAN_SOURCES:.md=),$(BUILD_DIRECTORY)/$(target))
 
 ## Compiler
 CFLAGS += -std=c99
@@ -78,7 +81,6 @@ else
 endif
 
 ## Misc
-CLEAN_TARGETS = $(OBJS)
 CLEAN_TARGETS += $(BUILD_INCLUDE)/$(LIBRARY_NAME)
 CLEAN_TARGETS += $(BUILD_LIB)/$(STATIC)
 CLEAN_TARGETS += $(BUILD_LIB)/$(SOLIB)
@@ -88,14 +90,17 @@ ifeq ($(OS),Darwin)
 CLEAN_TARGETS += $(BUILD_LIB)/$(DYLIB)
 endif
 
+CLEAN_TARGETS += $(OBJS)
+
 ## Tests
 TEST_SOURCES = $(wildcard tests/*.c)
 TEST_TARGETS = $(TEST_SOURCES:.c=)
 
 ## Macro to ensure build directory structure is in place
 define ENSURE_BUILD_DIRECTORY_STRUCTURE
-@mkdir -p $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME) &&   \
- mkdir -p $(BUILD_DIRECTORY)/lib;
+@mkdir -p $(BUILD_DIRECTORY)/include/$(LIBRARY_NAME);
+@mkdir -p $(BUILD_DIRECTORY)/lib;
+@mkdir -p $(BUILD_DIRECTORY)/man;
 endef
 
 export PATH := $(CWD)/node_modules/.bin:$(PATH)
@@ -108,20 +113,28 @@ install: build
 uninstall:
 	@echo "Not implemented"
 
-## Builds
+## All build dependencies
 build: $(OBJS)
-build: $(BUILD_INCLUDE)/$(LIBRARY_NAME)
-build: $(STATIC)
-build: $(SO)
-build: $(SOLIB)
-ifeq ($(OS),Darwin)
-build: $(DYLIB)
-endif
-build: man
+build: build/lib
+build: build/man
 
+## Build libraries
+build/lib: $(BUILD_INCLUDE)/$(LIBRARY_NAME)
+build/lib: $(STATIC)
+build/lib: $(SO)
+build/lib: $(SOLIB)
+ifeq ($(OS),Darwin)
+build/lib: $(DYLIB)
+endif
+
+## Build man pages
+build/man: $(MAN_TARGETS)
+
+## Install nodejs modules for tooling
 node_modules:
 	$(NPM) install >/dev/null
 
+## Install `marked-man`
 $(MARKEDMAN_BIN): node_modules
 	@:
 
@@ -138,15 +151,11 @@ $(BUILD_LIB)/$(STATIC): $(OBJS)
 
 ## Copies header files
 .PHONY: $(BUILD_INCLUDE)/$(LIBRARY_NAME)
-$(BUILD_INCLUDE)/$(LIBRARY_NAME): BRIEF_ARGS = $(HEADERS) -> $@
-$(BUILD_INCLUDE)/$(LIBRARY_NAME): $(HEADERS)
+$(BUILD_INCLUDE)/$(LIBRARY_NAME): $(TARGET_HEADERS)
+
+$(TARGET_HEADERS): $(HEADERS)
 	$(ENSURE_BUILD_DIRECTORY_STRUCTURE)
-ifndef NO_BRIEF
-	@cp -rf $(HEADERS) $@
-	@for header in $(HEADERS); do printf " " && printf $(BRIEF_FORMAT) "CP" "$$(printf " %s\t~>\t%s" "$$header" "$@")"; done
-else
-	cp -rf $(HEADERS) $@
-endif
+	$(CP) $(subst $(BUILD_DIRECTORY),".",$@) $@
 
 ## Builds a shared object
 .PHONY: $(SO)
@@ -193,14 +202,15 @@ endif
 man: $(MAN_TARGETS)
 
 .PHONY: man/clean
-man/clean: BRIEF_ARGS = clean (man)
+man/clean: BRIEF_ARGS = build/man
 man/clean:
-	$(RM) $(MAN_TARGETS)
+	$(RM) $(BUILD_DIRECTORY)/$(MAN_TARGETS)
 
 $(MAN_TARGETS): $(MARKEDMAN_BIN)
+$(MAN_TARGETS): BRIEF_ARGS = $(BUILD_DIRECTORY)/$@
 $(MAN_TARGETS): $(MAN_SOURCES)
 	@rm -f $@
-	$(MAN) $@.md > $@
+	$(MAN) $(subst $(BUILD_DIRECTORY),".",$@).md > $@
 
 ## Compiles and runs all test
 .PHONY: tests
@@ -219,12 +229,14 @@ tests/clean:
 .PHONY: examples/clean
 examples/clean: BRIEF_ARGS = clean (examples)
 examples/clean:
-	$(MAKE) -C examples/hello-world clean
+	@$(MAKE) -C examples/hello-world clean
 
 clean: man/clean
+clean: targets/clean
 clean: tests/clean
 clean: examples/clean
-clean:
+
+targets/clean:
 ifndef NO_BRIEF
 	@rm -rf $(CLEAN_TARGETS)
 	@for target in $(CLEAN_TARGETS); do printf " " && printf $(BRIEF_FORMAT) "RM" " $$target"; done

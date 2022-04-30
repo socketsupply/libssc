@@ -70,4 +70,4 @@ $(PREFIX)/bin/$(TARGET): $(LIBOPC)
 	$(CC) $(SRC) $(LIBOPC)  $(CFLAGS) -o $@
 
 clean:
-	rm -rf build/
+	@rm -rf build/
