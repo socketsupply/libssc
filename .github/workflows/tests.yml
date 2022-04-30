@@ -11,7 +11,8 @@ jobs:
     - name: System Setup
       shell: bash
       run: |
-        sudo apt install -qq libcurl4-openssl-dev
+        sudo apt update -y
+        sudo apt install -y -qq libcurl4-openssl-dev
     - name: Run Tests
       run: |
         npm install
