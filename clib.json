@@ -3,8 +3,15 @@
   "repo": "socketsupply/libopc",
   "version": "0.0.0",
   "description": "Operator Framework client library written in C99.",
-  "keywords": ["operator", "framework", "client", "library", "socketsupply", "webview", "webkit"],
-  "makefile": "Makefile",
+  "keywords": [
+    "operator",
+    "framework",
+    "client",
+    "library",
+    "socketsupply",
+    "webview",
+    "webkit"
+  ],
   "license": "MIT",
   "src": [
     "include/opc/buffer.h",

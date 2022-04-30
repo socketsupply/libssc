@@ -47,6 +47,7 @@
   ],
   "scripts": [
     "scripts/build.sh",
+    "scripts/generate-man-template.sh",
     "scripts/update-manifest-files.sh",
     "scripts/version.sh",
     "scripts/build.ps1",

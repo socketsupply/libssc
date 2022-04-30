@@ -29,8 +29,13 @@
 # SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
 ##
 
-## Make
+## Environment
+OS = $(shell uname)
+CWD := $(shell pwd)
+
+## MAKE Configuration
 MAKEFLAGS += --no-print-directory
+THIS_MAKEFILE := $(dir $(firstword $(MAKEFILE_LIST)))
 
 ## Commands
 CP = cp -rf
@@ -52,3 +57,11 @@ ifneq ($(shell which valgrind 2>/dev/null),)
 VALGRIND ?= valgrind -q
 endif
 endif
+
+## Project settings
+LIBRARY_NAME ?= opc
+LIBRARY_VERSION_MAJOR = 0
+LIBRARY_VERSION_MINOR = 0
+LIBRARY_VERSION_PATCH = 0
+LIBRARY_VERSION_REVISION = $(shell $(THIS_MAKEFILE)/scripts/version.sh)
+LIBRARY_DATE_COMPILED := $(shell date)

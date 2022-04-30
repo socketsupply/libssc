@@ -29,7 +29,10 @@
 # SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
 ##
 
-CWD ?= $(shell pwd)
+## Makefile includes
+include ../mk/common.mk
+-include ../mk/brief.mk
+
 BUILD_LIBRARY_PATH = ../build/lib
 
 ## test source files
@@ -59,10 +62,6 @@ DEPS +=
 ## so our test executables can load the built library at runtime
 export LD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 export DYLD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
-
-## Makefile includes
--include ../mk/common.mk
--include ../mk/brief.mk
 
 default: $(TARGETS)
 

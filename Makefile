@@ -29,29 +29,17 @@
 # SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
 ##
 
-## Environment
-OS = $(shell uname)
-CWD = $(shell pwd)
+## Configure brief.mk (before including)
+BRIEFC += MAN
+
+## Makfile includes
+include ./mk/common.mk
+-include ./mk/brief.mk
 
 MAN = marked-man
 NPM ?= npm
 
 MARKEDMAN_BIN = ./node_modules/.bin/marked-man
-
-## Configure brief.mk
-BRIEFC += MAN
-
-## Makfile incluedes
--include ./mk/common.mk
--include ./mk/brief.mk
-
-## Project settings
-LIBRARY_NAME ?= opc
-LIBRARY_VERSION_MAJOR = 0
-LIBRARY_VERSION_MINOR = 0
-LIBRARY_VERSION_PATCH = 0
-LIBRARY_VERSION_REVISION = $(shell scripts/version.sh)
-LIBRARY_DATE_COMPILED := $(shell date)
 
 ## Dependencies
 DEPS += $(wildcard deps/flag/*.c)
@@ -116,7 +104,6 @@ default: build
 	@:
 
 install: build
-	@echo "Not implemented"
 
 uninstall:
 	@echo "Not implemented"
