@@ -32,7 +32,7 @@
 ## MAKE Configuration
 MAKEFLAGS += --no-print-directory
 MAKEFILE := $(firstword $(MAKEFILE_LIST))
-MAKEFILE_DIRNAME := $(shell realpath $(dir $(MAKEFILE)))
+MAKEFILE_DIRNAME := $(realpath $(dir $(MAKEFILE)))
 
 ## Environment
 OS = $(shell uname)
@@ -65,5 +65,5 @@ LIBRARY_NAME ?= opc
 LIBRARY_VERSION_MAJOR = 0
 LIBRARY_VERSION_MINOR = 0
 LIBRARY_VERSION_PATCH = 0
-LIBRARY_VERSION_REVISION = $(shell $(THIS_MAKEFILE)/scripts/version.sh)
+LIBRARY_VERSION_REVISION = $(shell $(MAKEFILE)/scripts/version.sh)
 LIBRARY_DATE_COMPILED := $(shell date)

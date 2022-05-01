@@ -33,7 +33,7 @@
 include ../mk/common.mk
 -include ../mk/brief.mk
 
-BUILD_LIBRARY_PATH = $(shell realpath $(MAKEFILE_DIRNAME)/../build/lib)
+BUILD_LIBRARY_PATH = $(realpath $(MAKEFILE_DIRNAME)/../build/lib)
 
 ## test source files
 SRC += $(wildcard *.c)
