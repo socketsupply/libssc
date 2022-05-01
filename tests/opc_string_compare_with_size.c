@@ -29,5 +29,19 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+test("opc_string_compare_with_size(string, string_size, other, other_size)", 0) {
+  const OPCString hello = "helloworld";
+  const OPCString world = "worldhello";
+
+  assert(opc_string_compare_with_size(hello, 5, world, 5) == -1);
+  assert(opc_string_compare_with_size(world, 5, hello, 5) == 1);
+
+  assert(opc_string_compare_with_size(hello + 5, 5, hello + 5, 5) == 0);
+  assert(opc_string_compare_with_size(world + 5, 5, world + 5, 5) == 0);
+
+  assert(opc_string_compare_with_size(hello + 5, 5, world, 5) == 0);
+  assert(opc_string_compare_with_size(world + 5, 5, hello, 5) == 0);
+}

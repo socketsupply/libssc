@@ -33,6 +33,7 @@
 #define OPC_H
 #ifdef __cplusplus
 extern "C" {
+#define OPC_CPLUSPLUS
 #endif
 
 // this should be included first
@@ -51,6 +52,32 @@ extern "C" {
 #include "string.h"
 #include "uri.h"
 #include "utf8.h"
+
+
+/**
+ * An alias to `opc_init_argc()`.
+ */
+#define opc_argc opc_init_argc
+
+/**
+ * An alias to `opc_init_argv()`.
+ */
+#define opc_argv opc_init_argv
+
+/**
+ * An alias to `opc_init_stdin()`.
+ */
+#define opc_stdin opc_init_stdin
+
+/**
+ * An alias to `opc_init_stdout()`.
+ */
+#define opc_stdout opc_init_stdout
+
+/**
+ * An alias to `opc_init_stderr()`.
+ */
+#define opc_stderr opc_init_stderr
 
 #ifdef __cplusplus
 }

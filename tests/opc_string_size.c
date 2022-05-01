@@ -29,5 +29,20 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+test("opc_string_size(string)", 0) {
+  assert(opc_string_size("") == 0);
+  assert(opc_string_size("h") == 1);
+  assert(opc_string_size("he") == 2);
+  assert(opc_string_size("hel") == 3);
+  assert(opc_string_size("hell") == 4);
+  assert(opc_string_size("hello") == 5);
+  assert(opc_string_size("hello ") == 6);
+  assert(opc_string_size("hello w") == 7);
+  assert(opc_string_size("hello wo") == 8);
+  assert(opc_string_size("hello wor") == 9);
+  assert(opc_string_size("hello worl") == 10);
+  assert(opc_string_size("hello world") == 11);
+}

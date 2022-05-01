@@ -46,16 +46,6 @@ typedef enum {
 } OPCInitState;
 
 /**
- * An alias to `opc_init_argc()`.
- */
-#define opc_argc opc_init_argc
-
-/**
- * An alias to `opc_init_argv()`.
- */
-#define opc_argv opc_init_argv
-
-/**
  * Initializes the `libopc` library with command line arguments suitable for
  * custom configuration provided by the shell caller. The default `stdin`,
  * `stdout`, and `stderr` file stream pointers are used. Callers who want to use
@@ -95,14 +85,32 @@ opc_init_state ();
  * Returns the initialized argument count given to `opc_init()`.
  * @return The argument count
  */
-const int
+OPC_EXPORT const int
 opc_init_argc ();
 
 /**
  * Returns the initialized arguments vector pointer given to `opc_init()`.
  * @return A pointer to the argument vector
  */
-const char **
+OPC_EXPORT const char **
 opc_init_argv ();
+
+/**
+ * @TODO
+ */
+OPC_EXPORT void *
+opc_init_stdin ();
+
+/**
+ * @TODO
+ */
+OPC_EXPORT void *
+opc_init_stdout ();
+
+/**
+ * @TODO
+ */
+OPC_EXPORT void *
+opc_init_stderr ();
 
 #endif

@@ -56,6 +56,18 @@ ifneq ($(shell which clang-check-15 2>/dev/null),)
 endif
 endif
 
+ifneq ($(shell which clang-tidy 2>/dev/null),)
+	TIDY = clang-tidy
+else
+ifneq ($(shell which clang-tidy-15 2>/dev/null),)
+	TIDY = clang-tidy-15
+endif
+endif
+
+ifneq ($(shell which cpplint 2>/dev/null),)
+	LINT = cpplint
+endif
+
 ifneq ($(GCC),)
 	CC = gcc
 else

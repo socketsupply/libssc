@@ -31,39 +31,66 @@
 
 #include <flag/flag.h>
 #include <opc/opc.h>
+#include "types.h"
 
-static OPCInitState init_state = OPC_INIT_NONE;
-static int init_argc = 0;
-static const char **init_argv = 0;
+// state
+static OPCInitState state = OPC_INIT_NONE;
 
-OPCInitState
-opc_init_state () {
-  return init_state;
-}
+// program
+static int argc = 0;
+static const char **argv = 0;
+
+// streams
+static void *stdin_stream;
+static void *stdout_stream;
+static void *stderr_stream;
 
 void
 opc_init_library (
-  void *stdin_stream,
-  void *stdout_stream,
-  void *stderr_stream,
-  const int argc,
-  const char **argv
+  void *init_stdin_stream,
+  void *init_stdout_stream,
+  void *init_stderr_stream,
+  const int init_argc,
+  const char **init_argv
 ) {
-  if (init_state == OPC_INIT_NONE) {
-    init_state = OPC_INIT_PENDING;
-    init_argc = argc;
-    init_argv = argv;
-    opc_log_set_file_stream_pointer(stderr_stream);
-    init_state = OPC_INIT_READY;
+  if (state == OPC_INIT_NONE) {
+    state = OPC_INIT_PENDING;
+    argc = init_argc;
+    argv = init_argv;
+    stdin_stream = init_stdin_stream;
+    stdout_stream = init_stdout_stream;
+    stderr_stream = init_stderr_stream;
+    opc_log_set_file_stream_pointer(init_stderr_stream);
+    state = OPC_INIT_READY;
   }
+}
+
+OPCInitState
+opc_init_state () {
+  return state;
 }
 
 const int
 opc_init_argc () {
-  return init_argc;
+  return argc;
 }
 
 const char **
 opc_init_argv () {
-  return init_argv;
+  return argv;
+}
+
+void *
+opc_init_stdin () {
+  return stdin_stream;
+}
+
+void *
+opc_init_stdout () {
+  return stdout_stream;
+}
+
+void *
+opc_init_stderr () {
+  return stderr_stream;
 }

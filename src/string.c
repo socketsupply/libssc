@@ -30,6 +30,7 @@
  */
 
 #include <opc/opc.h>
+#include "types.h"
 
 OPCUSize
 opc_string_size (const OPCString string) {
@@ -113,5 +114,5 @@ opc_string_slice (const OPCString self, const OPCUSize offset) {
 
 OPCBoolean
 opc_string_equals (const OPCString left, const OPCString right) {
-  return opc_string_compare(left, right) == 0 ? OPC_TRUE : OPC_FALSE;
+  return opc_string_compare(left, right) == 0 ? true : false;
 }

@@ -21,13 +21,11 @@ jobs:
         npm install
         pip install cpplint
 
-        ## tests
-        make check
-        make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        ## checks
+        make tidy lint check
 
-        ## lint
-        curl -Lo- get.bpkg.sh | bash
-        bpkg run lint
+        ## tests
+        make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
 
   macos:
     name: macOS
@@ -39,18 +37,15 @@ jobs:
     - name: System Setup
       shell: bash
       run: |
-        brew install openssl curl
+        brew install openssl curl clang-format
     - name: Run Tests
       run: |
         ## deps
         npm install
         pip install cpplint
 
+        ## checks
+        make clint check
+
         ## tests
         make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
-        make check
-
-        ## lint
-        export PRFEFIX=/usr/local
-        curl -Lo- get.bpkg.sh | bash
-        bpkg run lint

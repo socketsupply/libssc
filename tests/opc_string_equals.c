@@ -29,5 +29,20 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+test("opc_string_equals(string, other)", 0) {
+  const OPCString hello = "hello";
+  const OPCString world = "world";
+  const OPCString empty = "";
+
+  assert_ok(opc_string_equals(hello, empty) == OPC_FALSE);
+  assert_ok(opc_string_equals(world, empty) == OPC_FALSE);
+
+  assert_ok(opc_string_equals(hello, hello) == OPC_TRUE);
+  assert_ok(opc_string_equals(world, world) == OPC_TRUE);
+
+  assert_ok(opc_string_equals(hello, world) == OPC_TRUE);
+  assert_ok(opc_string_equals(world, hello) == OPC_TRUE);
+}

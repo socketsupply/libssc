@@ -29,5 +29,13 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+#define SOURCE_STRING "betty aime le fromage français"
+#define EXPECTED_SIZE 43
+
+test("opc_uri_component_encode_size(input)", 0) {
+  OPCBuffer input = opc_buffer(SOURCE_STRING);
+  assert(EXPECTED_SIZE == opc_uri_component_encode_size(input));
+}

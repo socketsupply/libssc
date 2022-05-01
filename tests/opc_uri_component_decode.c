@@ -30,32 +30,30 @@
  */
 
 #include <opc/test.h>
+#include <string.h>
 
-test("string", 0) {
-  assert(opc_string_size(opc_string("hello")) == 5);
-  assert(opc_string_size(opc_string("world")) == 5);
-  assert(opc_string_size(opc_string("h")) == 1);
-  assert(opc_string_size(opc_string("")) == 0);
-  assert(opc_string_compare(opc_string("hello"), opc_string("hello")) == 0);
-  assert(opc_string_compare(opc_string("hello"), opc_string("world")) == -1);
-  assert(opc_string_compare(opc_string("world"), opc_string("hello")) == 1);
+// includes decoded unicode characters
+#define SOURCE_STRING "betty%20aime%20le%20fromage%20fran%C3%A7ais"
+// includes decoded unicode characters
+#define EXPECTED_STRING "betty aime le fromage français"
 
-  assert(opc_string_equals(opc_string("hello"), opc_string("hello")));
+static OPCByte stack[4096] = { 0 };
 
-  assert_equal(
-    0,
-    opc_string_compare_with_size(
-      opc_string("hello world"), 5, opc_string("hello moon"), 5
-    )
-  );
+test("opc_uri_component_decode(output, input)", 0) {
+  const OPCString expected = opc_string(EXPECTED_STRING);
+  const OPCString source = opc_string(SOURCE_STRING);
 
-  assert_equal(
-    0,
-    opc_string_compare_with_size(
-      opc_string_slice(opc_string("hello world"), 6),
-      5,
-      opc_string_slice(opc_string("goodbye world"), 8),
-      5
-    )
-  );
+  const OPCUSize expected_size = opc_string_size(expected);
+  const OPCUSize source_size = opc_string_size(source);
+
+  OPCBuffer memory = opc_buffer_from(stack);
+  OPCBuffer output = opc_buffer_slice(memory, 0, expected_size);
+  OPCBuffer input =
+    opc_buffer_slice(memory, output.size + 1, output.size + source_size + 1);
+
+  // write source to input buffer
+  assert(opc_buffer_write_string(&input, source, 0) > 0);
+
+  // verify successful decode of input into output
+  assert_ok(opc_uri_component_decode(&output, input));
 }

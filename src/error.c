@@ -30,6 +30,14 @@
  */
 
 #include <opc/opc.h>
+#include "types.h"
+
+// Define `OPC_MISSING_ERRNO=1` if `<errno.h>` or `strerror(3)` was not found in
+// a user space configure or feature detection script
+#ifndef OPC_MISSING_ERRNO
+#define HAVE_ERRONO
+#include <errno.h>
+#endif
 
 struct Error {
   const OPCResult code;
@@ -59,6 +67,7 @@ opc_error_init () {
 const OPCString
 opc_error_string (OPCResult error) {
   unsigned long count = sizeof(errors) / sizeof(struct Error);
+  OPCBoolean check_errno = OPC_TRUE;
 
   for (int i = 0; i < count; ++i) {
     if (errors[i].code == error) {
@@ -81,6 +90,7 @@ opc_error_throw (
   OPCBuffer buffer = opc_buffer_from(global_error.bytes);
 
   // header
+  // NOLINTNEXTLINE
   global_error.meta.header_size = opc_string_nformat(
     opc_string(buffer.bytes),
     OPC_ERROR_MAX_HEADER_BYTES,
@@ -109,6 +119,7 @@ opc_error_throw (
   if (message != 0 && opc_string_size(message) > 0) {
     OPCUSize header_size = global_error.meta.header_size;
     global_error.message = opc_string(buffer.bytes + header_size);
+    // NOLINTNEXTLINE
     global_error.meta.message_size = opc_string_vnformat(
       global_error.message,
       OPC_ERROR_MAX_MESSAGE_BYTES,
@@ -118,6 +129,7 @@ opc_error_throw (
   }
 
   // |location
+  // NOLINTNEXTLINE
   opc_string_nformat(
     global_error.location,
     OPC_ERROR_MAX_LOCATION_BYTES,
@@ -126,6 +138,7 @@ opc_error_throw (
   );
 
   // |function
+  // NOLINTNEXTLINE
   opc_string_nformat(
     global_error.function,
     OPC_ERROR_MAX_FUNCTION_BYTES,

@@ -40,6 +40,7 @@
  * return values.
  */
 typedef enum {
+  OPC_BAD_STATE = -6,
   OPC_INVALID_ARGUMENT = -5,
   OPC_OUT_OF_BOUNDS = -4,
   OPC_OUT_OF_MEMORY = -3,
@@ -56,7 +57,7 @@ typedef enum {
  * An identity for `OPC_OK`
  * @return `OPC_OK`
  */
-#define opc_ok() (OPCResult) (OPC_OK)
+#define opc_ok(value) (OPCResult) ( value == OPC_TRUE ? OPC_OK : value)
 
 /**
  * @TODO(jwerle)

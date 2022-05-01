@@ -31,17 +31,17 @@
 
 #include <opc/opc.h>
 #include <stdarg.h>
-
-void
-ipc_flush () {
-  OPC_FPRINTF(stdout, "\n");
-}
+#include "types.h"
 
 OPCResult
 opc_ipc_vwrite (const OPCString string, va_list args) {
-  if (string != 0) {
-    OPC_VFPRINTF(stdout, string, args);
+  if (string == 0) {
+    return opc_throw(OPC_NULL_POINTER, "String cannot be NULL");
   }
+
+  // NOLINTNEXTLINE
+  OPC_VFPRINTF(opc_stdout(), string, args);
+  return OPC_OK;
 }
 
 OPCResult
@@ -61,7 +61,7 @@ opc_ipc_flush (const OPCString string, ...) {
 
   va_start(args, string);
   opc_ipc_vwrite(string, args);
-  ipc_flush();
+  opc_ipc_write("\n");
   va_end(args);
 
   return OPC_OK;

@@ -30,6 +30,7 @@
  */
 
 #include <opc/opc.h>
+#include "types.h"
 
 struct Result {
   const OPCResult code;

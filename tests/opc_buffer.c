@@ -29,5 +29,37 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+static OPCByte stack[4096] = {0};
+
+test("opc_buffer(bytes, ...)", 0) {
+  OPCBuffer buffer = opc_buffer(stack);
+
+  assert(opc_bytes(buffer.bytes) == opc_bytes(stack));
+  assert(buffer.size == sizeof(stack));
+
+  OPCBuffer slice = opc_buffer(
+    opc_bytes(stack) + 1024,
+    4096 - 1024,
+    opc_bytes(stack),
+    1024
+  );
+
+  assert(slice.parent == opc_bytes(stack));
+  assert(slice.size == 4096 - 1024);
+  assert(slice.offset = 1024);
+
+  OPCBuffer with_members = opc_buffer(
+    slice.bytes + 1024,
+    .parent = slice.bytes,
+    .offset = 1024,
+    .size = 1024
+  );
+
+  assert(with_members.bytes  == slice.bytes + 1024);
+  assert(with_members.parent == slice.bytes);
+  assert(with_members.offset == 1024);
+  assert(with_members.size == 1024);
+}

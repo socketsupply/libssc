@@ -145,6 +145,16 @@
 #define opc_bytes(value) (OPCBytes) (value)
 
 /**
+ * Cast to library byte.
+ */
+#define opc_byte(value) (OPCByte) (value)
+
+/**
+ * Cast to library string.
+ */
+#define opc_string(value) (OPCString)(value)
+
+/**
  * Cast to library signed size value.
  */
 #define opc_size(value) (OPCSize) (value)
@@ -173,6 +183,7 @@
 /**
  * Library platform types.
  */
+
 typedef unsigned long long OPCUSize;
 typedef long long OPCSize;
 typedef unsigned char *OPCBytes;
@@ -181,6 +192,8 @@ typedef unsigned int OPCUInt;
 typedef int OPCInt;
 typedef double OPCDouble;
 typedef float OPCFloat;
+typedef char OPCChar;
+typedef char *OPCString;
 
 /**
  * Libary booleans.

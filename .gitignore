@@ -73,3 +73,5 @@ man/*.3
 deps/bin
 tests/buffer
 tmp
+tests/opc_buffer
+tests/opc_buffer_from

@@ -29,5 +29,8 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+test("opc_buffer_slice(buffer, start, end)", 0) {
+}

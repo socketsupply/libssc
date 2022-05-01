@@ -29,3 +29,5 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
+#include <opc/opc.h>
+#include "types.h"

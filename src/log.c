@@ -32,6 +32,7 @@
 #include <opc/opc.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "types.h"
 
 #define RED_LABEL_FORMAT "[\x1B[31m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
 #define GREEN_LABEL_FORMAT "[\x1B[32m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
@@ -170,6 +171,7 @@ opc_log (
 #ifdef __ANDROID__
 #  error TODO
 #else
+  // NOLINTNEXTLINE
   LOG(
     location, line, function, log_level_formats[level], log_level_names[level]
   );

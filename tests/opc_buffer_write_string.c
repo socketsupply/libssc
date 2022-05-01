@@ -29,5 +29,22 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+static OPCByte stack[4096] = { 0 };
+
+test("opc_buffer_write_string(buffer, string, offset)", 0) {
+  OPCBuffer buffer = opc_buffer_from(stack);
+
+  assert_ok(
+    opc_buffer_write_string(&buffer, "hello", 0) == 5
+  );
+
+  assert_ok(
+    opc_buffer_write_string(&buffer, "world", 64) == 5
+  );
+
+  assert(0 == strncmp(opc_string(buffer.bytes), "hello", 5));
+  assert(0 == strncmp(opc_string(buffer.bytes + 64), "world", 5));
+}

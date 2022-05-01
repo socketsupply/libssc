@@ -126,9 +126,6 @@ endef
 
 export PATH := $(CWD)/node_modules/.bin:$(PATH)
 
-foo:
-	@echo $(ROOT_DIRNAME)
-
 default: build
 	@:
 
@@ -255,7 +252,7 @@ man: $(MAN3_TARGETS)
 .PHONY: man/clean
 man/clean: BRIEF_ARGS = build/man
 man/clean:
-	$(RM) $(BUILD_DIRECTORY)/$(MAN3_TARGETS)
+	$(RM) $(MAN3_TARGETS)
 
 $(MAN3_TARGETS): $(MARKEDMAN_BIN)
 $(MAN3_TARGETS): BRIEF_ARGS = $(BUILD_DIRECTORY)/$@
@@ -265,9 +262,9 @@ $(MAN3_TARGETS): $(MAN3_SOURCES)
 	$(MAN) $(subst $(BUILD_DIRECTORY),.,$@).md > $@
 
 ## Compiles and runs all test
-.PHONY: tests
+.PHONY: tests test
 test: tests
-tests: $(TEST_TARGETS)
+tests: $(TEST_TARGETS) build
 
 $(TEST_TARGETS): $(TEST_SOURCES) $(SRC) $(HEADERS) $(HEADER_TARGETS) tests/Makefile Makefile build
 	@$(MAKE) -B -C tests `basename $@`
@@ -283,10 +280,14 @@ examples/clean: BRIEF_ARGS = clean (examples)
 examples/clean:
 	@$(MAKE) -C examples/hello-world clean
 
+.PHONY: clean
 clean: man/clean
 clean: targets/clean
 clean: tests/clean
 clean: examples/clean
+clean: BRIEF_ARGS = $(BUILD_DIRECTORY) tmp
+clean:
+	$(RM) $(BUILD_DIRECTORY) ./tmp/
 
 targets/clean:
 ifndef NO_BRIEF
@@ -303,6 +304,34 @@ compile_flags.txt: Makefile
 	@$(call BRIEF_ECHO, CREATE, $@)
 	@echo $(CFLAGS) | sed 's/\s/\n/g' > $@
 
-check: BRIEF_ARGS = src/*.c include/$(LIBRARY_NAME)/*.h
-check: compile_flags.txt $(SRC) $(HEADERS)
-	$(CHECK) $(SRC) $(HEADERS)
+tidycheck: tidy check
+tidylintcheck: tidy lint check
+
+.PHONY: check
+check: BRIEF_ARGS = src/*.c include/$(LIBRARY_NAME)/*.h test/*.c
+check: compile_flags.txt
+check: $(SRC) $(HEADERS) $(TEST_SOURCES)
+ifneq ($(CHECK),)
+	$(CHECK) $(filter-out $(DEPS), $(SRC)) $(HEADERS) $(TEST_SOURCES)
+endif
+
+.PHONY: tidy
+tidy: BRIEF_ARGS = src/*.c include/$(LIBRARY_NAME)/*.h test/*.c
+tidy: .clang-tidy $(SRC) $(HEADERS) $(TEST_SOURCES)
+ifneq ($(TIDY),)
+	$(TIDY) $(filter-out $(DEPS), $(SRC)) $(HEADERS) $(TEST_SOURCES)
+endif
+
+.PHONY: lint
+lint: BRIEF_ARGS = src/*.c include/$(LIBRARY_NAME)/*.h test/*.c
+lint: $(SRC) $(HEADERS) $(TEST_SOURCES)
+ifneq ($(LINT),)
+	$(LINT) $(filter-out $(DEPS), $(SRC)) $(HEADERS) $(TEST_SOURCES)
+endif
+
+.clang-tidy: BRIEF_ARGS = $@
+.clang-tidy: $(SRC) $(HEADERS) $(TEST_SOURCES) Makefile
+ifneq ($(TIDY),)
+	$(RM) $@
+	$(TIDY) --checks="-*,clang-analyzer-*" --dump-config > $@
+endif

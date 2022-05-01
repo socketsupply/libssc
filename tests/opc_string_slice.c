@@ -29,5 +29,14 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+test("opc_string_slice(string, offset)", 0) {
+  const OPCString string = "hello world";
+  OPCString hello = opc_string_slice(string, 0);
+  OPCString world = opc_string_slice(string, 6);
+
+  assert(0 == strncmp(hello, "hello", 5));
+  assert(0 == strncmp(world, "world", 5));
+}

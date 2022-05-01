@@ -37,7 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
+#if defined(__cplusplus) && !defined(OPC_CPLUSPLUS)
 extern "C" {
 #endif
 
@@ -64,6 +64,7 @@ ok (const char *format, ...) {
   ok_passed++;
 
   OPC_PRINTF("ok %d - ", ++ok_count);
+  // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF("\n");
 
@@ -79,11 +80,12 @@ notok (const char *format, ...) {
 
   va_start(args, format);
 
-  if (!format) {
+  if (format == 0) {
     format = (const char *) "";
   }
 
   OPC_PRINTF("not ok %d - ", ++ok_count);
+  // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF("\n");
 
@@ -99,11 +101,12 @@ okskip (const char *format, ...) {
 
   va_start(args, format);
 
-  if (!format) {
+  if (format == 0) {
     format = (const char *) "";
   }
 
   OPC_PRINTF("ok %d - ", ++ok_count);
+  // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #SKIP");
   OPC_PRINTF("\n");
@@ -120,11 +123,12 @@ notokskip (const char *format, ...) {
 
   va_start(args, format);
 
-  if (!format) {
+  if (format == 0) {
     format = (const char *) "";
   }
 
   OPC_PRINTF("not ok %d - ", ++ok_count);
+  // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #SKIP");
   OPC_PRINTF("\n");
@@ -141,11 +145,12 @@ oktodo (const char *format, ...) {
 
   va_start(args, format);
 
-  if (!format) {
+  if (format == 0) {
     format = (const char *) "";
   }
 
   OPC_PRINTF("ok %d - ", ++ok_count);
+  // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #TODO");
   OPC_PRINTF("\n");
@@ -162,11 +167,12 @@ notoktodo (const char *format, ...) {
 
   va_start(args, format);
 
-  if (!format) {
+  if (format == 0) {
     format = (const char *) "";
   }
 
   OPC_PRINTF("not ok %d - ", ++ok_count);
+  // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #TODO");
   OPC_PRINTF("\n");
@@ -260,6 +266,15 @@ okdone (void) {
     ok("%s", OPC_PP_STRINGX(condition));                                       \
   } else {                                                                     \
     notok("%s", OPC_PP_STRINGX(condition));                                    \
+    opc_catch(err) {                                                           \
+      OPC_PRINTF("  ---\n");                                                   \
+      OPC_PRINTF("  message: %s\n", err.string);                               \
+      OPC_PRINTF("  severity: fail\n");                                        \
+      OPC_PRINTF("  at:\n");                                                   \
+      OPC_PRINTF("    file: %s\n", __FILE__);                                  \
+      OPC_PRINTF("    line: %d\n", __LINE__);                                  \
+      OPC_PRINTF("  ---\n");                                                   \
+    }                                                                          \
   }
 
 /**
@@ -268,16 +283,16 @@ okdone (void) {
  * @param condition The condition to test
  */
 #define assert_ok(condition, ...)                                              \
-  if ((condition) == OPC_OK) {                                                 \
+  if (opc_ok(condition) == OPC_OK) {                                           \
     ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
   } else {                                                                     \
+    notok(                                                                     \
+      "%s [%s %s]",                                                            \
+      OPC_PP_STRINGX(condition),                                               \
+      opc_callsite_function_name(),                                            \
+      opc_callsite_file_location()                                             \
+    );                                                                         \
     opc_catch(err) {                                                           \
-      notok(                                                                   \
-        "%s [%s %s]",                                                          \
-        OPC_PP_STRINGX(condition),                                             \
-        opc_callsite_function_name(),                                          \
-        opc_callsite_file_location()                                           \
-      );                                                                       \
       OPC_PRINTF("  ---\n");                                                   \
       OPC_PRINTF("  message: %s\n", err.string);                               \
       OPC_PRINTF("  severity: fail\n");                                        \
@@ -297,13 +312,13 @@ okdone (void) {
   if ((condition) != OPC_OK) {                                                 \
     ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
   } else {                                                                     \
+    notok(                                                                     \
+      "%s [%s %s]",                                                            \
+      OPC_PP_STRINGX(condition),                                               \
+      opc_callsite_function_name(),                                            \
+      opc_callsite_file_location()                                             \
+    );                                                                         \
     opc_catch(err) {                                                           \
-      notok(                                                                   \
-        "%s [%s %s]",                                                          \
-        OPC_PP_STRINGX(condition),                                             \
-        opc_callsite_function_name(),                                          \
-        opc_callsite_file_location()                                           \
-      );                                                                       \
       OPC_PRINTF("  ---\n");                                                   \
       OPC_PRINTF("  message: %s\n", err.string);                               \
       OPC_PRINTF("  severity: fail\n");                                        \
@@ -325,6 +340,15 @@ okdone (void) {
     ok("%s equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));           \
   } else {                                                                     \
     notok("%s not equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));    \
+    opc_catch(err) {                                                           \
+      OPC_PRINTF("  ---\n");                                                   \
+      OPC_PRINTF("  message: %s\n", err.string);                               \
+      OPC_PRINTF("  severity: fail\n");                                        \
+      OPC_PRINTF("  at:\n");                                                   \
+      OPC_PRINTF("    file: %s\n", __FILE__);                                  \
+      OPC_PRINTF("    line: %d\n", __LINE__);                                  \
+      OPC_PRINTF("  ---\n");                                                   \
+    }                                                                          \
   }
 
 /**
@@ -338,6 +362,15 @@ okdone (void) {
     ok("%s not equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));       \
   } else {                                                                     \
     notok("%s equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));        \
+    opc_catch(err) {                                                           \
+      OPC_PRINTF("  ---\n");                                                   \
+      OPC_PRINTF("  message: %s\n", err.string);                               \
+      OPC_PRINTF("  severity: fail\n");                                        \
+      OPC_PRINTF("  at:\n");                                                   \
+      OPC_PRINTF("    file: %s\n", __FILE__);                                  \
+      OPC_PRINTF("    line: %d\n", __LINE__);                                  \
+      OPC_PRINTF("  ---\n");                                                   \
+    }                                                                          \
   }
 
 #ifdef __cplusplus

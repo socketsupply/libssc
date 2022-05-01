@@ -30,6 +30,7 @@
  */
 
 #include <opc/opc.h>
+#include "types.h"
 
 // clang-format off
 static const char UTF8_SAFE_CHARS[256] = {

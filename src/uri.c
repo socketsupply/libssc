@@ -30,6 +30,7 @@
  */
 
 #include <opc/opc.h>
+#include "types.h"
 
 // clang-format off
 static const char DEC2HEX[16 + 1] = {
@@ -115,7 +116,7 @@ opc_uri_component_encode_size (const OPCBuffer input) {
     return 0;
   }
 
-  for (int i = 0; i < input.size; ++i) {
+  for (int i = 0; i < input.size && input.bytes[i] != 0; ++i) {
     long status = opc_utf8_detect(opc_buffer_slice(input, i, i + 1));
 
     switch (status) {

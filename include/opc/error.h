@@ -115,6 +115,14 @@ struct OPCError {
 /**
  * Throws an error with `code` and `message` that can be caught with
  * `opc_catch(err)
+ * @param code An `OPCResult` error code. An error code defined in `<errno.h>`
+ *             may be used to if the header is supported by the platform
+ * @param message A custom error message
+ * @param ... Variadic values to use in string formats in `message`
+ * @example
+ *   if (read_out_of_bounds) {
+ *     return opc_throw(OPC_OUT_OF_BOUNDS, "");
+ *   }
  */
 #define opc_throw(code, message, ...)                                          \
   opc_error_throw(                                                             \
@@ -151,7 +159,8 @@ opc_error_string (const OPCResult error);
  * Throws an error with `code` and `message` that can be caught with
  * `opc_error_catch()`. Call site data must be given to this function.
  * The `opc_throw()` function handles this.
- * @param code An `OPCResult` error code
+ * @param code An `OPCResult` error code. An error code defined in `<errno.h>`
+ *             may be used to if the header is supported by the platform
  * @param message A custom error message
  * @param location The file location of the error
  * @param line The file line number of the error

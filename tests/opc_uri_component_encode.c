@@ -29,5 +29,31 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+// includes decoded unicode characters
+#define SOURCE_STRING "betty aime le fromage français"
+// includes encoded unicode characters
+#define EXPECTED_STRING "betty%20aime%20le%20fromage%20fran%C3%A7ais"
+
+static OPCByte stack[4096] = { 0 };
+
+test("opc_uri_component_encode(output, input)", 0) {
+  const OPCString expected = opc_string(EXPECTED_STRING);
+  const OPCString source = opc_string(SOURCE_STRING);
+
+  const OPCUSize expected_size = opc_string_size(expected);
+  const OPCUSize source_size = opc_string_size(source);
+
+  OPCBuffer memory = opc_buffer_from(stack);
+  OPCBuffer output = opc_buffer_slice(memory, 0, expected_size);
+  OPCBuffer input =
+    opc_buffer_slice(memory, output.size + 1, output.size + source_size + 1);
+
+  // write source to input buffer
+  assert(opc_buffer_write_string(&input, source, 0) > 0);
+
+  // verify successful encode of input into output
+  assert_ok(opc_uri_component_encode(&output, input));
+}

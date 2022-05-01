@@ -29,5 +29,17 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+test("opc_buffer_from_string(string)", 0) {
+  OPCBuffer hello = opc_buffer_from_string("hello");
+  OPCBuffer world = opc_buffer_from_string("world");
+
+  assert(0 == strncmp(opc_string(hello.bytes), "hello", hello.size));
+  assert(0 == strncmp(opc_string(world.bytes), "world", world.size));
+
+  char chars[] = { 'h', 'e', 'l', 'l', 'o', 0 };
+  OPCBuffer chars_buffer = opc_buffer_from_string(chars);
+  assert(0 == strncmp(opc_string(chars_buffer.bytes), chars, chars_buffer.size));
+}

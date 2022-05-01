@@ -11,6 +11,7 @@
     "shellcheck": "command shellcheck scripts/*.sh",
     "format": "clang-format -i include/**/*.h src/*.c tests/*.c example/**/*.c",
     "indent": "indent -t2 -kr -nut src/**/*.c include/**/*.h",
+    "check": "make check",
     "lint": "cpplint  include/**/*.h src/*.c"
   },
   "files": [
@@ -29,6 +30,7 @@
     "include/opc/print.h",
     "include/opc/result.h",
     "include/opc/string.h",
+    "include/opc/system.h",
     "include/opc/test.h",
     "include/opc/uri.h",
     "include/opc/utf8.h",

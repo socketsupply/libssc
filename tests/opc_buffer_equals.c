@@ -29,5 +29,20 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
-#include "types.h"
+#include <opc/test.h>
+#include <string.h>
+
+test("opc_buffer_equals(buffer, other)", 0) {
+  OPCBuffer hello = opc_buffer_from("hello");
+  OPCBuffer world = opc_buffer_from("world");
+  OPCBuffer empty = opc_buffer_from("");
+
+  assert_ok(opc_buffer_equals(hello, empty) == OPC_FALSE);
+  assert_ok(opc_buffer_equals(world, empty) == OPC_FALSE);
+
+  assert_ok(opc_buffer_equals(hello, hello) == OPC_TRUE);
+  assert_ok(opc_buffer_equals(world, world) == OPC_TRUE);
+
+  assert_ok(opc_buffer_equals(hello, world) == OPC_TRUE);
+  assert_ok(opc_buffer_equals(world, hello) == OPC_TRUE);
+}

@@ -29,6 +29,7 @@
     "include/opc/print.h",
     "include/opc/result.h",
     "include/opc/string.h",
+    "include/opc/system.h",
     "include/opc/test.h",
     "include/opc/uri.h",
     "include/opc/utf8.h",

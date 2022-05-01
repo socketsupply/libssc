@@ -30,6 +30,7 @@
  */
 
 #include <opc/opc.h>
+#include "types.h"
 
 OPCBuffer
 opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end) {
@@ -48,6 +49,11 @@ opc_buffer_compare (const OPCBuffer self, const OPCBuffer right) {
     opc_string(right.bytes),
     right.size
   );
+}
+
+OPCBoolean
+opc_buffer_equals (const OPCBuffer left, const OPCBuffer right) {
+  return opc_buffer_compare(left, right) == 0 ? true : false;
 }
 
 const OPCUSize

@@ -29,5 +29,15 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
+// This file is a **private** source file and will _NOT_ be gaurded with
+// #ifndef...#endif macro gaurds which prevents double defines
+
 #include <opc/opc.h>
-#include "types.h"
+
+#ifndef true
+#define true OPC_TRUE
+#endif
+
+#ifndef false
+#define false OPC_FALSE
+#endif

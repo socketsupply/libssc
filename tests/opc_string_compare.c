@@ -30,16 +30,15 @@
  */
 
 #include <opc/test.h>
+#include <string.h>
 
-static OPCBytes stack[4096] = {0};
+test("opc_string_compare(string, other)", 0) {
+  const OPCString hello = "hello";
+  const OPCString world = "world";
 
-test("buffer", 0) {
-  OPCBuffer memory = opc_buffer_from(stack);
-  OPCBuffer hello = opc_buffer_from("hello");
-  OPCBuffer world = opc_buffer_from("world");
+  assert(opc_string_compare(hello, world) == -1);
+  assert(opc_string_compare(world, hello) == 1);
 
-  assert_ok(opc_buffer_write_buffer(&memory, hello, 0));
-  assert_ok(opc_buffer_write_buffer(&memory, world, hello.size + 1));
-  opc_print(opc_string(memory.bytes + hello.size + 1));
-  opc_buffer_print(opc_buffer(memory.bytes + hello.size + 1));
+  assert(opc_string_compare(hello, hello) == 0);
+  assert(opc_string_compare(world, world) == 0);
 }

@@ -35,77 +35,62 @@
 #include "platform.h"
 
 /**
- * @TODO
- */
-typedef char *OPCString;
-
-/**
- * @TODO
- */
-#define opc_string(value) (OPCString)(value)
-
-/**
- * @TODO
- */
-#define opc_string_from_buffer(buffer) (OPCString)((buffer).bytes)
-
-/**
- * @TODO
+ * `fprintf` library function.
  */
 #define opc_string_fprintf(stream, value, ...)                                 \
   OPC_FPRINTF(stream, opc_string(value), ##__VA_ARGS__)
 
 /**
- * @TODO
+ * `sprintf` library function.
  */
 #define opc_string_sprintf(string, format, ...)                                \
   OPC_SPRINTF(string, opc_string(format), ##__VA_ARGS__)
 
 /**
- * @TODO
+ * `snprintf` library function.
  */
 #define opc_string_snprintf(string, size, format, ...)                         \
   OPC_SNPRINTF(string, size, opc_string(format), ##__VA_ARGS__)
 
 /**
- * @TODO
+ * `vsprintf` library function.
  */
 #define opc_string_vsprintf(string, ...) OPC_VSPRINTF(string, __VA_ARGS__)
 
 /**
- * @TODO
+ * `vsnprintf` library function.
  */
 #define opc_string_vsnprintf(string, ...) OPC_VSNPRINTF(string, __VA_ARGS__)
 
 /**
- * @TODO
+ * `printf` library function.
  */
 #define opc_string_printf(value, ...)                                          \
   OPC_PRINTF(opc_string(value), ##__VA_ARGS__)
 
 /**
- * @TODO
+ * `print` library function.
  */
 #define opc_string_print(value) opc_string_printf("%s\n", opc_string(value))
 
 /**
- * @TODO
+ * Format a string like `sprintf`.
  */
 #define opc_string_format(string, ...) opc_string_sprintf(string, __VA_ARGS__)
 
 /**
- * @TODO
+ * Format a string with a variadic argument list like `vsprintf`.
  */
 #define opc_string_vformat(string, ...) opc_string_vsprintf(string, __VA_ARGS__)
 
 /**
- * @TODO
+ * Format a string like `snprintf`.
  */
 #define opc_string_nformat(string, size, ...)                                  \
   opc_string_snprintf(string, size, __VA_ARGS__)
 
 /**
- * @TODO
+ * Format a string with a variadic argument list like `vsnprintf`.
  */
 #define opc_string_vnformat(string, ...)                                       \
   opc_string_vsnprintf(string, __VA_ARGS__)
@@ -154,9 +139,13 @@ opc_string_compare_with_size (
 );
 
 /**
- * @TODO
+ * Slice a `string` returning a pointer at `offset`.
+ * @notice `string` is checked for `NULL`, but not for nullterm.
+ * @param string
+ * @param offset
+ * @return A pointer at `string + offset`
  */
 OPC_EXPORT const OPCString
-opc_string_slice (const OPCString self, const OPCUSize offset);
+opc_string_slice (const OPCString string, const OPCUSize offset);
 
 #endif
