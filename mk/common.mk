@@ -47,11 +47,20 @@ STRIP = strip
 MKDIR = mkdir -p
 _MKDIR = mkdir -p
 INSTALL = install
+
+ifneq ($(shell which clang-check 2>/dev/null),)
+	CHECK = clang-check
+else
+ifneq ($(shell which clang-check-15 2>/dev/null),)
+	CHECK = clang-check-15
+endif
+endif
+
 ifneq ($(GCC),)
-CC = gcc
+	CC = gcc
 else
 ifneq ($(shell which clang 2>/dev/null),)
-CC = clang
+	CC = clang
 endif
 endif
 

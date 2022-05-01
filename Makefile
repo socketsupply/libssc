@@ -295,3 +295,14 @@ ifndef NO_BRIEF
 else
 	rm -rf $(CLEAN_TARGETS)
 endif
+
+compile_flags: compile_flags.txt
+compile_flags.txt: BRIEF_ARGS = $@
+compile_flags.txt: Makefile
+	$(RM) -f $@
+	@$(call BRIEF_ECHO, CREATE, $@)
+	@echo $(CFLAGS) | sed 's/\s/\n/g' > $@
+
+check: BRIEF_ARGS = src/*.c include/$(LIBRARY_NAME)/*.h
+check: compile_flags.txt $(SRC) $(HEADERS)
+	$(CHECK) $(SRC) $(HEADERS)

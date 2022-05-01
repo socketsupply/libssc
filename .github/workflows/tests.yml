@@ -14,12 +14,18 @@ jobs:
       shell: bash
       run: |
         sudo apt update -y
-        sudo apt install -y -qq curl libcurl4-openssl-dev
+        sudo apt install -y -qq curl libcurl4-openssl-dev clang-tools
     - name: Run Tests
       run: |
+        ## deps
         npm install
         pip install cpplint
+
+        ## tests
+        make check
         make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+
+        ## lint
         curl -Lo- get.bpkg.sh | bash
         bpkg run lint
 
@@ -36,9 +42,15 @@ jobs:
         brew install openssl curl
     - name: Run Tests
       run: |
+        ## deps
         npm install
         pip install cpplint
+
+        ## tests
         make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        make check
+
+        ## lint
         export PRFEFIX=/usr/local
         curl -Lo- get.bpkg.sh | bash
         bpkg run lint
