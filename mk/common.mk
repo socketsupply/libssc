@@ -37,6 +37,7 @@ MAKEFILE_DIRNAME := $(realpath $(dir $(MAKEFILE)))
 ## Environment
 OS = $(shell uname)
 CWD := $(shell pwd)
+ROOT_DIRNAME := $(shell dirname $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))))
 
 ## Commands
 CP = cp -rf
@@ -65,5 +66,5 @@ LIBRARY_NAME ?= opc
 LIBRARY_VERSION_MAJOR = 0
 LIBRARY_VERSION_MINOR = 0
 LIBRARY_VERSION_PATCH = 0
-LIBRARY_VERSION_REVISION = $(shell $(MAKEFILE)/scripts/version.sh)
+LIBRARY_VERSION_REVISION = $(shell $(ROOT_DIRNAME)/scripts/version.sh)
 LIBRARY_DATE_COMPILED := $(shell date)

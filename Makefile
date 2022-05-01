@@ -126,6 +126,9 @@ endef
 
 export PATH := $(CWD)/node_modules/.bin:$(PATH)
 
+foo:
+	@echo $(ROOT_DIRNAME)
+
 default: build
 	@:
 
