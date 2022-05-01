@@ -29,13 +29,14 @@
 # SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
 ##
 
+## MAKE Configuration
+MAKEFLAGS += --no-print-directory
+MAKEFILE := $(firstword $(MAKEFILE_LIST))
+MAKEFILE_DIRNAME := $(shell realpath $(dir $(MAKEFILE)))
+
 ## Environment
 OS = $(shell uname)
 CWD := $(shell pwd)
-
-## MAKE Configuration
-MAKEFLAGS += --no-print-directory
-THIS_MAKEFILE := $(dir $(firstword $(MAKEFILE_LIST)))
 
 ## Commands
 CP = cp -rf

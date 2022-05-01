@@ -33,7 +33,7 @@
 include ../mk/common.mk
 -include ../mk/brief.mk
 
-BUILD_LIBRARY_PATH = ../build/lib
+BUILD_LIBRARY_PATH = $(shell realpath $(MAKEFILE_DIRNAME)/../build/lib)
 
 ## test source files
 SRC += $(wildcard *.c)
@@ -66,6 +66,7 @@ DEPS +=
 ## so our test executables can load the built library at runtime
 export LD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 export DYLD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
+export DYLD_FALLBACK_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 
 default: $(TARGETS)
 
