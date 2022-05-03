@@ -14,7 +14,7 @@ jobs:
       shell: bash
       run: |
         sudo apt update -y
-        sudo apt install -y -qq curl libcurl4-openssl-dev clang-tools
+        sudo apt install -y -qq curl libcurl4-openssl-dev clang-tools clang-tidy
     - name: Run Tests
       run: |
         ## deps
@@ -45,7 +45,7 @@ jobs:
         pip install cpplint
 
         ## checks
-        make clint check
+        make lint check
 
         ## tests
         make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
