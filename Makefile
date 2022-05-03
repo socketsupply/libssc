@@ -326,7 +326,7 @@ endif
 lint: BRIEF_ARGS = src/*.c include/$(LIBRARY_NAME)/*.h test/*.c
 lint: $(SRC) $(HEADERS) $(TEST_SOURCES)
 ifneq ($(LINT),)
-	$(LINT) $(filter-out $(DEPS), $(SRC)) $(HEADERS) $(TEST_SOURCES)
+	$(LINT) --quiet --recursive $(filter-out $(DEPS), $(SRC)) $(HEADERS) $(TEST_SOURCES)
 endif
 
 .clang-tidy: BRIEF_ARGS = $@
