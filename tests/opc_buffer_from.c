@@ -34,7 +34,7 @@
 
 static OPCByte stack[4096] = {0};
 
-test("opc_buffer_from(bytes)", 0) {
+test("opc_buffer_from(bytes)") {
   OPCBuffer hello = opc_buffer_from_string("hello");
   OPCBuffer bytes = opc_buffer_from(stack, sizeof(stack));
 

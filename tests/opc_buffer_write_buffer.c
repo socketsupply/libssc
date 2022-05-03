@@ -34,7 +34,7 @@
 
 static OPCByte stack[4096] = { 0 };
 
-test("opc_buffer_write_buffer(buffer, input_buffer, offset)", 0) {
+test("opc_buffer_write_buffer(buffer, input_buffer, offset)") {
   OPCBuffer buffer = opc_buffer_from(stack, sizeof(stack));
 
   assert_ok(

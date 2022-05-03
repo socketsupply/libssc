@@ -31,7 +31,7 @@
 
 #include <opc/test.h>
 
-test("opc_is_error", 0) {
+test("opc_is_error") {
   assert(opc_is_error(OPC_MISSING_CONTEXT));
   assert(opc_is_error(OPC_BAD_STATE));
   assert(opc_is_error(OPC_INVALID_ARGUMENT));

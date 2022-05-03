@@ -31,7 +31,7 @@
 
 #include <opc/test.h>
 
-test("opc_error_throw(code, message, location, line, function, ...)", 0) {
+test("opc_error_throw(code, message, location, line, function, ...)") {
   assert_equal(
     OPC_ERROR,
     opc_error_throw(OPC_ERROR, "ERROR %s", "file.c", 1234, "function", "oops")

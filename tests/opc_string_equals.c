@@ -32,7 +32,7 @@
 #include <opc/test.h>
 #include <string.h>
 
-test("opc_string_equals(string, other)", 0) {
+test("opc_string_equals(string, other)") {
   const OPCString hello = "hello";
   const OPCString world = "world";
   const OPCString empty = "";

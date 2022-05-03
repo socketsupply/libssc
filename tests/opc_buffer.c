@@ -38,7 +38,7 @@ struct CustomBuffer {
   OPCBuffer buffer;
 };
 
-test("opc_buffer(value)", 0) {
+test("opc_buffer(value)") {
   // clang-format off
   CustomBuffer custom_buffer = {
     .buffer = opc_buffer_from(stack, sizeof(stack))

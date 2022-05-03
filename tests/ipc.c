@@ -31,7 +31,7 @@
 
 #include <opc/test.h>
 
-test("ipc", 0) {
+test("ipc") {
   OPCIPCContext ctx = { 0 };
   OPCBuffer *data[] = {
     &opc_buffer_from_string("foo"),

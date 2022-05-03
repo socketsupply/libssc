@@ -44,9 +44,9 @@ extern "C" {
 /**
  * Tests stats
  */
-static int ok_count;
-static int ok_passed;
-static int ok_expected;
+static int total_test_count;
+static int total_pass_count;
+static int expected_pass_count;
 
 /**
  * Simple `ok()` emission for a passed test.
@@ -61,9 +61,9 @@ ok (const char *format, ...) {
     format = (const char *) "";
   }
 
-  ok_passed++;
+  total_pass_count++;
 
-  OPC_PRINTF("ok %d - ", ++ok_count);
+  OPC_PRINTF("ok %d - ", ++total_test_count);
   // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF("\n");
@@ -84,7 +84,7 @@ notok (const char *format, ...) {
     format = (const char *) "";
   }
 
-  OPC_PRINTF("not ok %d - ", ++ok_count);
+  OPC_PRINTF("not ok %d - ", ++total_test_count);
   // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF("\n");
@@ -105,7 +105,7 @@ okskip (const char *format, ...) {
     format = (const char *) "";
   }
 
-  OPC_PRINTF("ok %d - ", ++ok_count);
+  OPC_PRINTF("ok %d - ", ++total_test_count);
   // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #SKIP");
@@ -127,7 +127,7 @@ notokskip (const char *format, ...) {
     format = (const char *) "";
   }
 
-  OPC_PRINTF("not ok %d - ", ++ok_count);
+  OPC_PRINTF("not ok %d - ", ++total_test_count);
   // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #SKIP");
@@ -149,7 +149,7 @@ oktodo (const char *format, ...) {
     format = (const char *) "";
   }
 
-  OPC_PRINTF("ok %d - ", ++ok_count);
+  OPC_PRINTF("ok %d - ", ++total_test_count);
   // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #TODO");
@@ -171,7 +171,7 @@ notoktodo (const char *format, ...) {
     format = (const char *) "";
   }
 
-  OPC_PRINTF("not ok %d - ", ++ok_count);
+  OPC_PRINTF("not ok %d - ", ++total_test_count);
   // NOLINTNEXTLINE
   OPC_VPRINTF(format, args);
   OPC_PRINTF(" #TODO");
@@ -186,8 +186,8 @@ notoktodo (const char *format, ...) {
 void
 okdone (void) {
   int rc = 0;
-  if (0 != ok_expected && ok_passed != ok_expected) {
-    if (ok_expected > ok_passed) {
+  if (0 != expected_pass_count && total_pass_count != expected_pass_count) {
+    if (expected_pass_count > total_pass_count) {
       OPC_FPRINTF(stderr, "expected number of success conditions not met.\n");
     } else {
       OPC_FPRINTF(
@@ -198,17 +198,17 @@ okdone (void) {
     }
 
     rc = 1;
-  } else if (ok_passed != ok_count) {
+  } else if (total_pass_count != total_test_count) {
     rc = 1;
   }
 
-  if (ok_expected == 0) {
-    OPC_PRINTF("1..%d\n", ok_count);
+  if (expected_pass_count == 0) {
+    OPC_PRINTF("1..%d\n", total_test_count);
   }
 
-  OPC_PRINTF("# tests %d\n", ok_count);
-  OPC_PRINTF("# fail %d\n", ok_count - ok_passed);
-  OPC_PRINTF("# pass %d\n", ok_passed);
+  OPC_PRINTF("# tests %d\n", total_test_count);
+  OPC_PRINTF("# fail %d\n", total_test_count - total_pass_count);
+  OPC_PRINTF("# pass %d\n", total_pass_count);
 
   OPC_EXIT(rc);
 }
@@ -219,42 +219,39 @@ okdone (void) {
  * @param expected_pass_count The expected number of passed tests where 0 means
  * no expectation
  */
-#define test(test_name, expected_pass_count)                                   \
-  void runner(                                                                 \
-    const char *_test_name, const unsigned int _expected_pass_count            \
-  );                                                                           \
+#define test(test_name, ...)                                                   \
+  void runner();                                                               \
   int main(const int argc, const char **argv) {                                \
     opc_init(argc, argv);                                                      \
+    { __VA_ARGS__; };                                                          \
     OPC_PRINTF("TAP version 14\n");                                            \
     OPC_PRINTF("# %s\n", test_name);                                           \
     if (expected_pass_count > 0) {                                             \
       OPC_PRINTF("1..%d\n", expected_pass_count);                              \
-      ok_expected = expected_pass_count;                                       \
+      expected_pass_count = expected_pass_count;                               \
     }                                                                          \
-    runner(test_name, expected_pass_count);                                    \
+    runner();                                                                  \
     okdone();                                                                  \
     if (expected_pass_count > 0) {                                             \
-      return ok_expected - ok_passed;                                          \
+      return expected_pass_count - total_pass_count;                           \
     }                                                                          \
-    return ok_count - ok_passed;                                               \
+    return total_test_count - total_pass_count;                                \
   }                                                                            \
-  void runner(const char *_test_name, const unsigned int _expected_pass_count)
+  void runner()
 
 /**
  * A simple macro to skip tests instead of running them marked by the leading
  * `x` character in `test()`
  */
-#define xtest(test_name, expected_pass_count)                                  \
-  void runner(                                                                 \
-    const char *_test_name, const unsigned int _expected_pass_count            \
-  );                                                                           \
+#define xtest(test_name, ...)                                                  \
+  void runner();                                                               \
   int main(void) {                                                             \
     OPC_PRINTF("TAP version 14\n");                                            \
     OPC_PRINTF("# %s\n", test_name);                                           \
     OPC_PRINTF("1..0\n");                                                      \
     return 0;                                                                  \
   }                                                                            \
-  void runner(const char *_test_name, const unsigned int _expected_pass_count)
+  void runner()
 
 /**
  * A simple assertion that emits `ok ...` or `not ok ...`

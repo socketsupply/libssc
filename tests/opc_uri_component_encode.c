@@ -39,7 +39,7 @@
 
 static OPCByte stack[4096] = { 0 };
 
-test("opc_uri_component_encode(output, input)", 0) {
+test("opc_uri_component_encode(output, input)") {
   const OPCString expected = opc_string(EXPECTED_STRING);
   const OPCString source = opc_string(SOURCE_STRING);
 

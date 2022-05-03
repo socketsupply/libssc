@@ -34,7 +34,7 @@
 #define assert_result_string(code)                                             \
   assert(opc_string_equals(OPC_PP_STRING(code), opc_result_string(code)))
 
-test("opc_result_string", 0) {
+test("opc_result_string") {
   assert_result_string(OPC_MISSING_CONTEXT);
   assert_result_string(OPC_INVALID_ARGUMENT);
   assert_result_string(OPC_OUT_OF_BOUNDS);

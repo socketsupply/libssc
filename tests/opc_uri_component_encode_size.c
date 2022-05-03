@@ -35,7 +35,7 @@
 #define SOURCE_STRING "betty aime le fromage français"
 #define EXPECTED_SIZE 43
 
-test("opc_uri_component_encode_size(input)", 0) {
+test("opc_uri_component_encode_size(input)") {
   OPCBuffer input = opc_buffer_from_string(SOURCE_STRING);
   assert(EXPECTED_SIZE == opc_uri_component_encode_size(input));
 }

@@ -31,5 +31,5 @@
 
 #include <opc/test.h>
 
-test("opc_error_catch(error)", 0) {
+test("opc_error_catch(error)") {
 }

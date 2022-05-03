@@ -33,7 +33,7 @@
 
 #define from_macro(...) OPC_PP_VARG_COUNT(__VA_ARGS__)
 
-test("pp", 0) {
+test("pp") {
   assert(0 == OPC_PP_VARG_COUNT());
   assert(1 == OPC_PP_VARG_COUNT(1));
   assert(2 == OPC_PP_VARG_COUNT(1, 2));

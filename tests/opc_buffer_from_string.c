@@ -32,14 +32,26 @@
 #include <opc/test.h>
 #include <string.h>
 
-test("opc_buffer_from_string(string)", 0) {
+test("opc_buffer_from_string(string)") {
   OPCBuffer hello = opc_buffer_from_string("hello");
   OPCBuffer world = opc_buffer_from_string("world");
 
   assert(0 == strncmp(opc_string(hello.bytes), "hello", hello.size));
   assert(0 == strncmp(opc_string(world.bytes), "world", world.size));
 
-  char chars[] = { 'h', 'e', 'l', 'l', 'o', 0 };
+  OPCChar chars[] = { 'h', 'e', 'l', 'l', 'o', 0 };
   OPCBuffer chars_buffer = opc_buffer_from_string(chars);
-  assert(0 == strncmp(opc_string(chars_buffer.bytes), chars, chars_buffer.size));
+  OPCBuffer chars_buffer_static =
+    opc_buffer_from(opc_chars('h', 'e', 'l', 'l', 'o'), 5);
+
+  assert_equal(
+    0, strncmp(opc_string(chars_buffer.bytes), chars, chars_buffer.size)
+  );
+
+  assert_equal(
+    0,
+    strncmp(
+      opc_string(chars_buffer_static.bytes), chars, chars_buffer_static.size
+    )
+  );
 }

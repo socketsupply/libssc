@@ -33,7 +33,7 @@
 
 static const unsigned long long UMAX = -1;
 
-test("opc_math", 0) {
+test("opc_math") {
   assert(opc_math_clamp(1, 0, 2) == 1);
   assert(opc_math_clamp(-2, -3, 3) == -2);
   assert(opc_math_clamp(-128, -128, 128) == -128);

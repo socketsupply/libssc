@@ -32,5 +32,5 @@
 #include <opc/test.h>
 #include <string.h>
 
-test("opc_buffer_fill(buffer, byte offset, end)", 0) {
+test("opc_buffer_fill(buffer, byte offset, end)") {
 }

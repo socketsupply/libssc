@@ -31,6 +31,6 @@
 
 #include <opc/test.h>
 
-test("opc_error_create(code, message)", 0) {
+test("opc_error_create(code, message)") {
   assert_ok(opc_error_create(OPC_ERROR, "oops"));
 }

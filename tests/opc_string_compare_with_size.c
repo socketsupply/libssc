@@ -32,7 +32,7 @@
 #include <opc/test.h>
 #include <string.h>
 
-test("opc_string_compare_with_size(string, string_size, other, other_size)", 0) {
+test("opc_string_compare_with_size(string, string_size, other, other_size)") {
   const OPCString hello = "helloworld";
   const OPCString world = "worldhello";
 

@@ -32,7 +32,7 @@
 #include <opc/test.h>
 #include <string.h>
 
-test("opc_buffer_equals(buffer, other)", 0) {
+test("opc_buffer_equals(buffer, other)") {
   OPCBuffer hello = opc_buffer_from_string("hello");
   OPCBuffer world = opc_buffer_from_string("world");
   OPCBuffer empty = opc_buffer_from_string("");

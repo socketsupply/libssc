@@ -32,7 +32,7 @@
 #include <opc/test.h>
 #include <string.h>
 
-test("opc_string_slice(string, offset)", 0) {
+test("opc_string_slice(string, offset)") {
   const OPCString string = "hello world";
   OPCString hello = opc_string_slice(string, 0);
   OPCString world = opc_string_slice(string, 6);

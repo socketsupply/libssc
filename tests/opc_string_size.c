@@ -32,7 +32,7 @@
 #include <opc/test.h>
 #include <string.h>
 
-test("opc_string_size(string)", 0) {
+test("opc_string_size(string)") {
   assert(opc_string_size("") == 0);
   assert(opc_string_size("h") == 1);
   assert(opc_string_size("he") == 2);
