@@ -49,38 +49,31 @@ struct OPCBuffer {
 };
 
 /**
+ * Casts `value` to a `OPCBuffer`
+ * @param value
+ * @return `value` casted to `OPCBuffer`
+ */
+#define opc_buffer(value) (*((OPCBuffer*) &((value))))
+
+/**
  * Converts `bytes` to an `OPCBuffer` with optional `size` and `parent`
  * properties.
  * @param bytes Bytes pointer
- * @param [size = 0] Optional size of byets
+ * @param size
  * @param [parent = 0] Optional parent to bytes
  * @param [offset = 0] Optional byte offset in parent bytes
  * @return An `OPCBuffer` structure
  */
-#define opc_buffer(bytes, ...)                                                 \
-  (OPCBuffer)({                                                                \
-    OPCBuffer buf = { (OPCBytes) (bytes), ##__VA_ARGS__ };                     \
-    if (!buf.size) {                                                           \
-      buf.size = sizeof((bytes));                                              \
-    }                                                                          \
-    (buf);                                                                     \
-  })
-
-/**
- * Converts static `value` to an `OPCBuffer` with `size` computed statically.
- * @param value
- * @return An `OPCBuffer` structure
- */
-#define opc_buffer_from(value)                                                 \
-  ((OPCBuffer) { (OPCBytes) value, sizeof(value), 0, 0 })
+#define opc_buffer_from(bytes, ...)                                            \
+  ((OPCBuffer) { (OPCBytes) (bytes), ##__VA_ARGS__ })
 
 /**
  * Converts `string` to an `OPCBuffer` with `size` computed dynamically.
  * @param string The string
  */
 #define opc_buffer_from_string(string)                                         \
-  ((OPCBuffer) {                                                               \
-    opc_bytes(opc_string(string)), opc_string_size(opc_string(string)), 0, 0 } \
+  opc_buffer_from(                                                             \
+    opc_bytes(opc_string(string)), opc_string_size(opc_string(string))         \
   )
 
 /**
@@ -89,8 +82,16 @@ struct OPCBuffer {
  */
 #define opc_buffer_print(buffer)                                               \
   opc_string_fprintf(                                                          \
-    opc_stdout(), "%.*s\n", (int) (buffer).size, opc_string((buffer).bytes)    \
+    opc_stdout(), "%.*s\n", opc_int((buffer).size), opc_string((buffer).bytes) \
   )
+
+/**
+ * Writes zeros to `buffer` up to `size` bytes.
+ * @param buffer
+ * @param size
+ */
+#define opc_buffer_zero(buffer, size)                                          \
+  opc_buffer_fill(&opc_buffer_from(opc_bytes(buffer)), 0, 0, size)
 
 /**
  * Computes a new buffer with slice

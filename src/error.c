@@ -36,22 +36,25 @@
 // a user space configure or feature detection script
 #ifndef OPC_MISSING_ERRNO
 #define HAVE_ERRONO
-#include <errno.h>
+#include <string.h>
 #endif
 
 struct Error {
-  const OPCResult code;
-  const OPCString message;
+  OPCSize code;
+  OPCString message;
 };
 
 // clang-format off
-static struct Error errors[] = {
+static struct Error errors[1024] = {
   { 0, "" },
   { OPC_ERROR, "An error occurred" },
   { OPC_NULL_POINTER, "NULL pointer reference" },
   { OPC_OUT_OF_MEMORY, "Ran out of memory" },
   { OPC_OUT_OF_BOUNDS, "Read out of bounds" },
-  { OPC_INVALID_ARGUMENT, "Invalid argument" }
+  { OPC_INVALID_ARGUMENT, "Invalid argument" },
+  { OPC_BAD_STATE, "Bad state" },
+  { OPC_MISSING_CONTEXT, "Missing context" },
+  { 0, 0 },
 };
 
 // clang-format on
@@ -65,29 +68,87 @@ opc_error_init () {
 }
 
 const OPCString
-opc_error_string (OPCResult error) {
-  unsigned long count = sizeof(errors) / sizeof(struct Error);
-  OPCBoolean check_errno = OPC_TRUE;
+opc_error_string (OPCSize error) {
+  OPCUSize count = sizeof(errors) / sizeof(struct Error);
 
-  for (int i = 0; i < count; ++i) {
-    if (errors[i].code == error) {
-      return errors[i].message;
+  if (error < 0) {
+    for (int i = 0; i < count; ++i) {
+      if (errors[i].code == 0 && errors[i].message == 0) {
+        break;
+      }
+
+      if (errors[i].code == error) {
+        return errors[i].message;
+      }
     }
   }
+
+#ifdef HAVE_ERRONO
+  if (error > 0) {
+    OPCString message = strerror(opc_int(opc_math_abs(error)));
+    if (message != 0) {
+      return message;
+    }
+  }
+#endif
 
   return errors[0].message;
 }
 
-const OPCResult
+const OPCSize
+opc_error_create (OPCSize code, const OPCString message) {
+  OPCSize count = sizeof(errors) / sizeof(struct Error);
+  OPCSize slot = -1;
+
+  if (code >= 0) {
+    return opc_throw(OPC_INVALID_ARGUMENT, "Error code must be less than 0");
+  }
+
+  if (message == 0) {
+    return opc_throw(OPC_INVALID_ARGUMENT, "Message cannot be NULL");
+  }
+
+  for (int i = 0; i < count - 1; ++i) {
+    if (errors[i].code == code) {
+      slot = i;
+      break;
+    }
+
+    if (errors[i].code == 0 && errors[i].message == 0) {
+      slot = i;
+      break;
+    }
+  }
+
+  if (slot == -1 || slot >= count) {
+    return opc_throw(OPC_OUT_OF_BOUNDS, "Maximum errors created");
+  }
+
+  // assign code + message
+  errors[slot].code = code;
+  errors[slot].message = message;
+
+  // set end marker slot
+  errors[slot + 1].code = 0;
+  errors[slot + 1].message = 0;
+
+  return OPC_OK;
+}
+
+const OPCSize
 opc_error_throw (
-  const OPCResult code,
+  const OPCSize code,
   const OPCString message,
   const OPCString location,
-  const OPCUSize line,
+  const OPCSize line,
   const OPCString function,
   ...
 ) {
-  OPCBuffer buffer = opc_buffer_from(global_error.bytes);
+  // clang-format off
+  OPCBuffer buffer = opc_buffer_from(
+    global_error.bytes,
+    sizeof(global_error.bytes)
+  );
 
   // header
   // NOLINTNEXTLINE
@@ -104,7 +165,6 @@ opc_error_throw (
   va_list args;
   va_start(args, function);
 
-  // clang-format off
   global_error.code = code;
   global_error.line = line;
   global_error.location = opc_string(
@@ -117,7 +177,7 @@ opc_error_throw (
 
   // +message
   if (message != 0 && opc_string_size(message) > 0) {
-    OPCUSize header_size = global_error.meta.header_size;
+    OPCSize header_size = global_error.meta.header_size;
     global_error.message = opc_string(buffer.bytes + header_size);
     // NOLINTNEXTLINE
     global_error.meta.message_size = opc_string_vnformat(
@@ -152,13 +212,13 @@ opc_error_throw (
   return code;
 }
 
-const OPCResult
+const OPCSize
 opc_error_catch (OPCError *error) {
-  const OPCResult code = global_error.code;
+  const OPCSize code = global_error.code;
 
   // catch can be called with `NULL` pointer
   if (error != 0) {
-    OPCBuffer buffer = opc_buffer_from(error->bytes);
+    OPCBuffer buffer = opc_buffer_from(error->bytes, sizeof(error->bytes));
     opc_buffer_fill(&buffer, 0, 0, OPC_ERROR_MAX_BYTES);
     opc_buffer_write(&buffer, global_error.bytes, 0, OPC_ERROR_MAX_BYTES);
 
@@ -190,12 +250,24 @@ opc_error_reset () {
   opc_buffer_fill(&opc_buffer_from(global_error.bytes), 0, 0, -1);
 }
 
-const OPCResult
+const OPCSize
 opc_error_get_code () {
   return global_error.code;
 }
 
 const OPCString
 opc_error_get_message () {
+  return global_error.message;
+}
+
+const OPCSize
+opc_error_get_code_at_slot (OPCUSize slot) {
+  OPCUSize count = sizeof(errors) / sizeof(struct Error);
+  return global_error.code;
+}
+
+const OPCString
+opc_error_get_message_at_slot (OPCUSize slot) {
+  OPCUSize count = sizeof(errors) / sizeof(struct Error);
   return global_error.message;
 }

@@ -102,11 +102,11 @@ struct OPCError {
   OPCString message;
   OPCString location;
   OPCString function;
-  OPCUSize line;
-  OPCResult code;
+  OPCSize line;
+  OPCSize code;
   struct {
-    OPCUSize message_size;
-    OPCUSize header_size;
+    OPCSize message_size;
+    OPCSize header_size;
   } meta;
   // <header+message|location|function>
   OPCByte bytes[OPC_ERROR_MAX_BYTES];
@@ -115,7 +115,7 @@ struct OPCError {
 /**
  * Throws an error with `code` and `message` that can be caught with
  * `opc_catch(err)
- * @param code An `OPCResult` error code. An error code defined in `<errno.h>`
+ * @param code An `OPCSize` error code. An error code defined in `<errno.h>`
  *             may be used to if the header is supported by the platform
  * @param message A custom error message
  * @param ... Variadic values to use in string formats in `message`
@@ -149,17 +149,17 @@ struct OPCError {
        error.code == OPC_UNKNOWN && opc_error_catch(&error) != OPC_OK;)
 /**
  * Returns the built-in error string for the error result.
- * @param error An `OPCResult` error code.
+ * @param error An `OPCSize` error code.
  * @return Built-in error string.
  */
 OPC_EXPORT const OPCString
-opc_error_string (const OPCResult error);
+opc_error_string (const OPCSize error);
 
 /**
  * Throws an error with `code` and `message` that can be caught with
  * `opc_error_catch()`. Call site data must be given to this function.
  * The `opc_throw()` function handles this.
- * @param code An `OPCResult` error code. An error code defined in `<errno.h>`
+ * @param code An `OPCSize` error code. An error code defined in `<errno.h>`
  *             may be used to if the header is supported by the platform
  * @param message A custom error message
  * @param location The file location of the error
@@ -169,12 +169,12 @@ opc_error_string (const OPCResult error);
  *            `message` variable
  * @return The `code` value given to this function
  */
-OPC_EXPORT const OPCResult
+OPC_EXPORT const OPCSize
 opc_error_throw (
-  const OPCResult code,
+  const OPCSize code,
   const OPCString message,
   const OPCString location,
-  const OPCUSize line,
+  const OPCSize line,
   const OPCString function,
   ...
 );
@@ -185,8 +185,16 @@ opc_error_throw (
  * @param error A pointer to an `OPCError` structure
  * @return The caught error code
  */
-OPC_EXPORT const OPCResult
+OPC_EXPORT const OPCSize
 opc_error_catch (OPCError *error);
+
+/**
+ * Creates an error type with `code` and corresponding `message`.
+ * @param code Custom error code
+ * @param {
+ */
+const OPCSize
+opc_error_create (OPCSize code, const OPCString message);
 
 /**
  * Resets the current global error state.
@@ -197,7 +205,7 @@ opc_error_reset ();
 /**
  * Returns the current global error code.
  */
-OPC_EXPORT const OPCResult
+OPC_EXPORT const OPCSize
 opc_error_get_code ();
 
 /**

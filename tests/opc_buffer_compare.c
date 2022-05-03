@@ -33,9 +33,9 @@
 #include <string.h>
 
 test("opc_buffer_compare(buffer, other)", 0) {
-  OPCBuffer hello = opc_buffer_from("hello");
-  OPCBuffer world = opc_buffer_from("world");
-  OPCBuffer empty = opc_buffer_from("");
+  OPCBuffer hello = opc_buffer_from_string("hello");
+  OPCBuffer world = opc_buffer_from_string("world");
+  OPCBuffer empty = opc_buffer_from_string("");
 
   assert_ok(opc_buffer_compare(hello, empty) == 1);
   assert_ok(opc_buffer_compare(world, empty) == 1);

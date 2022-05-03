@@ -46,7 +46,7 @@ test("opc_uri_component_decode(output, input)", 0) {
   const OPCUSize expected_size = opc_string_size(expected);
   const OPCUSize source_size = opc_string_size(source);
 
-  OPCBuffer memory = opc_buffer_from(stack);
+  OPCBuffer memory = opc_buffer_from(stack, sizeof(stack));
   OPCBuffer output = opc_buffer_slice(memory, 0, expected_size);
   OPCBuffer input =
     opc_buffer_slice(memory, output.size + 1, output.size + source_size + 1);
@@ -55,5 +55,7 @@ test("opc_uri_component_decode(output, input)", 0) {
   assert(opc_buffer_write_string(&input, source, 0) > 0);
 
   // verify successful decode of input into output
-  assert_ok(opc_uri_component_decode(&output, input));
+  assert_equal(
+    opc_uri_component_decode(&output, input), opc_string_size(EXPECTED_STRING)
+  );
 }

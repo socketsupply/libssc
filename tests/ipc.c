@@ -32,4 +32,19 @@
 #include <opc/test.h>
 
 test("ipc", 0) {
+  OPCIPCContext ctx = { 0 };
+  OPCBuffer *data[] = {
+    &opc_buffer_from_string("foo"),
+    &opc_buffer_from_string("bar"),
+  };
+
+  assert_ok(opc_ipc_context_init(&ctx));
+  opc_ipc_request(
+    &ctx,
+    (OPCIPCRequestOptions) {
+      .window = 0,
+      .data = { data, 2 },
+      .command = opc_buffer_from_string("getScreenSize"),
+    }
+  );
 }

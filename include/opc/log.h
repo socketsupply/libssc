@@ -40,7 +40,7 @@
  * `opg_log_*` functions.
  */
 #ifndef OPC_LOG_LINE_FORMAT
-#define OPC_LOG_LINE_FORMAT "(%s) <%s:%llu>: "
+#  define OPC_LOG_LINE_FORMAT "<%s:%llu> %s: "
 #endif
 
 /**

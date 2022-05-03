@@ -30,19 +30,7 @@
  */
 
 #include <opc/test.h>
-#include <string.h>
 
-test("opc_buffer_equals(buffer, other)", 0) {
-  OPCBuffer hello = opc_buffer_from_string("hello");
-  OPCBuffer world = opc_buffer_from_string("world");
-  OPCBuffer empty = opc_buffer_from_string("");
-
-  assert_ok(opc_buffer_equals(hello, empty) == OPC_FALSE);
-  assert_ok(opc_buffer_equals(world, empty) == OPC_FALSE);
-
-  assert_ok(opc_buffer_equals(hello, hello) == OPC_TRUE);
-  assert_ok(opc_buffer_equals(world, world) == OPC_TRUE);
-
-  assert_ok(opc_buffer_equals(hello, world) == OPC_TRUE);
-  assert_ok(opc_buffer_equals(world, hello) == OPC_TRUE);
+test("opc_error_create(code, message)", 0) {
+  assert_ok(opc_error_create(OPC_ERROR, "oops"));
 }

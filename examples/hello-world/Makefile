@@ -60,10 +60,13 @@ export DYLD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 
 default: build
 
-build: $(PREFIX)/bin/$(TARGET)
+build: $(PREFIX)/bin/$(TARGET) $(PREFIX)/lib/libopc.a
+	cp -f src/*.html $(PREFIX)
+
+$(PREFIX)/lib/libopc.a: $(LIBOPC)
 
 $(LIBOPC):
-	$(MAKE) -C ../..
+	$(MAKE) -C ../.. install-library PREFIX=$(PREFIX)
 
 $(PREFIX)/bin/$(TARGET): $(LIBOPC)
 	$(MKDIR) `dirname $@`

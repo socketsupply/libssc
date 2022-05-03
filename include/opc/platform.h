@@ -152,7 +152,7 @@
 /**
  * Cast to library string.
  */
-#define opc_string(value) (OPCString)(value)
+#define opc_string(value) (OPCString) (value)
 
 /**
  * Cast to library signed size value.
@@ -165,9 +165,24 @@
 #define opc_usize(value) (OPCUSize) (value)
 
 /**
+ * Cast to library unsigned int value.
+ */
+#define opc_uint(value) (OPCUInt) (value)
+
+/**
+ * Cast to library int value.
+ */
+#define opc_int(value) (OPCInt) (value)
+
+/**
  * Cast to library boolean.
  */
 #define opc_bool(value) ((value) ? OPC_TRUE : OPC_FALSE)
+
+/**
+ * Cast to library pointer.
+ */
+#define opc_pointer(value) ((unsigned long int *) &(value))
 
 /**
  * Helper macro for a libary main function which calls `opc_init()`.
@@ -194,6 +209,7 @@ typedef double OPCDouble;
 typedef float OPCFloat;
 typedef char OPCChar;
 typedef char *OPCString;
+typedef void *OPCGeneric;
 
 /**
  * Libary booleans.

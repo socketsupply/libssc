@@ -32,6 +32,11 @@
 #include <opc/opc.h>
 #include <stdarg.h>
 #include <stdio.h>
+
+#ifndef _WIN32
+#include <unistd.h>
+#endif
+
 #include "types.h"
 
 #define RED_LABEL_FORMAT "[\x1B[31m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
@@ -77,6 +82,7 @@ static OPCString log_level_formats[] = {
   WHITE_LABEL_FORMAT // DEBUG
 };
 
+// @TODO(jwerle): use this
 static OPCSize log_level_clocks[] = {
   0, // EMERG
   0, // ALERT
@@ -96,7 +102,7 @@ static OPCLogLevel log_level = OPC_LOG_LEVEL_INFO;
 #endif
 
 static void *file_stream_pointer = 0;
-static OPCBoolean colors_enabled = OPC_TRUE;
+static OPCBoolean colors_enabled = true;
 
 #define LOG(location, line, function, label_format, label)                     \
   if (file_stream_pointer != 0) {                                              \
@@ -105,21 +111,20 @@ static OPCBoolean colors_enabled = OPC_TRUE;
                                                                                \
     if (colors_enabled) {                                                      \
       OPC_FPRINTF(                                                             \
-        file_stream_pointer, label_format, label, function, location, line     \
+        file_stream_pointer, label_format, label, location, line, function     \
       );                                                                       \
     } else {                                                                   \
       OPC_FPRINTF(                                                             \
         file_stream_pointer,                                                   \
         PLAIN_LABEL_FORMAT,                                                    \
         label,                                                                 \
-        function,                                                              \
         location,                                                              \
-        line                                                                   \
+        line,                                                                  \
+        function                                                               \
       );                                                                       \
     }                                                                          \
                                                                                \
     OPC_VFPRINTF(file_stream_pointer, format, args);                           \
-    OPC_FPRINTF(file_stream_pointer, "\n");                                    \
                                                                                \
     va_end(args);                                                              \
   }
@@ -147,16 +152,21 @@ opc_log_get_level_name () {
 void
 opc_log_set_file_stream_pointer (void *pointer) {
   file_stream_pointer = pointer;
+#ifndef _WIN32
+  if (isatty(0) == 0) {
+    //colors_enabled = false;
+  }
+#endif
 }
 
 void
 opc_log_enable_colors () {
-  colors_enabled = OPC_TRUE;
+  colors_enabled = true;
 }
 
 void
 opc_log_disable_colors () {
-  colors_enabled = OPC_FALSE;
+  colors_enabled = false;
 }
 
 void
@@ -175,5 +185,7 @@ opc_log (
   LOG(
     location, line, function, log_level_formats[level], log_level_names[level]
   );
+
+  OPC_FPRINTF(file_stream_pointer, "\n");
 #endif
 }

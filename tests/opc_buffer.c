@@ -33,33 +33,31 @@
 #include <string.h>
 
 static OPCByte stack[4096] = {0};
+typedef struct CustomBuffer CustomBuffer;
+struct CustomBuffer {
+  OPCBuffer buffer;
+};
 
-test("opc_buffer(bytes, ...)", 0) {
-  OPCBuffer buffer = opc_buffer(stack);
+test("opc_buffer(value)", 0) {
+  // clang-format off
+  CustomBuffer custom_buffer = {
+    .buffer = opc_buffer_from(stack, sizeof(stack))
+  };
+  // clang-format on
 
-  assert(opc_bytes(buffer.bytes) == opc_bytes(stack));
-  assert(buffer.size == sizeof(stack));
+  OPCString string = "hello world";
+  OPCUSize offset = 32;
+  OPCUSize size = opc_string_size(string);
 
-  OPCBuffer slice = opc_buffer(
-    opc_bytes(stack) + 1024,
-    4096 - 1024,
-    opc_bytes(stack),
-    1024
+  assert_equal(
+    size, opc_buffer_write_string(&opc_buffer(custom_buffer), string, offset)
   );
 
-  assert(slice.parent == opc_bytes(stack));
-  assert(slice.size == 4096 - 1024);
-  assert(slice.offset = 1024);
-
-  OPCBuffer with_members = opc_buffer(
-    slice.bytes + 1024,
-    .parent = slice.bytes,
-    .offset = 1024,
-    .size = 1024
+  assert_equal(
+    OPC_TRUE,
+    opc_buffer_equals(
+      opc_buffer_from_string(string),
+      opc_buffer_slice(opc_buffer(custom_buffer), offset, offset + size)
+    )
   );
-
-  assert(with_members.bytes  == slice.bytes + 1024);
-  assert(with_members.parent == slice.bytes);
-  assert(with_members.offset == 1024);
-  assert(with_members.size == 1024);
 }

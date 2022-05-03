@@ -93,3 +93,12 @@ tests/opc_uri_component_decode
 tests/opc_uri_component_decode_size
 tests/opc_uri_component_encode
 tests/opc_uri_component_encode_size
+tests/opc_is_error
+tests/opc_error_throw
+tests/opc_error_catch
+tests/opc_error_create
+tests/opc_error_get_code
+tests/opc_error_get_message
+tests/opc_error_reset
+tests/opc_error_string
+tests/opc_math

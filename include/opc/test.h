@@ -263,9 +263,9 @@ okdone (void) {
  */
 #define assert(condition, ...)                                                 \
   if ((condition)) {                                                           \
-    ok("%s", OPC_PP_STRINGX(condition));                                       \
+    ok("%s", OPC_PP_STRING(condition));                                        \
   } else {                                                                     \
-    notok("%s", OPC_PP_STRINGX(condition));                                    \
+    notok("%s", OPC_PP_STRING(condition));                                     \
     opc_catch(err) {                                                           \
       OPC_PRINTF("  ---\n");                                                   \
       OPC_PRINTF("  message: %s\n", err.string);                               \
@@ -284,11 +284,11 @@ okdone (void) {
  */
 #define assert_ok(condition, ...)                                              \
   if (opc_ok(condition) == OPC_OK) {                                           \
-    ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
+    ok(OPC_PP_STRING(condition), ##__VA_ARGS__);                               \
   } else {                                                                     \
     notok(                                                                     \
       "%s [%s %s]",                                                            \
-      OPC_PP_STRINGX(condition),                                               \
+      OPC_PP_STRING(condition),                                                \
       opc_callsite_function_name(),                                            \
       opc_callsite_file_location()                                             \
     );                                                                         \
@@ -310,11 +310,11 @@ okdone (void) {
  */
 #define assert_notok(condition, ...)                                           \
   if ((condition) != OPC_OK) {                                                 \
-    ok(OPC_PP_STRINGX(condition), ##__VA_ARGS__);                              \
+    ok(OPC_PP_STRING(condition), ##__VA_ARGS__);                               \
   } else {                                                                     \
     notok(                                                                     \
       "%s [%s %s]",                                                            \
-      OPC_PP_STRINGX(condition),                                               \
+      OPC_PP_STRING(condition),                                                \
       opc_callsite_function_name(),                                            \
       opc_callsite_file_location()                                             \
     );                                                                         \
@@ -337,9 +337,9 @@ okdone (void) {
  */
 #define assert_equal(left, right, ...)                                         \
   if ((left) == (right)) {                                                     \
-    ok("%s equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));           \
+    ok("%s equals %s", OPC_PP_STRING(left), OPC_PP_STRING(right));             \
   } else {                                                                     \
-    notok("%s not equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));    \
+    notok("%s not equals %s", OPC_PP_STRING(left), OPC_PP_STRING(right));      \
     opc_catch(err) {                                                           \
       OPC_PRINTF("  ---\n");                                                   \
       OPC_PRINTF("  message: %s\n", err.string);                               \
@@ -359,9 +359,9 @@ okdone (void) {
  */
 #define assert_not_equal(left, right, ...)                                     \
   if ((left) != (right)) {                                                     \
-    ok("%s not equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));       \
+    ok("%s not equals %s", OPC_PP_STRING(left), OPC_PP_STRING(right));         \
   } else {                                                                     \
-    notok("%s equals %s", OPC_PP_STRINGX(left), OPC_PP_STRINGX(right));        \
+    notok("%s equals %s", OPC_PP_STRING(left), OPC_PP_STRING(right));          \
     opc_catch(err) {                                                           \
       OPC_PRINTF("  ---\n");                                                   \
       OPC_PRINTF("  message: %s\n", err.string);                               \

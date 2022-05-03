@@ -38,7 +38,7 @@ opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end) {
   OPCUSize offset = opc_math_uclamp(start, 0, self.size - size);
   OPCBytes bytes = self.bytes + offset;
 
-  return opc_buffer(bytes, size, self.bytes, offset);
+  return opc_buffer_from(bytes, size, self.bytes, offset);
 }
 
 const OPCResult

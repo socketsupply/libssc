@@ -33,6 +33,7 @@
 #define OPC_SYSTEM_H
 
 #include "platform.h"
+#include "ipc.h"
 
 /**
  * A container for an initialized "system" container interface.

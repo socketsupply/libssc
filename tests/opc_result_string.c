@@ -35,6 +35,8 @@
   assert(opc_string_equals(OPC_PP_STRING(code), opc_result_string(code)))
 
 test("opc_result_string", 0) {
+  assert_result_string(OPC_MISSING_CONTEXT);
+  assert_result_string(OPC_INVALID_ARGUMENT);
   assert_result_string(OPC_OUT_OF_BOUNDS);
   assert_result_string(OPC_OUT_OF_MEMORY);
   assert_result_string(OPC_NULL_POINTER);
@@ -44,6 +46,6 @@ test("opc_result_string", 0) {
   assert_result_string(OPC_NOT_DETECTED);
   assert_result_string(OPC_UNKNOWN);
 
-  assert(opc_string_equals("OPC_UNKNOWN", opc_result_string(-30)));
+  assert(opc_string_equals("OPC_UNKNOWN", opc_result_string(-3000)));
   assert(opc_string_equals("OPC_UNKNOWN", opc_result_string(1046)));
 }

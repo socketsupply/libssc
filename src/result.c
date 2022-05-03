@@ -39,6 +39,10 @@ struct Result {
 
 // clang-format off
 static struct Result results[] = {
+  { OPC_E_MAX, "OPC_E_MAX" },
+  { OPC_MISSING_CONTEXT, "OPC_MISSING_CONTEXT" },
+  { OPC_BAD_STATE, "OPC_BAD_STATE" },
+  { OPC_INVALID_ARGUMENT, "OPC_INVALID_ARGUMENT" },
   { OPC_OUT_OF_BOUNDS, "OPC_OUT_OF_BOUNDS" },
   { OPC_OUT_OF_MEMORY, "OPC_OUT_OF_MEMORY" },
   { OPC_NULL_POINTER, "OPC_NULL_POINTER" },

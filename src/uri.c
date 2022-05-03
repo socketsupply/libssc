@@ -30,6 +30,7 @@
  */
 
 #include <opc/opc.h>
+
 #include "types.h"
 
 // clang-format off
@@ -63,7 +64,7 @@ static const char HEX2DEC[256] = {
 
 // clang-format on
 
-OPCResult
+OPCSize
 opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
   OPCSize size = 0;
 
@@ -105,7 +106,7 @@ opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
     }
   }
 
-  return OPC_OK;
+  return size;
 }
 
 OPCSize
@@ -134,12 +135,16 @@ opc_uri_component_encode_size (const OPCBuffer input) {
   return (long) size;
 }
 
-OPCResult
+OPCSize
 opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
   OPCSize size = 0;
 
-  if (output->bytes == 0 || input.bytes == 0) {
-    return OPC_NULL_POINTER;
+  if (output->bytes == 0) {
+    return opc_throw(OPC_NULL_POINTER, "Output bytes cannot be NULL");
+  }
+
+  if (input.bytes == 0) {
+    return opc_throw(OPC_NULL_POINTER, "Input bytes cannot be NULL");
   }
 
   for (int i = 0; i < input.size; ++i) {
@@ -147,7 +152,7 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
       break;
 
     if (size >= output->size) {
-      return OPC_OUT_OF_MEMORY;
+      return opc_throw(OPC_OUT_OF_MEMORY, "Output out of memory");
     }
 
     if (input.bytes[i] == '%') {
@@ -162,24 +167,27 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
     }
   }
 
-  return OPC_OK;
+  return size;
 }
 
 OPCSize
 opc_uri_component_decode_size (const OPCBuffer input) {
   OPCSize size = 0;
-  OPCSize length = input.size;
   int i = 0;
 
   if (input.bytes == 0 || input.size == 0) {
     return 0;
   }
 
-  while (length-- && i < input.size) {
+  while (i < input.size && input.bytes[i] != 0) {
     if (input.bytes[i] == '%') {
       i = i + 3;
     } else {
       i = i + 1;
+    }
+
+    if (input.bytes[i] == 0) {
+      break;
     }
 
     size = size + 1;

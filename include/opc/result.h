@@ -40,10 +40,12 @@
  * return values.
  */
 typedef enum {
-  OPC_BAD_STATE = -6,
-  OPC_INVALID_ARGUMENT = -5,
-  OPC_OUT_OF_BOUNDS = -4,
-  OPC_OUT_OF_MEMORY = -3,
+  OPC_E_MAX = -OPC_MAX_ENUM,
+  OPC_MISSING_CONTEXT = -40,
+  OPC_BAD_STATE = -30,
+  OPC_INVALID_ARGUMENT = -20,
+  OPC_OUT_OF_BOUNDS = -11,
+  OPC_OUT_OF_MEMORY = -10,
   OPC_NULL_POINTER = -2,
   OPC_ERROR = -1,
 
@@ -60,7 +62,16 @@ typedef enum {
 #define opc_ok(value) (OPCResult) ( value == OPC_TRUE ? OPC_OK : value)
 
 /**
- * @TODO(jwerle)
+ * Predicate helper to determine if `value` is an error result code
+ * @param value
+ * @return `OPC_TRUE` if `value` is an error result code
+ */
+#define opc_is_error(value) (value) < OPC_OK
+
+/**
+ * Returns string version of an `OPCResult` code.
+ * @param result `OPCResult` code value
+ * @return String of `result`
  */
 OPC_EXPORT const OPCString
 opc_result_string (const OPCResult result);

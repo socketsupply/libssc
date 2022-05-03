@@ -55,6 +55,13 @@
         ? (min)                                                                \
         : (value);                                                             \
 })
+
+/**
+ * Computes absolute value of `value`
+ * @param value
+ * @return The absolute value of `value`
+ */
+#define opc_math_abs(value) (value) < 0 ? -(value) : (value)
 // clang-format on
 
 /**

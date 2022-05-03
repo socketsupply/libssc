@@ -99,7 +99,7 @@ the `opc_` namespace.
 **Example:**
 
 ```c
-#define opc_buffer(bytes) ((OPCBuffer) { (OPCBytes) (bytes), 0 })
+#define opc_buffer(value) (OPCBuffer) (value)
 ```
 
 ```c

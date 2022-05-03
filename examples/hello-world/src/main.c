@@ -31,8 +31,52 @@
 
 #include <opc/opc.h>
 
+static OPCByte memory[4096] = { 0 };
 
-opc_main () {
-  //printf("ipc://stdout?value=%s\n", );
+int
+main (int argc, const char **argv) {
+  OPCIPCContext ctx = { 0 };
+  OPCBuffer file = opc_buffer_from(memory, 1024);
+  OPCBuffer *title[] = { &opc_buffer_from_string("value"),
+                         &opc_buffer_from_string("Hello World from libopc") };
+
+  OPCBuffer *navigate[] = { &opc_buffer_from_string("value"), &file };
+
+  opc_init(argc, argv);
+  opc_ipc_context_init(&ctx);
+
+  file.size =
+    opc_string_format(opc_string(file.bytes), "file://%s/index.html", ctx.cwd);
+
+  for (int i = 0; i < argc; i++) {
+    opc_log_debug("%s", argv[i]);
+  }
+
+  opc_ipc_request(
+    &ctx,
+    (OPCIPCRequestOptions) {
+      .window = 0,
+      .data = { title, 2 },
+      .command = opc_buffer_from_string("title"),
+    }
+  );
+
+  opc_ipc_request(
+    &ctx,
+    (OPCIPCRequestOptions) {
+      .window = 0,
+      .command = opc_buffer_from_string("show"),
+    }
+  );
+
+  opc_ipc_request(
+    &ctx,
+    (OPCIPCRequestOptions) {
+      .window = 0,
+      .data = { navigate, 2 },
+      .command = opc_buffer_from_string("navigate"),
+    }
+  );
+
   return 0;
 }
