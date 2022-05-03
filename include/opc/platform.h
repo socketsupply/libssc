@@ -155,6 +155,16 @@
 #define opc_string(value) (OPCString) (value)
 
 /**
+ * Cast to library char/
+ */
+#define opc_char(value) (OPCChar) (value)
+
+/**
+ * Cast to static library char array.
+ */
+#define opc_chars(...) ((OPCChar []) { __VA_ARGS__ })
+
+/**
  * Cast to library signed size value.
  */
 #define opc_size(value) (OPCSize) (value)
