@@ -50,9 +50,10 @@ extern "C" {
 #include "print.h"
 #include "result.h"
 #include "string.h"
+#include "system.h"
 #include "uri.h"
 #include "utf8.h"
-
+#include "window.h"
 
 /**
  * An alias to `opc_init_argc()`.

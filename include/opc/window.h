@@ -29,28 +29,26 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#ifndef OPC_WINDOW_H
+#define OPC_WINDOW_H
 
-#include "types.h"
+#include "platform.h"
+#include "result.h"
 
-OPCResult
-opc_system_init (
-  OPCSystem *system,
-  const OPCSystemConfiguration configuration
-) {
-  opc_ipc_context_init(&system->ipc);
-  opc_catch(err) {
-    return err.code;
-  }
-  return OPC_OK;
-}
+/**
+ * @TODO
+ */
+typedef struct OPCWindow OPCWindow;
+struct OPCWindow {
+  OPCUSize index;
+};
 
-OPCResult
-opc_system_send (OPCSystem *system, const OPCWindow window) {
-  return OPC_OK;
-}
+/**
+ * TODO
+ * @param window TODO
+ * @return `OPC_OK` upon success, otherwise an error.
+ */
+OPC_EXPORT OPCResult
+opc_window_init (OPCWindow *window);
 
-OPCResult
-opc_system_request (OPCSystem *system) {
-  return OPC_OK;
-}
+#endif

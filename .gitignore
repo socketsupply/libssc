@@ -102,3 +102,4 @@ tests/opc_error_get_message
 tests/opc_error_reset
 tests/opc_error_string
 tests/opc_math
+tests/opc_system_init

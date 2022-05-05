@@ -195,6 +195,11 @@
 #define opc_pointer(value) ((unsigned long int *) &(value))
 
 /**
+ * Cast to library handle (void *).
+ */
+#define opc_handle(value) (OPCHandle) (value)
+
+/**
  * Helper macro for a libary main function which calls `opc_init()`.
  */
 #define opc_main()                                                             \
@@ -219,7 +224,7 @@ typedef double OPCDouble;
 typedef float OPCFloat;
 typedef char OPCChar;
 typedef char *OPCString;
-typedef void *OPCGeneric;
+typedef void *OPCHandle;
 
 /**
  * Libary booleans.

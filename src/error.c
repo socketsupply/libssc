@@ -30,6 +30,7 @@
  */
 
 #include <opc/opc.h>
+
 #include "types.h"
 
 // Define `OPC_MISSING_ERRNO=1` if `<errno.h>` or `strerror(3)` was not found in

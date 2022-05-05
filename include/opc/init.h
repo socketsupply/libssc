@@ -96,21 +96,24 @@ OPC_EXPORT const char **
 opc_init_argv ();
 
 /**
- * @TODO
+ * Returns handle to stdin stream.
+ * @return A `stdin` pointer
  */
-OPC_EXPORT void *
+OPC_EXPORT const OPCHandle
 opc_init_stdin ();
 
 /**
- * @TODO
+ * Returns handle to stdout stream.
+ * @return A `stdout` pointer
  */
-OPC_EXPORT void *
+OPC_EXPORT const OPCHandle
 opc_init_stdout ();
 
 /**
- * @TODO
+ * Returns handle to stderr stream.
+ * @return A `stderr` pointer
  */
-OPC_EXPORT void *
+OPC_EXPORT const OPCHandle
 opc_init_stderr ();
 
 #endif

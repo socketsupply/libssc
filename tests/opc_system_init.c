@@ -29,28 +29,9 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <opc/test.h>
 
-#include "types.h"
-
-OPCResult
-opc_system_init (
-  OPCSystem *system,
-  const OPCSystemConfiguration configuration
-) {
-  opc_ipc_context_init(&system->ipc);
-  opc_catch(err) {
-    return err.code;
-  }
-  return OPC_OK;
-}
-
-OPCResult
-opc_system_send (OPCSystem *system, const OPCWindow window) {
-  return OPC_OK;
-}
-
-OPCResult
-opc_system_request (OPCSystem *system) {
-  return OPC_OK;
+test("opc_system_init(system, configuration)") {
+  OPCSystem system = { 0 };
+  assert_ok(opc_system_init(&system, opc_system_default_configuration()));
 }

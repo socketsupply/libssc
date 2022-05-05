@@ -92,9 +92,9 @@ struct OPCIPCContext {
   OPCByte memory[IPC_MAX_MEMORY_BYTES];
 
   struct {
-    void *stdin;
-    void *stdout;
-    void *stderr;
+    OPCHandle stdin;
+    OPCHandle stdout;
+    OPCHandle stderr;
   } io;
 };
 

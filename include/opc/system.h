@@ -32,15 +32,65 @@
 #ifndef OPC_SYSTEM_H
 #define OPC_SYSTEM_H
 
-#include "platform.h"
 #include "ipc.h"
+#include "platform.h"
+#include "result.h"
+#include "window.h"
+
+/**
+ * Maximum windows managed by a system instance.
+ */
+#ifndef OPC_SYSTEM_MAX_WINDOWS
+#define OPC_SYSTEM_MAX_WINDOWS 32
+#endif
+
+/**
+ * A container for `OPCSystem` initialization configuration.
+ */
+typedef struct OPCSystemConfiguration OPCSystemConfiguration;
+struct OPCSystemConfiguration {
+  OPCUSize window_index_offset;
+};
 
 /**
  * A container for an initialized "system" container interface.
  */
 typedef struct OPCSystem OPCSystem;
 struct OPCSystem {
-  void *_;
+  OPCIPCContext ipc;
+  OPCWindow windows[OPC_SYSTEM_MAX_WINDOWS];
+  OPCSystemConfiguration configuration;
 };
+
+/**
+ * @TODO
+ * @return `OPCSystemConfiguration` with defaults
+ */
+#define opc_system_default_configuration()                                     \
+  ((OPCSystemConfiguration) { .window_index_offset = 0 })
+
+/**
+ * Initializes an `OPCSystem` instance.
+ * @param system
+ * @return `OCP_OK` upon success, otherwise an error.
+ */
+OPC_EXPORT OPCResult
+opc_system_init (OPCSystem *system, const OPCSystemConfiguration configuration);
+
+/**
+ * @TODO
+ * @param system
+ * @return `OCP_OK` upon success, otherwise an error.
+ */
+OPC_EXPORT OPCResult
+opc_system_send (OPCSystem *system, const OPCWindow window);
+
+/**
+ * @TODO
+ * @param system
+ * @return `OCP_OK` upon success, otherwise an error.
+ */
+OPC_EXPORT OPCResult
+opc_system_request (OPCSystem *system);
 
 #endif

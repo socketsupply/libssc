@@ -41,15 +41,15 @@ static int argc = 0;
 static const char **argv = 0;
 
 // streams
-static void *stdin_stream;
-static void *stdout_stream;
-static void *stderr_stream;
+static OPCHandle stdin_stream;
+static OPCHandle stdout_stream;
+static OPCHandle stderr_stream;
 
 void
 opc_init_library (
-  void *init_stdin_stream,
-  void *init_stdout_stream,
-  void *init_stderr_stream,
+  OPCHandle init_stdin_stream,
+  OPCHandle init_stdout_stream,
+  OPCHandle init_stderr_stream,
   const int init_argc,
   const char **init_argv
 ) {
@@ -80,17 +80,17 @@ opc_init_argv () {
   return argv;
 }
 
-void *
+const OPCHandle
 opc_init_stdin () {
   return stdin_stream;
 }
 
-void *
+const OPCHandle
 opc_init_stdout () {
   return stdout_stream;
 }
 
-void *
+const OPCHandle
 opc_init_stderr () {
   return stderr_stream;
 }
