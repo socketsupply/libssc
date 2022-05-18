@@ -151,6 +151,26 @@ with the `OPC_` namespace.
 
 > TODO
 
+### Program Crashes
+
+> TODO
+
+#### Ubuntu
+
+> TODO
+
+### Debugging
+
+> TODO
+
+#### Apport
+
+> TODO
+
+#### GDB
+
+> TODO
+
 ## 5. Tests
 
 Tests are single context executables that emit
@@ -273,7 +293,6 @@ assert(1 != 2);
 #include <opc/test.h>
 
 test("error", 0) {
-  assert_ok(opc_ok());
   assert_ok(opc_throw(OPC_ERROR, "ooops"));
 }
 ```
@@ -310,7 +329,6 @@ not ok 1 - opc_error_throw( OPC_ERROR, "ooops", (OPCString)("error.c"), (OPCUSiz
 
 test("error", 0) {
   assert_notok(opc_throw(OPC_ERROR, "oops"));
-  assert_notok(opc_ok());
 }
 ```
 

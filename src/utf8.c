@@ -30,7 +30,8 @@
  */
 
 #include <opc/opc.h>
-#include "types.h"
+
+#include "internal.h"
 
 // clang-format off
 static const char UTF8_SAFE_CHARS[256] = {
@@ -56,7 +57,7 @@ static const char UTF8_SAFE_CHARS[256] = {
 // clang-format on
 
 static OPCResult
-detect (unsigned char x) {
+detect (OPCUChar x) {
   // alpha capital/small
   if (opc_math_in_urange(x, 'a', 'z') || opc_math_in_urange(x, 'A', 'Z')) {
     return OPC_NOT_DETECTED;
@@ -64,16 +65,6 @@ detect (unsigned char x) {
 
   // decimal digits
   if (opc_math_in_urange(x, 0x0030, 0x0039)) {
-    return OPC_NOT_DETECTED;
-  }
-
-  // special characters
-  // clang-format off
-  if (
-    '-' == x || '_' == x || '.' == x || '!' == x ||
-    '~' == x || '*' == x || '(' == x || ')' == x
-  ) {
-    // clang-format on
     return OPC_NOT_DETECTED;
   }
 
@@ -95,7 +86,8 @@ opc_utf8_detect (const OPCBuffer input) {
   }
 
   for (int i = 0; i < input.size; ++i) {
-    OPCResult result = detect(input.bytes[i]);
+    OPCByte byte = input.bytes[i];
+    OPCResult result = detect(byte);
 
     if (result != OPC_NOT_DETECTED) {
       return result;

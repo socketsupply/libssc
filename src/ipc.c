@@ -39,7 +39,7 @@
 #include <unistd.h>
 #endif
 
-#include "types.h"
+#include "internal.h"
 
 OPCResult
 opc_ipc_context_init (OPCIPCContext *ctx) {

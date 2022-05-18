@@ -31,7 +31,7 @@
 
 #include <opc/opc.h>
 
-#include "types.h"
+#include "internal.h"
 
 // Define `OPC_MISSING_ERRNO=1` if `<errno.h>` or `strerror(3)` was not found in
 // a user space configure or feature detection script
@@ -55,6 +55,7 @@ static struct Error errors[1024] = {
   { OPC_INVALID_ARGUMENT, "Invalid argument" },
   { OPC_BAD_STATE, "Bad state" },
   { OPC_MISSING_CONTEXT, "Missing context" },
+  { OPC_MALFORMED_URI, "Malformed URI" },
   { 0, 0 },
 };
 
@@ -248,7 +249,9 @@ opc_error_reset () {
   global_error.meta.header_size = 0;
   global_error.meta.message_size = 0;
 
-  opc_buffer_fill(&opc_buffer_from(global_error.bytes), 0, 0, -1);
+  opc_buffer_fill(
+    &opc_buffer_from(global_error.bytes, sizeof(global_error.bytes)), 0, 0, -1
+  );
 }
 
 const OPCSize

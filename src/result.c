@@ -30,7 +30,8 @@
  */
 
 #include <opc/opc.h>
-#include "types.h"
+
+#include "internal.h"
 
 struct Result {
   const OPCResult code;
@@ -40,6 +41,7 @@ struct Result {
 // clang-format off
 static struct Result results[] = {
   { OPC_E_MAX, "OPC_E_MAX" },
+  { OPC_MALFORMED_URI, "OPC_MALFORMED_URI" },
   { OPC_MISSING_CONTEXT, "OPC_MISSING_CONTEXT" },
   { OPC_BAD_STATE, "OPC_BAD_STATE" },
   { OPC_INVALID_ARGUMENT, "OPC_INVALID_ARGUMENT" },

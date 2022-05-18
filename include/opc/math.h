@@ -65,6 +65,22 @@
 // clang-format on
 
 /**
+ * Compute max between `left` and `right`.
+ * @param left
+ * @param right
+ * @return Max value between `left` and `right`
+ */
+#define opc_math_max(left, right) left < right ? right : left
+
+/**
+ * Compute min between `left` and `right`.
+ * @param left
+ * @param right
+ * @return Min value between `left` and `right`
+ */
+#define opc_math_min(left, right) left > right ? right : left
+
+/**
  * Computes an unsigned value between `min` and `max`.
  * @param value
  * @param min

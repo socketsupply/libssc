@@ -30,7 +30,8 @@
  */
 
 #include <opc/opc.h>
-#include "types.h"
+
+#include "internal.h"
 
 OPCBuffer
 opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end) {
@@ -41,14 +42,39 @@ opc_buffer_slice (const OPCBuffer self, OPCUSize start, OPCUSize end) {
   return opc_buffer_from(bytes, size, self.bytes, offset);
 }
 
-const OPCResult
+const OPCSize
 opc_buffer_compare (const OPCBuffer self, const OPCBuffer right) {
-  return opc_string_compare_with_size(
-    opc_string(self.bytes),
-    self.size,
-    opc_string(right.bytes),
-    right.size
-  );
+  if (self.bytes == 0 && right.bytes == 0) {
+    return 0;
+  }
+
+  if (self.bytes == 0 && right.bytes != 0) {
+    return -1;
+  }
+
+  if (self.bytes != 0 && right.bytes == 0) {
+    return 1;
+  }
+
+  if (self.size > 0 && right.size == 0) {
+    return 1;
+  }
+
+  if (self.size == 0 && right.size > 0) {
+    return -1;
+  }
+
+  for (int i = 0; i < self.size && i < right.size; ++i) {
+    if (self.bytes[i] < right.bytes[i]) {
+      return -1;
+    }
+
+    if (self.bytes[i] > right.bytes[i]) {
+      return 1;
+    }
+  }
+
+  return 0;
 }
 
 OPCBoolean
@@ -65,8 +91,21 @@ opc_buffer_write (
 ) {
   OPCUSize written = 0;
 
+  if (self == 0) {
+    return opc_throw(OPC_NULL_POINTER, "Output buffer pointer cannot be null.");
+  }
+
+  if (self->bytes == 0) {
+    return opc_throw(
+      OPC_NULL_POINTER, "Output buffer bytes pointer cannot be null."
+    );
+  }
+
   if (offset + size > self->size) {
-    return 0;
+    return opc_throw(
+      OPC_OUT_OF_BOUNDS,
+      "Start offset cannot be larger than output buffer size."
+    );
   }
 
   for (OPCUSize i = offset; i < offset + size; ++i) {
@@ -134,11 +173,12 @@ opc_buffer_fill (
   }
 
   for (OPCUSize i = offset; i < self->size; ++i) {
-    if (end != -1 && i > end) {
+    if (end != -1 && i >= end) {
       break;
     }
 
     self->bytes[i] = byte;
+    filled = filled + 1;
   }
 
   return filled;

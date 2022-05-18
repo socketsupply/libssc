@@ -37,12 +37,12 @@ static OPCByte stack[4096] = { 0 };
 test("opc_buffer_write_string(buffer, string, offset)") {
   OPCBuffer buffer = opc_buffer_from(stack, sizeof(stack));
 
-  assert_ok(
-    opc_buffer_write_string(&buffer, "hello", 0) == 5
+  assert_true(
+    5 == opc_buffer_write_string(&buffer, "hello", 0)
   );
 
-  assert_ok(
-    opc_buffer_write_string(&buffer, "world", 64) == 5
+  assert_true(
+    5 == opc_buffer_write_string(&buffer, "world", 64)
   );
 
   assert(0 == strncmp(opc_string(buffer.bytes), "hello", 5));

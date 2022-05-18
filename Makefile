@@ -264,7 +264,8 @@ $(MAN3_TARGETS): $(MAN3_SOURCES)
 ## Compiles and runs all test
 .PHONY: tests test
 test: tests
-tests: $(TEST_TARGETS) build
+tests: build
+	@$(MAKE) -C tests FAST=1
 
 $(TEST_TARGETS): $(TEST_SOURCES) $(SRC) $(HEADERS) $(HEADER_TARGETS) tests/Makefile Makefile build
 	@$(MAKE) -B -C tests `basename $@`

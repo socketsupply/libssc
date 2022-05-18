@@ -37,11 +37,11 @@ test("opc_buffer_compare(buffer, other)") {
   OPCBuffer world = opc_buffer_from_string("world");
   OPCBuffer empty = opc_buffer_from_string("");
 
-  assert_ok(opc_buffer_compare(hello, empty) == 1);
-  assert_ok(opc_buffer_compare(world, empty) == 1);
+  assert_true(opc_buffer_compare(hello, empty) == 1);
+  assert_true(opc_buffer_compare(world, empty) == 1);
 
-  assert_ok(opc_buffer_compare(hello, hello) == 0);
-  assert_ok(opc_buffer_compare(world, world) == 0);
-  assert_ok(opc_buffer_compare(hello, world) == 1);
-  assert_ok(opc_buffer_compare(world, hello) == -1);
+  assert_true(opc_buffer_compare(hello, hello) == 0);
+  assert_true(opc_buffer_compare(world, world) == 0);
+  assert_true(opc_buffer_compare(hello, world) == -1);
+  assert_true(opc_buffer_compare(world, hello) == 1);
 }

@@ -31,7 +31,7 @@
 
 #include <opc/opc.h>
 
-#include "types.h"
+#include "internal.h"
 
 OPCResult
 opc_system_init (

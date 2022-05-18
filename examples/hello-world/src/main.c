@@ -45,7 +45,7 @@ main (int argc, const char **argv) {
   opc_init(argc, argv);
   opc_ipc_context_init(&ctx);
 
-  file.size =
+  file.size = // NOLINTNEXTLINE
     opc_string_format(opc_string(file.bytes), "file://%s/index.html", ctx.cwd);
 
   for (int i = 0; i < argc; i++) {

@@ -37,12 +37,11 @@ test("opc_string_equals(string, other)") {
   const OPCString world = "world";
   const OPCString empty = "";
 
-  assert_ok(opc_string_equals(hello, empty) == OPC_FALSE);
-  assert_ok(opc_string_equals(world, empty) == OPC_FALSE);
+  assert_true(opc_string_equals(hello, hello));
+  assert_true(opc_string_equals(world, world));
 
-  assert_ok(opc_string_equals(hello, hello) == OPC_TRUE);
-  assert_ok(opc_string_equals(world, world) == OPC_TRUE);
-
-  assert_ok(opc_string_equals(hello, world) == OPC_TRUE);
-  assert_ok(opc_string_equals(world, hello) == OPC_TRUE);
+  assert_false(opc_string_equals(hello, empty));
+  assert_false(opc_string_equals(world, empty));
+  assert_false(opc_string_equals(hello, world));
+  assert_false(opc_string_equals(world, hello));
 }

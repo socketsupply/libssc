@@ -76,6 +76,8 @@ ifneq ($(shell which clang 2>/dev/null),)
 endif
 endif
 
+_CC := $(CC)
+
 ifndef NO_VALGRIND
 ifneq ($(shell which valgrind 2>/dev/null),)
 VALGRIND ?= valgrind -q

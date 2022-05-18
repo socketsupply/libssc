@@ -70,14 +70,24 @@ export DYLD_FALLBACK_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 
 default: $(TARGETS)
 
+
 $(TARGETS): $(SRC) $(LIBRARY_SOURCES) Makefile
+ifdef FAST
+	@$(foreach target, $(TARGETS), $(_CC) -o $(target) $(target).c $(DEPS) $(CFLAGS);)
+ifdef VALIDATE_TAP
+	@$(foreach target, $(TARGETS), $(VALGRIND) $(target) | ../node_modules/.bin/tap-parser --tap;)
+else
+	@$(foreach target, $(TARGETS), $(VALGRIND) $(target);)
+endif
+else
 	@echo
 	$(CC) -o $@ $@.c $(DEPS) $(CFLAGS)
 	@echo
-ifdef VALIDATE_WITH_TAP_PARSER
+ifdef VALIDATE_TAP
 	@{ $(VALGRIND) ./$@ | ../node_modules/.bin/tap-parser --tap; } || { rm -rf $@ && exit 1; }
 else
 	@{ $(VALGRIND) ./$@; } || { rm -rf $@ && exit 1; }
+endif
 endif
 
 .PHONY: clean

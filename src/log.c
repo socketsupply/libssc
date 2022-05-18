@@ -37,7 +37,7 @@
 #include <unistd.h>
 #endif
 
-#include "types.h"
+#include "internal.h"
 
 #define RED_LABEL_FORMAT "[\x1B[31m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
 #define GREEN_LABEL_FORMAT "[\x1B[32m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT

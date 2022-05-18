@@ -30,7 +30,8 @@
  */
 
 #include <opc/opc.h>
-#include "types.h"
+
+#include "internal.h"
 
 unsigned long long
 opc_math_uclamp (

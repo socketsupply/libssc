@@ -37,12 +37,12 @@ test("opc_buffer_equals(buffer, other)") {
   OPCBuffer world = opc_buffer_from_string("world");
   OPCBuffer empty = opc_buffer_from_string("");
 
-  assert_ok(opc_buffer_equals(hello, empty) == OPC_FALSE);
-  assert_ok(opc_buffer_equals(world, empty) == OPC_FALSE);
+  assert_false(opc_buffer_equals(hello, empty));
+  assert_false(opc_buffer_equals(world, empty));
 
-  assert_ok(opc_buffer_equals(hello, hello) == OPC_TRUE);
-  assert_ok(opc_buffer_equals(world, world) == OPC_TRUE);
+  assert_true(opc_buffer_equals(hello, hello));
+  assert_true(opc_buffer_equals(world, world));
 
-  assert_ok(opc_buffer_equals(hello, world) == OPC_TRUE);
-  assert_ok(opc_buffer_equals(world, hello) == OPC_TRUE);
+  assert_false(opc_buffer_equals(hello, world));
+  assert_false(opc_buffer_equals(world, hello));
 }

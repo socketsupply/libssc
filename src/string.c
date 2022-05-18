@@ -30,7 +30,8 @@
  */
 
 #include <opc/opc.h>
-#include "types.h"
+
+#include "internal.h"
 
 OPCUSize
 opc_string_size (const OPCString string) {

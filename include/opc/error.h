@@ -92,24 +92,38 @@
 
 // clang-format on
 /**
+ * @TODO
+ */
+#define OPCErrorProperties(static_size)                                        \
+  /* <header+message|location|function> */                                     \
+  OPCByte bytes[static_size];                                                  \
+  OPCString string;                                                            \
+  OPCString message;                                                           \
+  OPCString location;                                                          \
+  OPCString function;                                                          \
+  OPCSize line;                                                                \
+  OPCSize code;                                                                \
+  struct {                                                                     \
+    OPCSize message_size;                                                      \
+    OPCSize header_size;                                                       \
+  } meta;
+
+/**
+ * @TODO
+ */
+#define OPCError(static_size)                                                  \
+  struct {                                                                     \
+    OPCErrorProperties(static_size)                                            \
+  }
+
+/**
  * An error container with static bytes that contain a possible
  * custom error message thrown by an `opc_*` function.
  */
 typedef struct OPCError OPCError;
 
 struct OPCError {
-  OPCString string;
-  OPCString message;
-  OPCString location;
-  OPCString function;
-  OPCSize line;
-  OPCSize code;
-  struct {
-    OPCSize message_size;
-    OPCSize header_size;
-  } meta;
-  // <header+message|location|function>
-  OPCByte bytes[OPC_ERROR_MAX_BYTES];
+  OPCErrorProperties(OPC_ERROR_MAX_BYTES)
 };
 
 /**
@@ -132,6 +146,13 @@ struct OPCError {
     opc_usize(__LINE__),                                                       \
     opc_string(__PRETTY_FUNCTION__),                                           \
     ##__VA_ARGS__                                                              \
+  )
+
+/**
+ */
+#define opc_rethrow_error(error)                                               \
+  opc_error_throw(                                                             \
+    error.code, error.message, error.location, error.line, error.function      \
   )
 
 /**

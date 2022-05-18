@@ -192,12 +192,33 @@
 /**
  * Cast to library pointer.
  */
-#define opc_pointer(value) ((unsigned long int *) &(value))
+#define opc_pointer(value) ((OPCByte *) &(value))
+
+/**
+ * Cast to library pointer at `offset`.
+ */
+#define opc_pointer_at(value, offset) ((OPCByte *) &(value)) + offset
 
 /**
  * Cast to library handle (void *).
  */
 #define opc_handle(value) (OPCHandle) (value)
+
+/**
+ * `offsetof` library function.
+ */
+#define opc_offsetof(type, property) ((OPCSize) & (((type *) 0)->property))
+
+/**
+ * Write `byte to `pointer`.
+ */
+#define opc_byte_write(pointer, byte) *(OPCUSize *) ((pointer)) = (byte)
+
+/**
+ * Write `byte` to `pointer` at `offset`.
+ */
+#define opc_byte_write_at(pointer, byte, offset)                               \
+  opc_byte_write(((pointer) + (offset)), byte)
 
 /**
  * Helper macro for a libary main function which calls `opc_init()`.
@@ -222,6 +243,7 @@ typedef unsigned int OPCUInt;
 typedef int OPCInt;
 typedef double OPCDouble;
 typedef float OPCFloat;
+typedef unsigned char OPCUChar;
 typedef char OPCChar;
 typedef char *OPCString;
 typedef void *OPCHandle;

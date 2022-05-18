@@ -36,27 +36,172 @@
 #include "platform.h"
 #include "result.h"
 
+#define OPC_FILE_URI_PREFIX "file://"
+#define OPC_FILE_URI_PREFIX_SIZE sizeof(OPC_FILE_URI_PREFIX)
+
 /**
- * @TODO(jwerle)
+ * Max URI in bytes including protocol prefix
+ */
+#define OPC_URI_MAX_BYTES 512 * 1024
+
+/**
+ * Emits static `OPCURI` properties of `static_size` bytes of memory.
+ * @param static_size Number of bytes for static `OPCByte` array.
+ * @prop bytes
+ * @prop href
+ * @prop protocol
+ * @prop username
+ * @prop password
+ * @prop host
+ * @prop port
+ * @prop path
+ * @prop query
+ * @prop hash
+ */
+#define OPCURIProperties(static_size)                                          \
+  OPCByte bytes[static_size];                                                  \
+  OPCBuffer href;                                                              \
+  OPCBuffer protocol;                                                          \
+  OPCBuffer username;                                                          \
+  OPCBuffer password;                                                          \
+  OPCBuffer host;                                                              \
+  OPCBuffer port;                                                              \
+  OPCBuffer path;                                                              \
+  OPCBuffer query;                                                             \
+  OPCBuffer hash;
+
+/**
+ * @param static_size
+ */
+#define OPCURI(static_size)                                                    \
+  struct {                                                                     \
+    OPCURIProperties(static_size)                                              \
+  }
+
+/**
+ * A simple container for a URI.
+ */
+typedef struct OPCURI OPCURI;
+struct OPCURI {
+  OPCURIProperties(OPC_URI_MAX_BYTES)
+};
+
+/**
+ * Parses `input` buffer into `uri` pointer.
+ * @param uri A pointer to a `OPCURI` struct
+ * @param input An input buffer
+ * @return `OPC_OK` upon success, otherwise an error
+ */
+OPC_EXPORT OPCResult
+opc_uri_parse (OPCURI *uri, const OPCBuffer input);
+
+/**
+ * Prints `uri` to stdout`.
+ * @param uri
+ */
+OPC_EXPORT void
+opc_uri_print (const OPCURI uri);
+
+/**
+ * Encodes `input` as a URI component into `output`
+ * @param output Output buffer
+ * @param input Input buffer
+ * @return Bytes written to `output`
  */
 OPC_EXPORT OPCSize
 opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input);
 
 /**
- * @TODO(jwerle)
+ * Computes URI component encode output size for `input`
+ * @param input Input buffer
+ * @return Total bytes needed for the encode output of `input`
  */
 OPC_EXPORT OPCSize
 opc_uri_component_encode_size (const OPCBuffer input);
 
 /**
- * @TODO(jwerle)
+ * Decodes `input` URI component into `output`
+ * @param output Output buffer
+ * @param input Input buffer
+ * @return Bytes written to `output`
  */
 OPC_EXPORT OPCSize
 opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input);
 
 /**
- * @TODO(jwerle)
+ * Computes URI component decode output size for `input`
+ * @param input Input buffer
+ * @return Total bytes needed for the decode output of `input`
  */
 OPC_EXPORT OPCSize
 opc_uri_component_decode_size (const OPCBuffer input);
+
+/**
+ * Encodes `input` as an URI into `output`
+ * @param output Output buffer
+ * @param input Input buffer
+ * @return Bytes written to `output`
+ */
+OPC_EXPORT OPCSize
+opc_uri_encode (OPCBuffer *output, const OPCBuffer input);
+
+/**
+ * Computes URI encode output size for `input`
+ * @param input Input buffer
+ * @return Total bytes needed for the encode output of `input`
+ */
+OPC_EXPORT OPCSize
+opc_uri_encode_size (const OPCBuffer input);
+
+/**
+ * Decodes `input` URI into `output`
+ * @param output Output buffer
+ * @param input Input buffer
+ * @return Bytes written to `output`
+ */
+OPC_EXPORT OPCSize
+opc_uri_decode (OPCBuffer *output, const OPCBuffer input);
+
+/**
+ * Computes URI decode output size for `input`
+ * @param input Input buffer
+ * @return Total bytes needed for the decode output of `input`
+ */
+OPC_EXPORT OPCSize
+opc_uri_decode_size (const OPCBuffer input);
+
+/**
+ * Encodes `input` as a file URI into `output`
+ * @param output Output buffer
+ * @param input Input buffer
+ * @return Bytes written to `output`
+ */
+OPC_EXPORT OPCSize
+opc_uri_file_encode (OPCBuffer *output, const OPCBuffer input);
+
+/**
+ * Computes file URI encode output size for `input`
+ * @param input Input buffer
+ * @return Total bytes needed for the encode output of `input`
+ */
+OPC_EXPORT OPCSize
+opc_uri_file_encode_size (const OPCBuffer input);
+
+/**
+ * Decodes `input` file URI into `output`
+ * @param output Output buffer
+ * @param input Input buffer
+ * @return Bytes written to `output`
+ */
+OPC_EXPORT OPCSize
+opc_uri_file_decode (OPCBuffer *output, const OPCBuffer input);
+
+/**
+ * Computes file URI decode output size for `input`
+ * @param input Input buffer
+ * @return Total bytes needed for the decode output of `input`
+ */
+OPC_EXPORT OPCSize
+opc_uri_file_decode_size (const OPCBuffer input);
+
 #endif

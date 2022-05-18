@@ -280,8 +280,8 @@ okdone (void) {
  * @param condition The condition to test
  */
 #define assert_ok(condition, ...)                                              \
-  if (opc_ok(condition) == OPC_OK) {                                           \
-    ok(OPC_PP_STRING(condition), ##__VA_ARGS__);                               \
+  if ((condition) == OPC_OK) {                                                 \
+    ok(OPC_PP_STRING(condition)##__VA_ARGS__);                                 \
   } else {                                                                     \
     notok(                                                                     \
       "%s [%s %s]",                                                            \
@@ -307,7 +307,7 @@ okdone (void) {
  */
 #define assert_notok(condition, ...)                                           \
   if ((condition) != OPC_OK) {                                                 \
-    ok(OPC_PP_STRING(condition), ##__VA_ARGS__);                               \
+    ok(OPC_PP_STRING(condition)##__VA_ARGS__);                                 \
   } else {                                                                     \
     notok(                                                                     \
       "%s [%s %s]",                                                            \
@@ -359,6 +359,48 @@ okdone (void) {
     ok("%s not equals %s", OPC_PP_STRING(left), OPC_PP_STRING(right));         \
   } else {                                                                     \
     notok("%s equals %s", OPC_PP_STRING(left), OPC_PP_STRING(right));          \
+    opc_catch(err) {                                                           \
+      OPC_PRINTF("  ---\n");                                                   \
+      OPC_PRINTF("  message: %s\n", err.string);                               \
+      OPC_PRINTF("  severity: fail\n");                                        \
+      OPC_PRINTF("  at:\n");                                                   \
+      OPC_PRINTF("    file: %s\n", __FILE__);                                  \
+      OPC_PRINTF("    line: %d\n", __LINE__);                                  \
+      OPC_PRINTF("  ---\n");                                                   \
+    }                                                                          \
+  }
+
+/**
+ * A simple assertion that tests for a truthy `result` and emits `ok ...` or
+ * `not ok ...` based on the given result being `OPC_TRUE` (`true`, `1`).
+ * @param result Result to test for `OPC_TRUE`
+ */
+#define assert_true(result)                                                    \
+  if ((result) != OPC_FALSE) {                                                 \
+    ok("%s", OPC_PP_STRING(result));                                           \
+  } else {                                                                     \
+    notok("%s is not true", OPC_PP_STRING(result));                            \
+    opc_catch(err) {                                                           \
+      OPC_PRINTF("  ---\n");                                                   \
+      OPC_PRINTF("  message: %s\n", err.string);                               \
+      OPC_PRINTF("  severity: fail\n");                                        \
+      OPC_PRINTF("  at:\n");                                                   \
+      OPC_PRINTF("    file: %s\n", __FILE__);                                  \
+      OPC_PRINTF("    line: %d\n", __LINE__);                                  \
+      OPC_PRINTF("  ---\n");                                                   \
+    }                                                                          \
+  }
+
+/**
+ * A simple assertion that tests for a falsy `result` and emits `ok ...` or
+ * `not ok ...` based on the given result being `OPC_FALSE` (`false`, `0`).
+ * @param result Result to test for `OPC_FALSE`
+ */
+#define assert_false(result)                                                   \
+  if ((result) == OPC_FALSE) {                                                 \
+    ok("%s", OPC_PP_STRING(result));                                           \
+  } else {                                                                     \
+    notok("%s is not true", OPC_PP_STRING(result));                            \
     opc_catch(err) {                                                           \
       OPC_PRINTF("  ---\n");                                                   \
       OPC_PRINTF("  message: %s\n", err.string);                               \

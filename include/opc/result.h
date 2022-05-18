@@ -41,6 +41,7 @@
  */
 typedef enum {
   OPC_E_MAX = -OPC_MAX_ENUM,
+  OPC_MALFORMED_URI = -100,
   OPC_MISSING_CONTEXT = -40,
   OPC_BAD_STATE = -30,
   OPC_INVALID_ARGUMENT = -20,
@@ -56,10 +57,9 @@ typedef enum {
 } OPCResult;
 
 /**
- * An identity for `OPC_OK`
- * @return `OPC_OK`
+ * Alias for `opc_is_error()`
  */
-#define opc_ok(value) (OPCResult) ( value == OPC_TRUE ? OPC_OK : value)
+#define opc_notok opc_is_error
 
 /**
  * Predicate helper to determine if `value` is an error result code

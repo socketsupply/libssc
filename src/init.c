@@ -31,7 +31,8 @@
 
 #include <flag/flag.h>
 #include <opc/opc.h>
-#include "types.h"
+
+#include "internal.h"
 
 // state
 static OPCInitState state = OPC_INIT_NONE;

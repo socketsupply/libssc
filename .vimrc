@@ -28,6 +28,10 @@ fun s:c()
   hi def link   Todo             Todo
   hi def link   Comment          Comment
 
+  syn match     NatspecTag       /libopc/ contained
+  syn match     NatspecTag       /SPDX-License-Identifier/ contained
+  syn match     NatspecTag       /SPDX-FileCopyrightText/ contained
+
   " Natspec
   syn match     NatspecTag       /@see\>/ contained
   syn match     NatspecTag       /@dev\>/ contained
@@ -41,6 +45,7 @@ fun s:c()
   syn match     NatspecTag       /@returns\>/ contained
   syn match     NatspecTag       /@example\>/ contained
   syn match     NatspecParam     /\(@param\s*\)\@<=\<[a-zA-Z_][0-9a-zA-Z_]*/
+  syn match     NatspecParam     /\(@prop\s*\)\@<=\<[a-zA-Z_][0-9a-zA-Z_]*/
   syn region    NatspecBlock     start=/\/\/\// end=/$/ contains=Todo,NatspecTag,NatspecParam,@Spell
   syn region    NatspecBlock     start=/\/\*\{2}/ end=/\*\// contains=Todo,NatspecTag,NatspecParam,@Spell
 

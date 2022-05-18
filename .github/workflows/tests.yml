@@ -25,7 +25,7 @@ jobs:
         make tidy lint check
 
         ## tests
-        make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        make tests VALGRIND= NO_BRIEF=1 VALIDATE_TAP=1
 
   macos:
     name: macOS
@@ -48,4 +48,4 @@ jobs:
         make lint check
 
         ## tests
-        make tests NO_VALGRIND=1 NO_BRIEF=1 VALIDATE_WITH_TAP_PARSER=1
+        make tests VALGRIND= NO_BRIEF=1 VALIDATE_TAP=1

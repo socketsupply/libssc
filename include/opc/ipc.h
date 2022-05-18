@@ -48,6 +48,10 @@
 #define IPC_MAX_CWD_PATH_BYTES 1024
 
 /**
+ */
+#define OPC_IPC_URI_PREFIX "ipc://"
+
+/**
  * Options for a low-level `send` IPC RPC command.
  */
 typedef struct OPCIPCSendOptions OPCIPCSendOptions;

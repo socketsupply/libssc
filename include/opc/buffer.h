@@ -37,15 +37,65 @@
 #include "string.h"
 
 /**
+ * Emits core `OPCBuffer` properties.
+ * @prop bytes Pointer to memory for the buffer
+ * @prop size Size of memory in `bytes`
+ * @prop parent Optional parent if `OPCBuffer` is a slice of `parent`
+ * @prop offset Optional offset in `parent` where `bytes` begins if it is a
+ * child of `parent`
+ */
+#define OPCBufferCoreProperties()                                              \
+  OPCBytes bytes;                                                              \
+  OPCUSize size;                                                               \
+  OPCBytes parent;                                                             \
+  OPCUSize offset;
+
+/**
+ * Emits static `OPCBuffer` properties of `static_size` bytes of memory.
+ * @param static_size Number of bytes for static `OPCByte` array.
+ * @prop bytes Static `OPCByte` array of `static_size` size
+ * @prop size Size of static memory in `bytes`
+ * @prop parent Should always be `NULL` as the buffer is static
+ * @prop offset Should always be `0` as the buffer is static
+ */
+#define OPCBufferProperties(static_size)                                       \
+  OPCByte bytes[static_size];                                                  \
+  OPCUSize size;                                                               \
+  OPCBytes parent;                                                             \
+  OPCUSize offset;
+
+/**
+ * Inline static struct with `OPCBuffer` properties.
+ * @param static_size Number of bytes for static `OPCByte` array.
+ * @see `OPCBufferProperties(static_size)`
+ */
+#define OPCBuffer(static_size)                                                 \
+  struct {                                                                     \
+    OPCBufferProperties(static_size)                                           \
+  }
+
+/**
+ * Inline struct for a static map of `OPCBuffer` types by name.
+ * @example
+ * OPCBufferStaticMap(hello, world) map;
+ * opc_buffer_set(&map.hello, "hello", 5);
+ * opc_buffer_set(&map.world, "world", 5);
+ * opc_buffer_print(map.hello); // "hello"
+ * opc_buffer_print(map.wrodl); // "world"
+ */
+#define OPCBufferStaticMap(...)                                                \
+  struct {                                                                     \
+    OPCBuffer __VA_ARGS__;                                                     \
+  }
+
+/**
  * A container for a bytes pointer with size.
+ * @see `OPCBufferProperties(static_size)`
  */
 typedef struct OPCBuffer OPCBuffer;
 
 struct OPCBuffer {
-  OPCBytes bytes;
-  OPCUSize size;
-  OPCBytes parent;
-  OPCUSize offset;
+  OPCBufferCoreProperties()
 };
 
 /**
@@ -53,20 +103,39 @@ struct OPCBuffer {
  * @param value
  * @return `value` casted to `OPCBuffer`
  */
-#define opc_buffer(value) (*((OPCBuffer*) &((value))))
+#define opc_buffer(value) (*((OPCBuffer *) &((value))))
+
+/**
+ * Emits struct initialization for a static `OPCBuffer(size)` with
+ * an optional `parent` and `offset` values.
+ * @param self
+ * @param parent Optional parent bytes pointer
+ * @param offset Optional offset in parent bytes pointer
+ * @return An initialized `OPCBuffer(size)` static buffer.
+ */
+#define opc_buffer_static_init(self, ...)                                      \
+  .bytes = { 0 }, .size = sizeof(self.bytes), ##__VA_ARGS__
 
 /**
  * Converts `bytes` to an `OPCBuffer` with optional `size` and `parent`
  * properties.
  * @param bytes Bytes pointer
- * @param size
  * @param [parent = 0] Optional parent to bytes
  * @param [offset = 0] Optional byte offset in parent bytes
  * @return An `OPCBuffer` structure
  */
 #define opc_buffer_from(bytes, ...)                                            \
-  ((OPCBuffer) { (OPCBytes) (bytes), ##__VA_ARGS__ })
+  ((OPCBuffer) { opc_bytes(bytes), ##__VA_ARGS__ })
 
+/**
+ * Converts static `OPCBuffer(size)` to `OPCBuffer`.
+ * @param value
+ * @return An `OPCBuffer` structure
+ */
+#define opc_buffer_from_static(value, ...)                                     \
+  ((OPCBuffer) { value.bytes, sizeof(value.bytes), ##__VA_ARGS__ })
+
+// clang-format on
 /**
  * Converts `string` to an `OPCBuffer` with `size` computed dynamically.
  * @param string The string
@@ -81,17 +150,40 @@ struct OPCBuffer {
  * @param buffer
  */
 #define opc_buffer_print(buffer)                                               \
-  opc_string_fprintf(                                                          \
-    opc_stdout(), "%.*s\n", opc_int((buffer).size), opc_string((buffer).bytes) \
-  )
+  {                                                                            \
+    OPCBuffer self = (OPCBuffer) (buffer);                                     \
+    opc_string_fprintf(                                                        \
+      opc_stdout(), "%.*s\n", opc_int(self.size), opc_string(self.bytes)       \
+    );                                                                         \
+  }
 
 /**
  * Writes zeros to `buffer` up to `size` bytes.
  * @param buffer
  * @param size
  */
-#define opc_buffer_zero(buffer, size)                                          \
-  opc_buffer_fill(&opc_buffer_from(opc_bytes(buffer)), 0, 0, size)
+#define opc_buffer_zero(buffer, size) opc_buffer_fill(&(buffer), 0, 0, size)
+
+/**
+ * @param buffer A pointer to a `OPCBuffer`
+ * @param bytes A pointer to the `bytes` memory
+ * @param size Size of memory in `bytes`
+ */
+#define opc_buffer_set(buffer, _bytes, _size)                                  \
+  ({                                                                           \
+    OPCBuffer *_self = (buffer);                                               \
+    _self->bytes = opc_bytes(_bytes);                                          \
+    _self->size = opc_usize(_size);                                            \
+    *(_self);                                                                  \
+  })
+
+/**
+ * Set `input` buffer on `buffer` instance replaceing `bytes` and `size.
+ * @param buffer
+ * @param input
+ */
+#define opc_buffer_set_buffer(self, buffer)                                    \
+  opc_buffer_set(self, buffer.bytes, buffer.size)
 
 /**
  * Computes a new buffer with slice
@@ -111,7 +203,7 @@ opc_buffer_slice (const OPCBuffer buffer, OPCUSize start, OPCUSize end);
  * @param right
  * @return `-1`, `0`, or `1` indicating the buffer difference or equality.
  */
-OPC_EXPORT const OPCResult
+OPC_EXPORT const OPCSize
 opc_buffer_compare (const OPCBuffer buffer, const OPCBuffer right);
 
 /**

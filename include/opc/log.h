@@ -40,7 +40,7 @@
  * `opg_log_*` functions.
  */
 #ifndef OPC_LOG_LINE_FORMAT
-#  define OPC_LOG_LINE_FORMAT "<%s:%llu> %s: "
+#define OPC_LOG_LINE_FORMAT "<%s:%llu> %s: "
 #endif
 
 /**
@@ -153,6 +153,62 @@ typedef enum {
     opc_string(__PRETTY_FUNCTION__),                                           \
     __VA_ARGS__                                                                \
   )
+
+/**
+ * Logs `[EMERG]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_emergb(buffer)                                                 \
+  opc_log_emerg("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
+
+/**
+ * Logs `[ALERT]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_alertb(buffer)                                                 \
+  opc_log_alert("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
+
+/**
+ * Logs `[CRIT]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_critb(buffer)                                                 \
+  opc_log_crit("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
+
+/**
+ * Logs `[ERROR]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_errorb(buffer)                                                 \
+  opc_log_error("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
+
+/**
+ * Logs `[WARN]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_warnb(buffer)                                                 \
+  opc_log_warn("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
+
+/**
+ * Logs `[NOTICE]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_noticeb(buffer)                                                 \
+  opc_log_notice("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
+
+/**
+ * Logs `[INFO]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_infob(buffer)                                                 \
+  opc_log_info("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
+
+/**
+ * Logs `[DEBUG]: ...` with buffer to stderr.
+ * @param buffer
+ */
+#define opc_log_debugb(buffer)                                                 \
+  opc_log_debug("%.*s", opc_int(buffer.size), opc_string(buffer.bytes))
 
 /**
  * Sets the current log level.
