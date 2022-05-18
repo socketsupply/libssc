@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,7 +29,7 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
@@ -56,43 +56,43 @@ static const char UTF8_SAFE_CHARS[256] = {
 
 // clang-format on
 
-static OPCResult
-detect (OPCUChar x) {
+static SSCResult
+detect (SSCUChar x) {
   // alpha capital/small
-  if (opc_math_in_urange(x, 'a', 'z') || opc_math_in_urange(x, 'A', 'Z')) {
-    return OPC_NOT_DETECTED;
+  if (ssc_math_in_urange(x, 'a', 'z') || ssc_math_in_urange(x, 'A', 'Z')) {
+    return SSC_NOT_DETECTED;
   }
 
   // decimal digits
-  if (opc_math_in_urange(x, 0x0030, 0x0039)) {
-    return OPC_NOT_DETECTED;
+  if (ssc_math_in_urange(x, 0x0030, 0x0039)) {
+    return SSC_NOT_DETECTED;
   }
 
   if (UTF8_SAFE_CHARS[x]) {
-    return OPC_NOT_DETECTED;
+    return SSC_NOT_DETECTED;
   }
 
-  return OPC_DETECTED;
+  return SSC_DETECTED;
 }
 
-OPCResult
-opc_utf8_detect (const OPCBuffer input) {
+SSCResult
+ssc_utf8_detect (const SSCBuffer input) {
   if (input.bytes == 0) {
-    return OPC_NULL_POINTER;
+    return SSC_NULL_POINTER;
   }
 
   if (input.size == 0) {
-    return OPC_OUT_OF_MEMORY;
+    return SSC_OUT_OF_MEMORY;
   }
 
   for (int i = 0; i < input.size; ++i) {
-    OPCByte byte = input.bytes[i];
-    OPCResult result = detect(byte);
+    SSCByte byte = input.bytes[i];
+    SSCResult result = detect(byte);
 
-    if (result != OPC_NOT_DETECTED) {
+    if (result != SSC_NOT_DETECTED) {
       return result;
     }
   }
 
-  return OPC_NOT_DETECTED;
+  return SSC_NOT_DETECTED;
 }

@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,52 +29,52 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
-static OPCByte memory[4096] = { 0 };
+static SSCByte memory[4096] = { 0 };
 
 int
 main (int argc, const char **argv) {
-  OPCIPCContext ctx = { 0 };
-  OPCBuffer file = opc_buffer_from(memory, 1024);
-  OPCBuffer *title[] = { &opc_buffer_from_string("value"),
-                         &opc_buffer_from_string("Hello World from libopc") };
+  SSCIPCContext ctx = { 0 };
+  SSCBuffer file = ssc_buffer_from(memory, 1024);
+  SSCBuffer *title[] = { &ssc_buffer_from_string("value"),
+                         &ssc_buffer_from_string("Hello World from libssc") };
 
-  OPCBuffer *navigate[] = { &opc_buffer_from_string("value"), &file };
+  SSCBuffer *navigate[] = { &ssc_buffer_from_string("value"), &file };
 
-  opc_init(argc, argv);
-  opc_ipc_context_init(&ctx);
+  ssc_init(argc, argv);
+  ssc_ipc_context_init(&ctx);
 
   file.size = // NOLINTNEXTLINE
-    opc_string_format(opc_string(file.bytes), "file://%s/index.html", ctx.cwd);
+    ssc_string_format(ssc_string(file.bytes), "file://%s/index.html", ctx.cwd);
 
   for (int i = 0; i < argc; i++) {
-    opc_log_debug("%s", argv[i]);
+    ssc_log_debug("%s", argv[i]);
   }
 
-  opc_ipc_request(
+  ssc_ipc_request(
     &ctx,
-    (OPCIPCRequestOptions) {
+    (SSCIPCRequestOptions) {
       .window = 0,
       .data = { title, 2 },
-      .command = opc_buffer_from_string("title"),
+      .command = ssc_buffer_from_string("title"),
     }
   );
 
-  opc_ipc_request(
+  ssc_ipc_request(
     &ctx,
-    (OPCIPCRequestOptions) {
+    (SSCIPCRequestOptions) {
       .window = 0,
-      .command = opc_buffer_from_string("show"),
+      .command = ssc_buffer_from_string("show"),
     }
   );
 
-  opc_ipc_request(
+  ssc_ipc_request(
     &ctx,
-    (OPCIPCRequestOptions) {
+    (SSCIPCRequestOptions) {
       .window = 0,
       .data = { navigate, 2 },
-      .command = opc_buffer_from_string("navigate"),
+      .command = ssc_buffer_from_string("navigate"),
     }
   );
 

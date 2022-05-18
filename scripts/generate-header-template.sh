@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 ##
-# `libopc` - Operator Framework Client Library
+# `libssc` - Socket SDK Client Library
 #
-# This file is part of libopc.
+# This file is part of libssc.
 #
 # MIT License
 #
@@ -45,7 +45,7 @@ if [ -z "$name" ]; then
 fi
 
 template="$root/templates/header.h"
-output="$root/include/opc/$name.h"
+output="$root/include/ssc/$name.h"
 
 if test -f "$output"; then
   rm -i "$output" || exit 1

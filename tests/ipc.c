@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,22 +29,22 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/test.h>
+#include <ssc/test.h>
 
 test("ipc") {
-  OPCIPCContext ctx = { 0 };
-  OPCBuffer *data[] = {
-    &opc_buffer_from_string("foo"),
-    &opc_buffer_from_string("bar"),
+  SSCIPCContext ctx = { 0 };
+  SSCBuffer *data[] = {
+    &ssc_buffer_from_string("foo"),
+    &ssc_buffer_from_string("bar"),
   };
 
-  assert_ok(opc_ipc_context_init(&ctx));
-  opc_ipc_request(
+  assert_ok(ssc_ipc_context_init(&ctx));
+  ssc_ipc_request(
     &ctx,
-    (OPCIPCRequestOptions) {
+    (SSCIPCRequestOptions) {
       .window = 0,
       .data = { data, 2 },
-      .command = opc_buffer_from_string("getScreenSize"),
+      .command = ssc_buffer_from_string("getScreenSize"),
     }
   );
 }

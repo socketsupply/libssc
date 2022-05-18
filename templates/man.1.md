@@ -1,4 +1,4 @@
-{{API}}(1) -- Operator Framework Client Library
+{{API}}(1) -- Socket SDK Client Library
 ===============================================
 
 ## SYNOPSIS
@@ -23,13 +23,13 @@ TODO
 
 ## SEE ALSO
 
-  `libopc`(3)
+  `libssc`(3)
 
-  Full documentation <https://gitub.com/socketsupply/libopc>
+  Full documentation <https://gitub.com/socketsupply/libssc>
 
 ## REPORTING BUGS
 
-  - <https://github.com/socketsupply/libopc/issues>
+  - <https://github.com/socketsupply/libssc/issues>
 
 ## LICENSE
 

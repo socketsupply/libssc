@@ -1,9 +1,9 @@
-{{API}}(3) -- Operator Framework Client Library
+{{API}}(3) -- Socket SDK Client Library
 ===============================================
 
 ## SYNOPSIS
 
-  `#include <opc/opc.h>`
+  `#include <ssc/ssc.h>`
 
 ## DESCRIPTION
 
@@ -19,11 +19,11 @@ TODO
 
 ## SEE ALSO
 
-  `libopc`(3)
+  `libssc`(3)
 
 ## REPORTING BUGS
 
-  - <https://github.com/socketsupply/libopc/issues>
+  - <https://github.com/socketsupply/libssc/issues>
 
 ## LICENSE
 

@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,7 +29,7 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 #include <stdarg.h>
 
 #ifdef _WIN32
@@ -41,10 +41,10 @@
 
 #include "internal.h"
 
-OPCResult
-opc_ipc_context_init (OPCIPCContext *ctx) {
+SSCResult
+ssc_ipc_context_init (SSCIPCContext *ctx) {
   if (ctx == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Context pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Context pointer cannot be NULL");
   }
 
 #ifdef _WIN32
@@ -54,89 +54,89 @@ opc_ipc_context_init (OPCIPCContext *ctx) {
 #endif
 
   ctx->seq = 0;
-  ctx->io.stdin = opc_init_stdin();
-  ctx->io.stdout = opc_init_stdout();
-  ctx->io.stderr = opc_init_stderr();
+  ctx->io.stdin = ssc_init_stdin();
+  ctx->io.stdout = ssc_init_stdout();
+  ctx->io.stderr = ssc_init_stderr();
 
-  return OPC_OK;
+  return SSC_OK;
 }
 
-OPCResult
-opc_ipc_write (OPCIPCContext *ctx, const OPCBuffer buffer) {
+SSCResult
+ssc_ipc_write (SSCIPCContext *ctx, const SSCBuffer buffer) {
   if (ctx == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Context pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Context pointer cannot be NULL");
   }
 
-  return opc_ipc_write_string(
-    ctx, "%*.s\n", buffer.size, opc_string(buffer.bytes)
+  return ssc_ipc_write_string(
+    ctx, "%*.s\n", buffer.size, ssc_string(buffer.bytes)
   );
 }
 
-OPCResult
-opc_ipc_vwrite_string (
-  OPCIPCContext *ctx,
-  const OPCString string,
+SSCResult
+ssc_ipc_vwrite_string (
+  SSCIPCContext *ctx,
+  const SSCString string,
   va_list args
 ) {
   if (ctx == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Context pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Context pointer cannot be NULL");
   }
 
   if (string == 0) {
-    return opc_throw(OPC_NULL_POINTER, "String cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "String cannot be NULL");
   }
 
   // NOLINTNEXTLINE
-  OPC_VFPRINTF(ctx->io.stdout, string, args);
-  return OPC_OK;
+  SSC_VFPRINTF(ctx->io.stdout, string, args);
+  return SSC_OK;
 }
 
-OPCResult
-opc_ipc_write_string (OPCIPCContext *ctx, const OPCString string, ...) {
+SSCResult
+ssc_ipc_write_string (SSCIPCContext *ctx, const SSCString string, ...) {
   va_list args;
 
   if (ctx == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Context pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Context pointer cannot be NULL");
   }
 
   va_start(args, string);
-  opc_ipc_vwrite_string(ctx, string, args);
+  ssc_ipc_vwrite_string(ctx, string, args);
   va_end(args);
 
-  return OPC_OK;
+  return SSC_OK;
 }
 
-OPCResult
-opc_ipc_flush (OPCIPCContext *ctx) {
+SSCResult
+ssc_ipc_flush (SSCIPCContext *ctx) {
   if (ctx == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Context pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Context pointer cannot be NULL");
   }
 
-  return opc_ipc_write_string(ctx, "\n");
+  return ssc_ipc_write_string(ctx, "\n");
 }
 
-OPCResult
-opc_ipc_send (OPCIPCContext *ctx, const OPCIPCSendOptions options) {
+SSCResult
+ssc_ipc_send (SSCIPCContext *ctx, const SSCIPCSendOptions options) {
   if (ctx == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Context pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Context pointer cannot be NULL");
   }
 
   if (options.event == 0) {
-    return opc_throw(OPC_INVALID_ARGUMENT, "Missing options.event");
+    return ssc_throw(SSC_INVALID_ARGUMENT, "Missing options.event");
   }
 
   if (options.value.size > 0 && options.value.bytes != 0) {
-    return opc_ipc_write_string(
+    return ssc_ipc_write_string(
       ctx,
       "ipc://send?window=%llu&event=%s&value=%*.s\n",
       options.window,
       options.event,
       options.value.size,
-      opc_string(options.value.bytes)
+      ssc_string(options.value.bytes)
     );
   }
 
-  return opc_ipc_write_string(
+  return ssc_ipc_write_string(
     ctx,
     "ipc://send?window=%llu&event=%s&value=\"\"\n",
     options.window,
@@ -144,16 +144,16 @@ opc_ipc_send (OPCIPCContext *ctx, const OPCIPCSendOptions options) {
   );
 }
 
-OPCResult
-opc_ipc_request (OPCIPCContext *ctx, const OPCIPCRequestOptions options) {
+SSCResult
+ssc_ipc_request (SSCIPCContext *ctx, const SSCIPCRequestOptions options) {
   if (ctx == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Context pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Context pointer cannot be NULL");
   }
 
-  OPCBuffer buffer = opc_buffer_from(ctx->memory, IPC_MAX_MEMORY_BYTES);
-  OPCUSize seq = ctx->seq++;
+  SSCBuffer buffer = ssc_buffer_from(ctx->memory, IPC_MAX_MEMORY_BYTES);
+  SSCUSize seq = ctx->seq++;
 
-  opc_ipc_write_string(
+  ssc_ipc_write_string(
     ctx,
     "ipc://%.*s?seq=%llu&value=\"\"&window=%llu",
     options.command.size,
@@ -163,20 +163,20 @@ opc_ipc_request (OPCIPCContext *ctx, const OPCIPCRequestOptions options) {
   );
 
   for (int i = 0; i < options.data.length; i += 2) {
-    OPCBuffer *key = options.data.tuples[i];
-    OPCBuffer *value = options.data.tuples[i + 1];
+    SSCBuffer *key = options.data.tuples[i];
+    SSCBuffer *value = options.data.tuples[i + 1];
 
     if (key != 0 && value != 0) {
       if (key->size > 0 && value->size > 0) {
-        OPCSize key_size = opc_uri_component_encode(&buffer, *key);
-        opc_ipc_write_string(ctx, "&%.*s=", key_size, buffer.bytes);
+        SSCSize key_size = ssc_uri_component_encode(&buffer, *key);
+        ssc_ipc_write_string(ctx, "&%.*s=", key_size, buffer.bytes);
 
-        OPCSize value_size = opc_uri_component_encode(&buffer, *value);
-        opc_ipc_write_string(ctx, "%.*s", value_size, buffer.bytes);
+        SSCSize value_size = ssc_uri_component_encode(&buffer, *value);
+        ssc_ipc_write_string(ctx, "%.*s", value_size, buffer.bytes);
       }
     }
   }
 
-  opc_ipc_flush(ctx);
-  return OPC_OK;
+  ssc_ipc_flush(ctx);
+  return SSC_OK;
 }

@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,17 +29,17 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/test.h>
+#include <ssc/test.h>
 
-#define from_macro(...) OPC_PP_VARG_COUNT(__VA_ARGS__)
+#define from_macro(...) SSC_PP_VARG_COUNT(__VA_ARGS__)
 
 test("pp") {
-  assert(0 == OPC_PP_VARG_COUNT());
-  assert(1 == OPC_PP_VARG_COUNT(1));
-  assert(2 == OPC_PP_VARG_COUNT(1, 2));
-  assert(3 == OPC_PP_VARG_COUNT(1, 2, 3));
-  assert(4 == OPC_PP_VARG_COUNT(1, 2, 3, 4));
-  assert(5 == OPC_PP_VARG_COUNT(1, 2, 3, 4, 5));
+  assert(0 == SSC_PP_VARG_COUNT());
+  assert(1 == SSC_PP_VARG_COUNT(1));
+  assert(2 == SSC_PP_VARG_COUNT(1, 2));
+  assert(3 == SSC_PP_VARG_COUNT(1, 2, 3));
+  assert(4 == SSC_PP_VARG_COUNT(1, 2, 3, 4));
+  assert(5 == SSC_PP_VARG_COUNT(1, 2, 3, 4, 5));
 
   assert_equal(0, from_macro());
   assert_equal(1, from_macro(1));
@@ -51,8 +51,8 @@ test("pp") {
   assert_equal(2, from_macro("foo", ("foo", 123)));
 
   // defects
-  assert_equal(0, OPC_PP_VARG_COUNT(("a", "b")));
-  assert_equal(0, OPC_PP_VARG_COUNT(("x", "y", "z")));
+  assert_equal(0, SSC_PP_VARG_COUNT(("a", "b")));
+  assert_equal(0, SSC_PP_VARG_COUNT(("x", "y", "z")));
   assert_equal(0, from_macro((1, 2)));
   assert_equal(0, from_macro((1, 2, 3)));
 }

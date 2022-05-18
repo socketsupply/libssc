@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -30,68 +30,68 @@
  */
 
 #include <flag/flag.h>
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
 // state
-static OPCInitState state = OPC_INIT_NONE;
+static SSCInitState state = SSC_INIT_NONE;
 
 // program
 static int argc = 0;
 static const char **argv = 0;
 
 // streams
-static OPCHandle stdin_stream;
-static OPCHandle stdout_stream;
-static OPCHandle stderr_stream;
+static SSCHandle stdin_stream;
+static SSCHandle stdout_stream;
+static SSCHandle stderr_stream;
 
 void
-opc_init_library (
-  OPCHandle init_stdin_stream,
-  OPCHandle init_stdout_stream,
-  OPCHandle init_stderr_stream,
+ssc_init_library (
+  SSCHandle init_stdin_stream,
+  SSCHandle init_stdout_stream,
+  SSCHandle init_stderr_stream,
   const int init_argc,
   const char **init_argv
 ) {
-  if (state == OPC_INIT_NONE) {
-    state = OPC_INIT_PENDING;
+  if (state == SSC_INIT_NONE) {
+    state = SSC_INIT_PENDING;
     argc = init_argc;
     argv = init_argv;
     stdin_stream = init_stdin_stream;
     stdout_stream = init_stdout_stream;
     stderr_stream = init_stderr_stream;
-    opc_log_set_file_stream_pointer(init_stderr_stream);
-    state = OPC_INIT_READY;
+    ssc_log_set_file_stream_pointer(init_stderr_stream);
+    state = SSC_INIT_READY;
   }
 }
 
-OPCInitState
-opc_init_state () {
+SSCInitState
+ssc_init_state () {
   return state;
 }
 
 const int
-opc_init_argc () {
+ssc_init_argc () {
   return argc;
 }
 
 const char **
-opc_init_argv () {
+ssc_init_argv () {
   return argv;
 }
 
-const OPCHandle
-opc_init_stdin () {
+const SSCHandle
+ssc_init_stdin () {
   return stdin_stream;
 }
 
-const OPCHandle
-opc_init_stdout () {
+const SSCHandle
+ssc_init_stdout () {
   return stdout_stream;
 }
 
-const OPCHandle
-opc_init_stderr () {
+const SSCHandle
+ssc_init_stderr () {
   return stderr_stream;
 }

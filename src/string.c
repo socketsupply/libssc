@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,14 +29,14 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
-OPCUSize
-opc_string_size (const OPCString string) {
-  const OPCString pointer = string;
-  OPCString ref = string;
+SSCUSize
+ssc_string_size (const SSCString string) {
+  const SSCString pointer = string;
+  SSCString ref = string;
 
   while (ref != 0 && *ref) {
     ++ref;
@@ -46,7 +46,7 @@ opc_string_size (const OPCString string) {
 }
 
 int
-opc_string_compare (const OPCString left, const OPCString right) {
+ssc_string_compare (const SSCString left, const SSCString right) {
   if (left == 0 && right == 0) {
     return 0;
   }
@@ -73,11 +73,11 @@ opc_string_compare (const OPCString left, const OPCString right) {
 }
 
 int
-opc_string_compare_with_size (
-  const OPCString left,
-  const OPCUSize left_size,
-  const OPCString right,
-  const OPCUSize right_size
+ssc_string_compare_with_size (
+  const SSCString left,
+  const SSCUSize left_size,
+  const SSCString right,
+  const SSCUSize right_size
 ) {
   if (left == 0 && right == 0) {
     return 0;
@@ -104,8 +104,8 @@ opc_string_compare_with_size (
   return 0;
 }
 
-const OPCString
-opc_string_slice (const OPCString self, const OPCUSize offset) {
+const SSCString
+ssc_string_slice (const SSCString self, const SSCUSize offset) {
   if (self == 0) {
     return 0;
   }
@@ -113,7 +113,7 @@ opc_string_slice (const OPCString self, const OPCUSize offset) {
   return self + offset;
 }
 
-OPCBoolean
-opc_string_equals (const OPCString left, const OPCString right) {
-  return opc_string_compare(left, right) == 0 ? true : false;
+SSCBoolean
+ssc_string_equals (const SSCString left, const SSCString right) {
+  return ssc_string_compare(left, right) == 0 ? true : false;
 }

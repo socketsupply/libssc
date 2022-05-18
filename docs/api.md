@@ -1,4 +1,4 @@
-Operator Framework C99 Client Library
+Socket SDK C99 Client Library
 =====================================
 
 > Library API Documentation.

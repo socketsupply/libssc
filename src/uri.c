@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,7 +29,7 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
@@ -64,10 +64,10 @@ static const char HEX2DEC[256] = {
 
 // clang-format on
 //
-static const OPCBuffer ENDING_OF_PROTOCOL_SLASHES = opc_buffer_from("://", 3);
+static const SSCBuffer ENDING_OF_PROTOCOL_SLASHES = ssc_buffer_from("://", 3);
 
-static OPCResult
-detect (OPCByte byte, OPCBoolean special) {
+static SSCResult
+detect (SSCByte byte, SSCBoolean special) {
   // clang-format off
   // restricted  characters
   if (
@@ -75,7 +75,7 @@ detect (OPCByte byte, OPCBoolean special) {
     '~' == byte || '*' == byte || '(' == byte || ')' == byte
   ) {
     // clang-format on
-    return OPC_NOT_DETECTED;
+    return SSC_NOT_DETECTED;
   }
 
   if (special) {
@@ -87,54 +87,54 @@ detect (OPCByte byte, OPCBoolean special) {
       '=' == byte || '?' == byte || '@' == byte
     ) {
       // clang-format on
-      return OPC_NOT_DETECTED;
+      return SSC_NOT_DETECTED;
     }
   }
 
-  return opc_utf8_detect(opc_buffer_from(opc_bytes(opc_pointer(byte)), 1));
+  return ssc_utf8_detect(ssc_buffer_from(ssc_bytes(ssc_pointer(byte)), 1));
 }
 
-static OPCSize
-opc_uri_component_encode_ (
-  OPCBuffer *output,
-  const OPCBuffer input,
-  OPCBoolean detect_special
+static SSCSize
+ssc_uri_component_encode_ (
+  SSCBuffer *output,
+  const SSCBuffer input,
+  SSCBoolean detect_special
 ) {
-  OPCSize size = 0;
+  SSCSize size = 0;
 
   if (output->bytes == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Output bytes pointer cannot be NULL.");
+    return ssc_throw(SSC_NULL_POINTER, "Output bytes pointer cannot be NULL.");
   }
 
   if (input.bytes == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Input bytes pointer cannot be NULL.");
+    return ssc_throw(SSC_NULL_POINTER, "Input bytes pointer cannot be NULL.");
   }
 
   for (int i = 0; i < input.size; ++i) {
     if (size >= output->size) {
-      return opc_throw(OPC_OUT_OF_MEMORY, "Output bytes out of memory.");
+      return ssc_throw(SSC_OUT_OF_MEMORY, "Output bytes out of memory.");
     }
 
-    const OPCByte byte = input.bytes[i];
+    const SSCByte byte = input.bytes[i];
     const long status = detect(byte, detect_special);
 
-    if (status < OPC_OK) {
+    if (status < SSC_OK) {
       return status;
     }
 
-    if (status == OPC_NOT_DETECTED) {
+    if (status == SSC_NOT_DETECTED) {
       output->bytes[size++] = byte;
     } else {
       output->bytes[size++] = '%';
 
       if (size >= output->size) {
-        return opc_throw(OPC_OUT_OF_MEMORY, "Output bytes out of memory.");
+        return ssc_throw(SSC_OUT_OF_MEMORY, "Output bytes out of memory.");
       }
 
       output->bytes[size++] = DEC2HEX[byte >> 4];
 
       if (size >= output->size) {
-        return opc_throw(OPC_OUT_OF_MEMORY, "Output bytes out of memory.");
+        return ssc_throw(SSC_OUT_OF_MEMORY, "Output bytes out of memory.");
       }
 
       output->bytes[size++] = DEC2HEX[byte & 0x0f];
@@ -144,31 +144,31 @@ opc_uri_component_encode_ (
   return size;
 }
 
-OPCSize
-opc_uri_component_encode (OPCBuffer *output, const OPCBuffer input) {
-  return opc_uri_component_encode_(output, input, false);
+SSCSize
+ssc_uri_component_encode (SSCBuffer *output, const SSCBuffer input) {
+  return ssc_uri_component_encode_(output, input, false);
 }
 
-static OPCSize
-opc_uri_component_encode_size_ (
-  const OPCBuffer input,
-  OPCBoolean detect_special
+static SSCSize
+ssc_uri_component_encode_size_ (
+  const SSCBuffer input,
+  SSCBoolean detect_special
 ) {
-  OPCSize size = 0;
+  SSCSize size = 0;
 
   if (input.bytes == 0 || input.size == 0) {
     return 0;
   }
 
   for (int i = 0; i < input.size && input.bytes[i] != 0; ++i) {
-    OPCByte byte = input.bytes[i];
+    SSCByte byte = input.bytes[i];
     const long status = detect(byte, detect_special);
 
     switch (status) {
-      case OPC_NOT_DETECTED:
+      case SSC_NOT_DETECTED:
         size++;
         break;
-      case OPC_DETECTED:
+      case SSC_DETECTED:
         size = size + 3; // %XX
         break;
       default:
@@ -179,21 +179,21 @@ opc_uri_component_encode_size_ (
   return (long) size;
 }
 
-OPCSize
-opc_uri_component_encode_size (const OPCBuffer input) {
-  return opc_uri_component_encode_size_(input, false);
+SSCSize
+ssc_uri_component_encode_size (const SSCBuffer input) {
+  return ssc_uri_component_encode_size_(input, false);
 }
 
-OPCSize
-opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
-  OPCSize size = 0;
+SSCSize
+ssc_uri_component_decode (SSCBuffer *output, const SSCBuffer input) {
+  SSCSize size = 0;
 
   if (output->bytes == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Output bytes cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Output bytes cannot be NULL");
   }
 
   if (input.bytes == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Input bytes cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Input bytes cannot be NULL");
   }
 
   for (int i = 0; i < input.size; ++i) {
@@ -201,12 +201,12 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
       break;
 
     if (size >= output->size) {
-      return opc_throw(OPC_OUT_OF_MEMORY, "Output out of memory");
+      return ssc_throw(SSC_OUT_OF_MEMORY, "Output out of memory");
     }
 
     if (input.bytes[i] == '%') {
-      OPCSize x = HEX2DEC[input.bytes[i + 1]];
-      OPCSize y = HEX2DEC[input.bytes[i + 2]];
+      SSCSize x = HEX2DEC[input.bytes[i + 1]];
+      SSCSize y = HEX2DEC[input.bytes[i + 2]];
 
       i = i + 2;
 
@@ -219,9 +219,9 @@ opc_uri_component_decode (OPCBuffer *output, const OPCBuffer input) {
   return size;
 }
 
-OPCSize
-opc_uri_component_decode_size (const OPCBuffer input) {
-  OPCSize size = 0;
+SSCSize
+ssc_uri_component_decode_size (const SSCBuffer input) {
+  SSCSize size = 0;
   int i = 0;
 
   if (input.bytes == 0 || input.size == 0) {
@@ -245,21 +245,21 @@ opc_uri_component_decode_size (const OPCBuffer input) {
   return size;
 }
 
-OPCResult
-opc_uri_parse (OPCURI *self, const OPCBuffer input) {
+SSCResult
+ssc_uri_parse (SSCURI *self, const SSCBuffer input) {
   // parser static memory
-  OPCByte memory[OPC_URI_MAX_BYTES] = { 0 };
+  SSCByte memory[SSC_URI_MAX_BYTES] = { 0 };
 
   if (self == 0) {
-    return opc_throw(OPC_NULL_POINTER, "OPCURI pointer cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "SSCURI pointer cannot be NULL");
   }
 
   if (input.bytes == 0) {
-    return opc_throw(OPC_NULL_POINTER, "Input bytes cannot be NULL");
+    return ssc_throw(SSC_NULL_POINTER, "Input bytes cannot be NULL");
   }
 
   if (input.size == 0) {
-    return opc_throw(OPC_INVALID_ARGUMENT, "Input size cannot be 0");
+    return ssc_throw(SSC_INVALID_ARGUMENT, "Input size cannot be 0");
   }
 
   // parser state
@@ -275,47 +275,47 @@ opc_uri_parse (OPCURI *self, const OPCBuffer input) {
     HASH
   };
 
-  OPCUSize tmp_offset = 0;
-  OPCUSize offset = 0;
-  OPCInt state = NONE;
+  SSCUSize tmp_offset = 0;
+  SSCUSize offset = 0;
+  SSCInt state = NONE;
 
   // clang-format off
-  OPCBufferStaticMap(tmp, output) buffers = {
-    .output = opc_buffer_from(self->bytes, OPC_URI_MAX_BYTES),
-    .tmp = opc_buffer_from(memory, sizeof(memory))
+  SSCBufferStaticMap(tmp, output) buffers = {
+    .output = ssc_buffer_from(self->bytes, SSC_URI_MAX_BYTES),
+    .tmp = ssc_buffer_from(memory, sizeof(memory))
   };
 
   // reset URI buffers
   // clang-format on
-  opc_buffer_set(&self->href, opc_bytes(""), 0);
-  opc_buffer_set(&self->protocol, opc_bytes(""), 0);
-  opc_buffer_set(&self->username, opc_bytes(""), 0);
-  opc_buffer_set(&self->password, opc_bytes(""), 0);
-  opc_buffer_set(&self->host, opc_bytes(""), 0);
-  opc_buffer_set(&self->port, opc_bytes(""), 0);
-  opc_buffer_set(&self->path, opc_bytes(""), 0);
-  opc_buffer_set(&self->query, opc_bytes(""), 0);
-  opc_buffer_set(&self->hash, opc_bytes(""), 0);
+  ssc_buffer_set(&self->href, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->protocol, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->username, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->password, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->host, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->port, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->path, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->query, ssc_bytes(""), 0);
+  ssc_buffer_set(&self->hash, ssc_bytes(""), 0);
 
   // both `protocol` and `href` point to the beginning of `bytes`, which
-  // is a static value and the first member of `OPCURI` so
-  // `opc_string_print("%s", opc_string(opc_pointer(uri)));`
+  // is a static value and the first member of `SSCURI` so
+  // `ssc_string_print("%s", ssc_string(ssc_pointer(uri)));`
   self->protocol.bytes = self->bytes;
   self->href.bytes = self->bytes;
 
   state = PROTOCOL;
 
   for (int i = 0; i < input.size; ++i) {
-    OPCByte byte = input.bytes[i];
-    OPCUSize written = 0;
+    SSCByte byte = input.bytes[i];
+    SSCUSize written = 0;
 
     if (offset >= buffers.output.size) {
-      return opc_throw(OPC_OUT_OF_MEMORY, "Out of memory");
+      return ssc_throw(SSC_OUT_OF_MEMORY, "Out of memory");
     }
 
     // protocol://username:password@host:port
     if (state < PATH) {
-      written = opc_buffer_write(&buffers.output, opc_bytes(&byte), offset, 1);
+      written = ssc_buffer_write(&buffers.output, ssc_bytes(&byte), offset, 1);
 
       if (written < 0) {
         break;
@@ -345,8 +345,8 @@ opc_uri_parse (OPCURI *self, const OPCBuffer input) {
 
       if (byte == ':') {
         if (state == PROTOCOL) {
-          OPCBuffer slice = opc_buffer_slice(input, i + 1, i + 3);
-          written = opc_buffer_write_buffer(&buffers.output, slice, offset);
+          SSCBuffer slice = ssc_buffer_slice(input, i + 1, i + 3);
+          written = ssc_buffer_write_buffer(&buffers.output, slice, offset);
 
           if (written < 0) {
             break;
@@ -354,7 +354,7 @@ opc_uri_parse (OPCURI *self, const OPCBuffer input) {
 
           offset += written;
           state = USERNAME;
-          opc_buffer_set(&self->username, buffers.output.bytes + offset, 0);
+          ssc_buffer_set(&self->username, buffers.output.bytes + offset, 0);
         }
 
         if (state == HOST) {
@@ -368,14 +368,14 @@ opc_uri_parse (OPCURI *self, const OPCBuffer input) {
 
       if (byte == '/') {
         if (state == USERNAME) {
-          opc_buffer_set_buffer(&self->host, self->username);
+          ssc_buffer_set_buffer(&self->host, self->username);
           self->host.size = self->username.size;
           self->host.bytes = self->username.bytes;
           self->username.size = 0;
-          self->username.bytes = opc_bytes("");
+          self->username.bytes = ssc_bytes("");
         } else if (state == HOST) {
         } else {
-          return opc_throw(OPC_MALFORMED_URI, "Invalid state in URI parser");
+          return ssc_throw(SSC_MALFORMED_URI, "Invalid state in URI parser");
         }
 
         state = PATH;
@@ -403,85 +403,85 @@ opc_uri_parse (OPCURI *self, const OPCBuffer input) {
     }
   }
 
-  opc_catch(err) {
-    return opc_rethrow_error(err);
+  ssc_catch(err) {
+    return ssc_rethrow_error(err);
   }
 
   self->href.size = offset - 1;
 
-  opc_log_alertb(self->href);
+  ssc_log_alertb(self->href);
 
-  return OPC_OK;
+  return SSC_OK;
 }
 
 static void
-uri_format (OPCString string, const OPCString format, const OPCURI self) {
+uri_format (SSCString string, const SSCString format, const SSCURI self) {
   // NOLINTNEXTLINE
-  opc_string_nformat(
-    opc_string(string),
-    OPC_URI_MAX_BYTES,
+  ssc_string_nformat(
+    ssc_string(string),
+    SSC_URI_MAX_BYTES,
     "%.*s%.*s%.*s%.*s%.*s",
-    opc_int(self.protocol.size),
-    opc_string(self.protocol.bytes),
-    opc_int(self.host.size),
-    opc_string(self.host.bytes),
-    opc_int(self.path.size),
-    opc_string(self.path.bytes),
-    opc_int(self.query.size),
-    opc_string(self.query.bytes),
-    opc_int(self.hash.size),
-    opc_string(self.hash.bytes)
+    ssc_int(self.protocol.size),
+    ssc_string(self.protocol.bytes),
+    ssc_int(self.host.size),
+    ssc_string(self.host.bytes),
+    ssc_int(self.path.size),
+    ssc_string(self.path.bytes),
+    ssc_int(self.query.size),
+    ssc_string(self.query.bytes),
+    ssc_int(self.hash.size),
+    ssc_string(self.hash.bytes)
   );
 }
 
 static void
-uri_fprintf (OPCHandle stream, const OPCString format, const OPCURI self) {
-  OPCChar string[OPC_URI_MAX_BYTES] = { 0 };
+uri_fprintf (SSCHandle stream, const SSCString format, const SSCURI self) {
+  SSCChar string[SSC_URI_MAX_BYTES] = { 0 };
   uri_format(string, format, self);
-  opc_string_fprintf(stream, "%s\n", string);
+  ssc_string_fprintf(stream, "%s\n", string);
 }
 
 void
-opc_uri_print (const OPCURI self) {
-  uri_fprintf(opc_stdout(), "%s\n", self);
+ssc_uri_print (const SSCURI self) {
+  uri_fprintf(ssc_stdout(), "%s\n", self);
 }
 
-OPCSize
-opc_uri_encode (OPCBuffer *output, const OPCBuffer input) {
+SSCSize
+ssc_uri_encode (SSCBuffer *output, const SSCBuffer input) {
   return 0;
 }
 
-OPCSize
-opc_uri_encode_size (const OPCBuffer input) {
+SSCSize
+ssc_uri_encode_size (const SSCBuffer input) {
   return 0;
 }
 
-OPCSize
-opc_uri_decode (OPCBuffer *output, const OPCBuffer input) {
+SSCSize
+ssc_uri_decode (SSCBuffer *output, const SSCBuffer input) {
   return 0;
 }
 
-OPCSize
-opc_uri_decode_size (const OPCBuffer input) {
+SSCSize
+ssc_uri_decode_size (const SSCBuffer input) {
   return 0;
 }
 
-OPCSize
-opc_uri_file_encode (OPCBuffer *output, const OPCBuffer input) {
+SSCSize
+ssc_uri_file_encode (SSCBuffer *output, const SSCBuffer input) {
   return 0;
 }
 
-OPCSize
-opc_uri_file_encode_size (const OPCBuffer input) {
-  return OPC_FILE_URI_PREFIX_SIZE + opc_uri_component_encode_size(input);
+SSCSize
+ssc_uri_file_encode_size (const SSCBuffer input) {
+  return SSC_FILE_URI_PREFIX_SIZE + ssc_uri_component_encode_size(input);
 }
 
-OPCSize
-opc_uri_file_decode (OPCBuffer *output, const OPCBuffer input) {
+SSCSize
+ssc_uri_file_decode (SSCBuffer *output, const SSCBuffer input) {
   return 0;
 }
 
-OPCSize
-opc_uri_file_decode_size (const OPCBuffer input) {
+SSCSize
+ssc_uri_file_decode_size (const SSCBuffer input) {
   return 0;
 }

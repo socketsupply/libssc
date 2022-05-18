@@ -1,4 +1,4 @@
-#include <opc/test.h>
+#include <ssc/test.h>
 
 xtest("a simple skipped test", expected_pass_count = 3) {
   assert(1 + 1 == 2);

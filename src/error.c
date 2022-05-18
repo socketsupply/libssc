@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,49 +29,49 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
-// Define `OPC_MISSING_ERRNO=1` if `<errno.h>` or `strerror(3)` was not found in
+// Define `SSC_MISSING_ERRNO=1` if `<errno.h>` or `strerror(3)` was not found in
 // a user space configure or feature detection script
-#ifndef OPC_MISSING_ERRNO
+#ifndef SSC_MISSING_ERRNO
 #define HAVE_ERRONO
 #include <string.h>
 #endif
 
 struct Error {
-  OPCSize code;
-  OPCString message;
+  SSCSize code;
+  SSCString message;
 };
 
 // clang-format off
 static struct Error errors[1024] = {
   { 0, "" },
-  { OPC_ERROR, "An error occurred" },
-  { OPC_NULL_POINTER, "NULL pointer reference" },
-  { OPC_OUT_OF_MEMORY, "Ran out of memory" },
-  { OPC_OUT_OF_BOUNDS, "Read out of bounds" },
-  { OPC_INVALID_ARGUMENT, "Invalid argument" },
-  { OPC_BAD_STATE, "Bad state" },
-  { OPC_MISSING_CONTEXT, "Missing context" },
-  { OPC_MALFORMED_URI, "Malformed URI" },
+  { SSC_ERROR, "An error occurred" },
+  { SSC_NULL_POINTER, "NULL pointer reference" },
+  { SSC_OUT_OF_MEMORY, "Ran out of memory" },
+  { SSC_OUT_OF_BOUNDS, "Read out of bounds" },
+  { SSC_INVALID_ARGUMENT, "Invalid argument" },
+  { SSC_BAD_STATE, "Bad state" },
+  { SSC_MISSING_CONTEXT, "Missing context" },
+  { SSC_MALFORMED_URI, "Malformed URI" },
   { 0, 0 },
 };
 
 // clang-format on
 
 // @TODO(jwerle): lock
-static struct OPCError global_error = { 0 };
+static struct SSCError global_error = { 0 };
 
 void
-opc_error_init () {
-  opc_error_reset();
+ssc_error_init () {
+  ssc_error_reset();
 }
 
-const OPCString
-opc_error_string (OPCSize error) {
-  OPCUSize count = sizeof(errors) / sizeof(struct Error);
+const SSCString
+ssc_error_string (SSCSize error) {
+  SSCUSize count = sizeof(errors) / sizeof(struct Error);
 
   if (error < 0) {
     for (int i = 0; i < count; ++i) {
@@ -87,7 +87,7 @@ opc_error_string (OPCSize error) {
 
 #ifdef HAVE_ERRONO
   if (error > 0) {
-    OPCString message = strerror(opc_int(opc_math_abs(error)));
+    SSCString message = strerror(ssc_int(ssc_math_abs(error)));
     if (message != 0) {
       return message;
     }
@@ -97,17 +97,17 @@ opc_error_string (OPCSize error) {
   return errors[0].message;
 }
 
-const OPCSize
-opc_error_create (OPCSize code, const OPCString message) {
-  OPCSize count = sizeof(errors) / sizeof(struct Error);
-  OPCSize slot = -1;
+const SSCSize
+ssc_error_create (SSCSize code, const SSCString message) {
+  SSCSize count = sizeof(errors) / sizeof(struct Error);
+  SSCSize slot = -1;
 
   if (code >= 0) {
-    return opc_throw(OPC_INVALID_ARGUMENT, "Error code must be less than 0");
+    return ssc_throw(SSC_INVALID_ARGUMENT, "Error code must be less than 0");
   }
 
   if (message == 0) {
-    return opc_throw(OPC_INVALID_ARGUMENT, "Message cannot be NULL");
+    return ssc_throw(SSC_INVALID_ARGUMENT, "Message cannot be NULL");
   }
 
   for (int i = 0; i < count - 1; ++i) {
@@ -123,7 +123,7 @@ opc_error_create (OPCSize code, const OPCString message) {
   }
 
   if (slot == -1 || slot >= count) {
-    return opc_throw(OPC_OUT_OF_BOUNDS, "Maximum errors created");
+    return ssc_throw(SSC_OUT_OF_BOUNDS, "Maximum errors created");
   }
 
   // assign code + message
@@ -134,31 +134,31 @@ opc_error_create (OPCSize code, const OPCString message) {
   errors[slot + 1].code = 0;
   errors[slot + 1].message = 0;
 
-  return OPC_OK;
+  return SSC_OK;
 }
 
-const OPCSize
-opc_error_throw (
-  const OPCSize code,
-  const OPCString message,
-  const OPCString location,
-  const OPCSize line,
-  const OPCString function,
+const SSCSize
+ssc_error_throw (
+  const SSCSize code,
+  const SSCString message,
+  const SSCString location,
+  const SSCSize line,
+  const SSCString function,
   ...
 ) {
   // clang-format off
-  OPCBuffer buffer = opc_buffer_from(
+  SSCBuffer buffer = ssc_buffer_from(
     global_error.bytes,
     sizeof(global_error.bytes)
   );
 
   // header
   // NOLINTNEXTLINE
-  global_error.meta.header_size = opc_string_nformat(
-    opc_string(buffer.bytes),
-    OPC_ERROR_MAX_HEADER_BYTES,
-    OPC_ERROR_HEADER_FORMAT,
-    opc_error_string(code),
+  global_error.meta.header_size = ssc_string_nformat(
+    ssc_string(buffer.bytes),
+    SSC_ERROR_MAX_HEADER_BYTES,
+    SSC_ERROR_HEADER_FORMAT,
+    ssc_error_string(code),
     function,
     location,
     line
@@ -169,22 +169,22 @@ opc_error_throw (
 
   global_error.code = code;
   global_error.line = line;
-  global_error.location = opc_string(
-    buffer.bytes + OPC_ERROR_LOCATION_BYTES_OFFSET
+  global_error.location = ssc_string(
+    buffer.bytes + SSC_ERROR_LOCATION_BYTES_OFFSET
   );
 
-  global_error.function = opc_string(
-    buffer.bytes + OPC_ERROR_FUNCTION_BYTES_OFFSET
+  global_error.function = ssc_string(
+    buffer.bytes + SSC_ERROR_FUNCTION_BYTES_OFFSET
   );
 
   // +message
-  if (message != 0 && opc_string_size(message) > 0) {
-    OPCSize header_size = global_error.meta.header_size;
-    global_error.message = opc_string(buffer.bytes + header_size);
+  if (message != 0 && ssc_string_size(message) > 0) {
+    SSCSize header_size = global_error.meta.header_size;
+    global_error.message = ssc_string(buffer.bytes + header_size);
     // NOLINTNEXTLINE
-    global_error.meta.message_size = opc_string_vnformat(
+    global_error.meta.message_size = ssc_string_vnformat(
       global_error.message,
-      OPC_ERROR_MAX_MESSAGE_BYTES,
+      SSC_ERROR_MAX_MESSAGE_BYTES,
       message,
       args
     );
@@ -192,18 +192,18 @@ opc_error_throw (
 
   // |location
   // NOLINTNEXTLINE
-  opc_string_nformat(
+  ssc_string_nformat(
     global_error.location,
-    OPC_ERROR_MAX_LOCATION_BYTES,
+    SSC_ERROR_MAX_LOCATION_BYTES,
     "%s",
     location
   );
 
   // |function
   // NOLINTNEXTLINE
-  opc_string_nformat(
+  ssc_string_nformat(
     global_error.function,
-    OPC_ERROR_MAX_FUNCTION_BYTES,
+    SSC_ERROR_MAX_FUNCTION_BYTES,
     "%s",
     function
   );
@@ -214,64 +214,64 @@ opc_error_throw (
   return code;
 }
 
-const OPCSize
-opc_error_catch (OPCError *error) {
-  const OPCSize code = global_error.code;
+const SSCSize
+ssc_error_catch (SSCError *error) {
+  const SSCSize code = global_error.code;
 
   // catch can be called with `NULL` pointer
   if (error != 0) {
-    OPCBuffer buffer = opc_buffer_from(error->bytes, sizeof(error->bytes));
-    opc_buffer_fill(&buffer, 0, 0, OPC_ERROR_MAX_BYTES);
-    opc_buffer_write(&buffer, global_error.bytes, 0, OPC_ERROR_MAX_BYTES);
+    SSCBuffer buffer = ssc_buffer_from(error->bytes, sizeof(error->bytes));
+    ssc_buffer_fill(&buffer, 0, 0, SSC_ERROR_MAX_BYTES);
+    ssc_buffer_write(&buffer, global_error.bytes, 0, SSC_ERROR_MAX_BYTES);
 
     error->line = global_error.line;
     error->code = global_error.code;
-    error->string = opc_string(error->bytes);
-    error->message = opc_string(buffer.bytes + global_error.meta.header_size);
+    error->string = ssc_string(error->bytes);
+    error->message = ssc_string(buffer.bytes + global_error.meta.header_size);
     error->location =
-      opc_string(buffer.bytes + OPC_ERROR_LOCATION_BYTES_OFFSET);
+      ssc_string(buffer.bytes + SSC_ERROR_LOCATION_BYTES_OFFSET);
     error->function =
-      opc_string(buffer.bytes + OPC_ERROR_FUNCTION_BYTES_OFFSET);
+      ssc_string(buffer.bytes + SSC_ERROR_FUNCTION_BYTES_OFFSET);
   }
 
-  opc_error_reset();
+  ssc_error_reset();
   return code;
 }
 
 void
-opc_error_reset () {
-  global_error.code = OPC_OK;
+ssc_error_reset () {
+  global_error.code = SSC_OK;
   global_error.line = 0;
-  global_error.string = opc_string(global_error.bytes);
+  global_error.string = ssc_string(global_error.bytes);
   global_error.message = "";
   global_error.function = "unknown";
   global_error.location = "unknown";
   global_error.meta.header_size = 0;
   global_error.meta.message_size = 0;
 
-  opc_buffer_fill(
-    &opc_buffer_from(global_error.bytes, sizeof(global_error.bytes)), 0, 0, -1
+  ssc_buffer_fill(
+    &ssc_buffer_from(global_error.bytes, sizeof(global_error.bytes)), 0, 0, -1
   );
 }
 
-const OPCSize
-opc_error_get_code () {
+const SSCSize
+ssc_error_get_code () {
   return global_error.code;
 }
 
-const OPCString
-opc_error_get_message () {
+const SSCString
+ssc_error_get_message () {
   return global_error.message;
 }
 
-const OPCSize
-opc_error_get_code_at_slot (OPCUSize slot) {
-  OPCUSize count = sizeof(errors) / sizeof(struct Error);
+const SSCSize
+ssc_error_get_code_at_slot (SSCUSize slot) {
+  SSCUSize count = sizeof(errors) / sizeof(struct Error);
   return global_error.code;
 }
 
-const OPCString
-opc_error_get_message_at_slot (OPCUSize slot) {
-  OPCUSize count = sizeof(errors) / sizeof(struct Error);
+const SSCString
+ssc_error_get_message_at_slot (SSCUSize slot) {
+  SSCUSize count = sizeof(errors) / sizeof(struct Error);
   return global_error.message;
 }

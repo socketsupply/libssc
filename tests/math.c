@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,27 +29,27 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/test.h>
+#include <ssc/test.h>
 
 static const unsigned long long UMAX = -1;
 
-test("opc_math") {
-  assert(opc_math_clamp(1, 0, 2) == 1);
-  assert(opc_math_clamp(-2, -3, 3) == -2);
-  assert(opc_math_clamp(-128, -128, 128) == -128);
-  assert(opc_math_uclamp(-2, -1, 2) == UMAX - 1);
+test("ssc_math") {
+  assert(ssc_math_clamp(1, 0, 2) == 1);
+  assert(ssc_math_clamp(-2, -3, 3) == -2);
+  assert(ssc_math_clamp(-128, -128, 128) == -128);
+  assert(ssc_math_uclamp(-2, -1, 2) == UMAX - 1);
 
-  assert(opc_math_in_range(1, 0, 2));
-  assert(opc_math_in_range(0, 0, 2));
-  assert(opc_math_in_range(2, 0, 2));
-  assert(!opc_math_in_range(-1, 0, 2));
-  assert(!opc_math_in_range(3, 0, 2));
-  assert(opc_math_in_urange(1, 0, 2));
-  assert(opc_math_in_urange(0, 0, 2));
-  assert(opc_math_in_urange(-1, 0, UMAX));
-  assert(!opc_math_in_urange(-1, 0, UMAX - 2));
-  assert(!opc_math_in_urange(-1, 0, 16));
+  assert(ssc_math_in_range(1, 0, 2));
+  assert(ssc_math_in_range(0, 0, 2));
+  assert(ssc_math_in_range(2, 0, 2));
+  assert(!ssc_math_in_range(-1, 0, 2));
+  assert(!ssc_math_in_range(3, 0, 2));
+  assert(ssc_math_in_urange(1, 0, 2));
+  assert(ssc_math_in_urange(0, 0, 2));
+  assert(ssc_math_in_urange(-1, 0, UMAX));
+  assert(!ssc_math_in_urange(-1, 0, UMAX - 2));
+  assert(!ssc_math_in_urange(-1, 0, 16));
 
-  assert_equal(2, opc_math_abs(-2));
-  assert_equal(2, opc_math_abs(2));
+  assert_equal(2, ssc_math_abs(-2));
+  assert_equal(2, ssc_math_abs(2));
 }

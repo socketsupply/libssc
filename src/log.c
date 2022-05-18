@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,7 +29,7 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -39,28 +39,28 @@
 
 #include "internal.h"
 
-#define RED_LABEL_FORMAT "[\x1B[31m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
-#define GREEN_LABEL_FORMAT "[\x1B[32m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
-#define YELLOW_LABEL_FORMAT "[\x1B[33m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
-#define BLUE_LABEL_FORMAT "[\x1B[34m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
-#define MAGENTA_LABEL_FORMAT "[\x1B[35m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
-#define CYAN_LABEL_FORMAT "[\x1B[36m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
-#define WHITE_LABEL_FORMAT "[\x1B[37m%s\x1B[0m]: " OPC_LOG_LINE_FORMAT
-#define PLAIN_LABEL_FORMAT "[%s]: " OPC_LOG_LINE_FORMAT
+#define RED_LABEL_FORMAT "[\x1B[31m%s\x1B[0m]: " SSC_LOG_LINE_FORMAT
+#define GREEN_LABEL_FORMAT "[\x1B[32m%s\x1B[0m]: " SSC_LOG_LINE_FORMAT
+#define YELLOW_LABEL_FORMAT "[\x1B[33m%s\x1B[0m]: " SSC_LOG_LINE_FORMAT
+#define BLUE_LABEL_FORMAT "[\x1B[34m%s\x1B[0m]: " SSC_LOG_LINE_FORMAT
+#define MAGENTA_LABEL_FORMAT "[\x1B[35m%s\x1B[0m]: " SSC_LOG_LINE_FORMAT
+#define CYAN_LABEL_FORMAT "[\x1B[36m%s\x1B[0m]: " SSC_LOG_LINE_FORMAT
+#define WHITE_LABEL_FORMAT "[\x1B[37m%s\x1B[0m]: " SSC_LOG_LINE_FORMAT
+#define PLAIN_LABEL_FORMAT "[%s]: " SSC_LOG_LINE_FORMAT
 
 // clang-format off
-static OPCString log_level_strings[] = {
-  "OPC_LOG_LEVEL_EMERGENCY",
-  "OPC_LOG_LEVEL_ALERT",
-  "OPC_LOG_LEVEL_CRITICAL",
-  "OPC_LOG_LEVEL_ERROR",
-  "OPC_LOG_LEVEL_WARNING",
-  "OPC_LOG_LEVEL_NOTICE",
-  "OPC_LOG_LEVEL_INFO",
-  "OPC_LOG_LEVEL_DEBUG"
+static SSCString log_level_strings[] = {
+  "SSC_LOG_LEVEL_EMERGENCY",
+  "SSC_LOG_LEVEL_ALERT",
+  "SSC_LOG_LEVEL_CRITICAL",
+  "SSC_LOG_LEVEL_ERROR",
+  "SSC_LOG_LEVEL_WARNING",
+  "SSC_LOG_LEVEL_NOTICE",
+  "SSC_LOG_LEVEL_INFO",
+  "SSC_LOG_LEVEL_DEBUG"
 };
 
-static OPCString log_level_names[] = {
+static SSCString log_level_names[] = {
   "EMERG",
   "ALERT",
   "CRIT",
@@ -71,7 +71,7 @@ static OPCString log_level_names[] = {
   "DEBUG"
 };
 
-static OPCString log_level_formats[] = {
+static SSCString log_level_formats[] = {
   RED_LABEL_FORMAT, // EMERG
   RED_LABEL_FORMAT, // ALERT
   RED_LABEL_FORMAT, // CRIT
@@ -83,7 +83,7 @@ static OPCString log_level_formats[] = {
 };
 
 // @TODO(jwerle): use this
-static OPCSize log_level_clocks[] = {
+static SSCSize log_level_clocks[] = {
   0, // EMERG
   0, // ALERT
   0, // CRIT
@@ -95,14 +95,14 @@ static OPCSize log_level_clocks[] = {
 };
 // clang-format on
 
-#ifdef OPC_LOG_LEVEL_DEFAULT
-static OPCLogLevel log_level = OPC_LOG_LEVEL_DEFAULT;
+#ifdef SSC_LOG_LEVEL_DEFAULT
+static SSCLogLevel log_level = SSC_LOG_LEVEL_DEFAULT;
 #else
-static OPCLogLevel log_level = OPC_LOG_LEVEL_INFO;
+static SSCLogLevel log_level = SSC_LOG_LEVEL_INFO;
 #endif
 
 static void *file_stream_pointer = 0;
-static OPCBoolean colors_enabled = true;
+static SSCBoolean colors_enabled = true;
 
 #define LOG(location, line, function, label_format, label)                     \
   if (file_stream_pointer != 0) {                                              \
@@ -110,11 +110,11 @@ static OPCBoolean colors_enabled = true;
     va_start(args, format);                                                    \
                                                                                \
     if (colors_enabled) {                                                      \
-      OPC_FPRINTF(                                                             \
+      SSC_FPRINTF(                                                             \
         file_stream_pointer, label_format, label, location, line, function     \
       );                                                                       \
     } else {                                                                   \
-      OPC_FPRINTF(                                                             \
+      SSC_FPRINTF(                                                             \
         file_stream_pointer,                                                   \
         PLAIN_LABEL_FORMAT,                                                    \
         label,                                                                 \
@@ -124,33 +124,33 @@ static OPCBoolean colors_enabled = true;
       );                                                                       \
     }                                                                          \
                                                                                \
-    OPC_VFPRINTF(file_stream_pointer, format, args);                           \
+    SSC_VFPRINTF(file_stream_pointer, format, args);                           \
                                                                                \
     va_end(args);                                                              \
   }
 
 void
-opc_log_set_level (const OPCLogLevel level) {
+ssc_log_set_level (const SSCLogLevel level) {
   log_level = level;
 }
 
-const OPCLogLevel
-opc_log_get_level () {
+const SSCLogLevel
+ssc_log_get_level () {
   return log_level;
 }
 
-const OPCString
-opc_log_get_level_string () {
+const SSCString
+ssc_log_get_level_string () {
   return log_level_strings[log_level];
 }
 
-const OPCString
-opc_log_get_level_name () {
+const SSCString
+ssc_log_get_level_name () {
   return log_level_strings[log_level];
 }
 
 void
-opc_log_set_file_stream_pointer (void *pointer) {
+ssc_log_set_file_stream_pointer (void *pointer) {
   file_stream_pointer = pointer;
 #ifndef _WIN32
   if (isatty(0) == 0) {
@@ -160,22 +160,22 @@ opc_log_set_file_stream_pointer (void *pointer) {
 }
 
 void
-opc_log_enable_colors () {
+ssc_log_enable_colors () {
   colors_enabled = true;
 }
 
 void
-opc_log_disable_colors () {
+ssc_log_disable_colors () {
   colors_enabled = false;
 }
 
 void
-opc_log (
-  const OPCLogLevel level,
-  const OPCString location,
-  const OPCUSize line,
-  const OPCString function,
-  const OPCString format,
+ssc_log (
+  const SSCLogLevel level,
+  const SSCString location,
+  const SSCUSize line,
+  const SSCString function,
+  const SSCString format,
   ...
 ) {
 #ifdef __ANDROID__
@@ -186,6 +186,6 @@ opc_log (
     location, line, function, log_level_formats[level], log_level_names[level]
   );
 
-  OPC_FPRINTF(file_stream_pointer, "\n");
+  SSC_FPRINTF(file_stream_pointer, "\n");
 #endif
 }

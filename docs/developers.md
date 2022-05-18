@@ -1,4 +1,4 @@
-`libopc` Developers Guide
+`libssc` Developers Guide
 =========================
 
 ## 0. Prerequisites
@@ -10,7 +10,7 @@
 
 ## 1. External Usage
 
-This document is intended for `libopc` developers working on the
+This document is intended for `libssc` developers working on the
 internals of the library. Please see [api.md](api.md) for the
 porcelain/public interfaces for integrating and using this library
 in your project or application.
@@ -20,24 +20,24 @@ license meet your needs.
 
 ## 2. Contributing
 
-Contributions to `libopc` can be made with a new
-[pull request](https://github.com/socketsupply/libopc/compare) opened
+Contributions to `libssc` can be made with a new
+[pull request](https://github.com/socketsupply/libssc/compare) opened
 on this library's
-[canonical repository](https://github.com/socketsupply/libopc).
+[canonical repository](https://github.com/socketsupply/libssc).
 
 If you have discovered an bug or want to open up a discussion, please
-[open an issue](https://github.com/socketsupply/libopc/issues/new) on
-this library's [canonical repository](https://github.com/socketsupply/libopc).
+[open an issue](https://github.com/socketsupply/libssc/issues/new) on
+this library's [canonical repository](https://github.com/socketsupply/libssc).
 
 Please be sure to review the following before committing or opening a
-pull request to the `libopc` project:
+pull request to the `libssc` project:
 
 - [Code of Conduct](../.github/CODE_OF_CONDUCT.md)
 - [Commit Format](../.github/COMMIT_FORMAT.md) (See [Commit Format Examples](../.github/COMMIT_FORMAT_EXAMPLES.md))
 
 ## 3. Coding Rules
 
-`libopc` uses the [_FFmpeg Coding Rules_][ffmpeg-coding-rules] developer
+`libssc` uses the [_FFmpeg Coding Rules_][ffmpeg-coding-rules] developer
 guidelines in this project with exceptions outlined in this section. For
 clarity, some rules are repeated here to give a clear context of
 expectations for developers contributing to this library.
@@ -55,38 +55,38 @@ The following outlines indentation requirements for files in the project:
 
 ### Naming Conventions
 
-This section describes various naming conventions used in `libopc`.
+This section describes various naming conventions used in `libssc`.
 
 #### Namespacing
 
 All types, structs, functions, variables, and macros exported for public
-usage should be namespaced with `opc_`, `OPC`, or `OPC_` depending on
+usage should be namespaced with `ssc_`, `SSC`, or `SSC_` depending on
 the defined interface.
 
 #### Types
 
 All exported types should be
 [PascalCamelCase](https://en.wikipedia.org/wiki/Camel_case) and
-prefixed with the `OPC` namespace.
+prefixed with the `SSC` namespace.
 
 **Example:**
 
 ```c
-typedef unsigned char * OPCByte
+typedef unsigned char * SSCByte
 ```
 
 #### Structs
 
 All exported structs should be
 [PascalCamelCase](https://en.wikipedia.org/wiki/Camel_case) and
-prefixed with the `OPC` namespace.
+prefixed with the `SSC` namespace.
 
 **Example:**
 
 ```c
-struct OPCBuffer {
-  OPCBytes bytes;
-  OPCUSize size;
+struct SSCBuffer {
+  SSCBytes bytes;
+  SSCUSize size;
 };
 ```
 
@@ -94,17 +94,17 @@ struct OPCBuffer {
 
 All exported functions and preprocessor functions should be
 [snake_case](https://en.wikipedia.org/wiki/Snake_case) and prefixed with
-the `opc_` namespace.
+the `ssc_` namespace.
 
 **Example:**
 
 ```c
-#define opc_buffer(value) (OPCBuffer) (value)
+#define ssc_buffer(value) (SSCBuffer) (value)
 ```
 
 ```c
-OPC_EXPORT const OPCResult
-opc_buffer_compare (const OPCBuffer self, const OPCBuffer right);
+SSC_EXPORT const SSCResult
+ssc_buffer_compare (const SSCBuffer self, const SSCBuffer right);
 ```
 
 #### Variables
@@ -112,39 +112,39 @@ opc_buffer_compare (const OPCBuffer self, const OPCBuffer right);
 All globally (`static`) exported, externally (`extern`) linked, or
 preprocessor macro variables should be
 [snake_case](https://en.wikipedia.org/wiki/Snake_case) and prefixed with the
-`opc_` namespace.
+`ssc_` namespace.
 
 **Example:**
 
 ```c
-static OPCBoolean opc_some_boolean = OPC_FALSE;
+static SSCBoolean ssc_some_boolean = SSC_FALSE;
 ```
 
 ```c
-extern OPCString *opc_some_extern_string = 0;
+extern SSCString *ssc_some_extern_string = 0;
 ```
 
 
 ```c
-#define opc_argc opc_init_argc
-#define opc_argv opc_init_argv
+#define ssc_argc ssc_init_argc
+#define ssc_argv ssc_init_argv
 ```
 
 #### Preprocessor Macros
 
 All preprocessor macros should be
 [SCREAMING_SNAKE_CASE](https://en.wikipedia.org/wiki/Snake_case) and prefixed
-with the `OPC_` namespace.
+with the `SSC_` namespace.
 
 **Example:**
 
 ```c
-#define OPC_VSNPRINTF vsnprintf
+#define SSC_VSNPRINTF vsnprintf
 ```
 
 ```c
-#define OPC_PP_STRING(value) OPC_PP_STRINGX(value)
-#define OPC_PP_STRINGX(value) #value
+#define SSC_PP_STRING(value) SSC_PP_STRINGX(value)
+#define SSC_PP_STRINGX(value) #value
 ```
 
 ## 4. Development
@@ -175,7 +175,7 @@ with the `OPC_` namespace.
 
 Tests are single context executables that emit
 [TAP](https://testanything.org/) output. Tests make use of a self hosted
-[`<opc/test.h>`](../include/opc/test.h) header file that provides
+[`<ssc/test.h>`](../include/ssc/test.h) header file that provides
 various macros and functions for making assertions that output TAP
 compliant logs.
 
@@ -211,9 +211,9 @@ _All tests can be run by simply invoking:_
 make tests
 ```
 
-### `<opc/test.h>` API
+### `<ssc/test.h>` API
 
-This section describes the C API exposed by the `<opc/test.h>`
+This section describes the C API exposed by the `<ssc/test.h>`
 
 #### `test(name, expected)`
 
@@ -226,7 +226,7 @@ This section describes the C API exposed by the `<opc/test.h>`
 **Example:**
 
 ```c
-#include <opc/test.h>
+#include <ssc/test.h>
 
 test("a simple test", 2) {
   assert(1 + 1 == 2);
@@ -254,7 +254,7 @@ ok 3 - 2 not equals 3
 **Example:**
 
 ```c
-#include <opc/test.h>
+#include <ssc/test.h>
 
 xtest("a simple skipped test", 3) {
   assert(1 + 1 == 2);
@@ -290,10 +290,10 @@ assert(1 != 2);
 **Example:**
 
 ```c
-#include <opc/test.h>
+#include <ssc/test.h>
 
 test("error", 0) {
-  assert_ok(opc_throw(OPC_ERROR, "ooops"));
+  assert_ok(ssc_throw(SSC_ERROR, "ooops"));
 }
 ```
 
@@ -302,8 +302,8 @@ _Output:_
 ```sh
 TAP version 14
 # error
-ok 1 (OPCResult) (OPC_OK)
-not ok 1 - opc_error_throw( OPC_ERROR, "ooops", (OPCString)("error.c"), (OPCUSize) (35), (OPCString)(__PRETTY_FUNCTION__) ) [runner (error.c:35)]
+ok 1 (SSCResult) (SSC_OK)
+not ok 1 - ssc_error_throw( SSC_ERROR, "ooops", (SSCString)("error.c"), (SSCUSize) (35), (SSCString)(__PRETTY_FUNCTION__) ) [runner (error.c:35)]
   ---
   message: (runner): ooops
   severity: fail
@@ -325,10 +325,10 @@ not ok 1 - opc_error_throw( OPC_ERROR, "ooops", (OPCString)("error.c"), (OPCUSiz
 **Example:**
 
 ```c
-#include <opc/test.h>
+#include <ssc/test.h>
 
 test("error", 0) {
-  assert_notok(opc_throw(OPC_ERROR, "oops"));
+  assert_notok(ssc_throw(SSC_ERROR, "oops"));
 }
 ```
 
@@ -337,8 +337,8 @@ _Output:_
 ```sh
 TAP version 14
 # error
-ok 1 - opc_error_throw( OPC_ERROR, "oops", (OPCString)("error.c"), (OPCUSize) (35), (OPCString)(__PRETTY_FUNCTION__) )
-not ok 2 - (OPCResult) (OPC_OK) [runner (error.c:36)]
+ok 1 - ssc_error_throw( SSC_ERROR, "oops", (SSCString)("error.c"), (SSCUSize) (35), (SSCString)(__PRETTY_FUNCTION__) )
+not ok 2 - (SSCResult) (SSC_OK) [runner (error.c:36)]
   ---
   message: (runner): oops
   severity: fail

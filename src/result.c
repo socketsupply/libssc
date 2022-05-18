@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,36 +29,36 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
 struct Result {
-  const OPCResult code;
-  const OPCString string;
+  const SSCResult code;
+  const SSCString string;
 };
 
 // clang-format off
 static struct Result results[] = {
-  { OPC_E_MAX, "OPC_E_MAX" },
-  { OPC_MALFORMED_URI, "OPC_MALFORMED_URI" },
-  { OPC_MISSING_CONTEXT, "OPC_MISSING_CONTEXT" },
-  { OPC_BAD_STATE, "OPC_BAD_STATE" },
-  { OPC_INVALID_ARGUMENT, "OPC_INVALID_ARGUMENT" },
-  { OPC_OUT_OF_BOUNDS, "OPC_OUT_OF_BOUNDS" },
-  { OPC_OUT_OF_MEMORY, "OPC_OUT_OF_MEMORY" },
-  { OPC_NULL_POINTER, "OPC_NULL_POINTER" },
-  { OPC_ERROR, "OPC_ERROR" },
-  { OPC_OK, "OPC_OK" },
-  { OPC_DETECTED, "OPC_DETECTED" },
-  { OPC_NOT_DETECTED, "OPC_NOT_DETECTED" },
-  { OPC_UNKNOWN, "OPC_UNKNOWN" }
+  { SSC_E_MAX, "SSC_E_MAX" },
+  { SSC_MALFORMED_URI, "SSC_MALFORMED_URI" },
+  { SSC_MISSING_CONTEXT, "SSC_MISSING_CONTEXT" },
+  { SSC_BAD_STATE, "SSC_BAD_STATE" },
+  { SSC_INVALID_ARGUMENT, "SSC_INVALID_ARGUMENT" },
+  { SSC_OUT_OF_BOUNDS, "SSC_OUT_OF_BOUNDS" },
+  { SSC_OUT_OF_MEMORY, "SSC_OUT_OF_MEMORY" },
+  { SSC_NULL_POINTER, "SSC_NULL_POINTER" },
+  { SSC_ERROR, "SSC_ERROR" },
+  { SSC_OK, "SSC_OK" },
+  { SSC_DETECTED, "SSC_DETECTED" },
+  { SSC_NOT_DETECTED, "SSC_NOT_DETECTED" },
+  { SSC_UNKNOWN, "SSC_UNKNOWN" }
 };
 
 // clang-format on
 
-const OPCString
-opc_result_string (const OPCResult result) {
+const SSCString
+ssc_result_string (const SSCResult result) {
   unsigned long count = sizeof(results) / sizeof(struct Result);
 
   for (int i = 0; i < count; ++i) {

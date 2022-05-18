@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,28 +29,28 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
-OPCResult
-opc_system_init (
-  OPCSystem *system,
-  const OPCSystemConfiguration configuration
+SSCResult
+ssc_system_init (
+  SSCSystem *system,
+  const SSCSystemConfiguration configuration
 ) {
-  opc_ipc_context_init(&system->ipc);
-  opc_catch(err) {
+  ssc_ipc_context_init(&system->ipc);
+  ssc_catch(err) {
     return err.code;
   }
-  return OPC_OK;
+  return SSC_OK;
 }
 
-OPCResult
-opc_system_send (OPCSystem *system, const OPCWindow window) {
-  return OPC_OK;
+SSCResult
+ssc_system_send (SSCSystem *system, const SSCWindow window) {
+  return SSC_OK;
 }
 
-OPCResult
-opc_system_request (OPCSystem *system) {
-  return OPC_OK;
+SSCResult
+ssc_system_request (SSCSystem *system) {
+  return SSC_OK;
 }

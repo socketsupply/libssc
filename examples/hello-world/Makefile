@@ -1,7 +1,7 @@
 ##
-# `libopc` - Operator Framework Client Library
+# `libssc` - Socket SDK Client Library
 #
-# This file is part of libopc.
+# This file is part of libssc.
 #
 # MIT License
 #
@@ -43,7 +43,7 @@ else
 PREFIX := $(CWD)/build
 endif
 
-LIBOPC = ../../build/lib/libopc.a
+LIBSSC = ../../build/lib/libssc.a
 
 CFLAGS += -I ../../build/include
 CFLAGS += -Werror
@@ -60,17 +60,17 @@ export DYLD_LIBRARY_PATH = $(BUILD_LIBRARY_PATH)
 
 default: build
 
-build: $(PREFIX)/bin/$(TARGET) $(PREFIX)/lib/libopc.a
+build: $(PREFIX)/bin/$(TARGET) $(PREFIX)/lib/libssc.a
 	cp -f src/*.html $(PREFIX)
 
-$(PREFIX)/lib/libopc.a: $(LIBOPC)
+$(PREFIX)/lib/libssc.a: $(LIBSSC)
 
-$(LIBOPC):
+$(LIBSSC):
 	$(MAKE) -C ../.. install-library PREFIX=$(PREFIX)
 
-$(PREFIX)/bin/$(TARGET): $(LIBOPC)
+$(PREFIX)/bin/$(TARGET): $(LIBSSC)
 	$(MKDIR) `dirname $@`
-	$(CC) $(SRC) $(LIBOPC)  $(CFLAGS) -o $@
+	$(CC) $(SRC) $(LIBSSC)  $(CFLAGS) -o $@
 
 clean:
 	@rm -rf build/

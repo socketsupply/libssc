@@ -1,7 +1,7 @@
 ##
-# `libopc` - Operator Framework Client Library
+# `libssc` - Socket SDK Client Library
 #
-# This file is part of libopc.
+# This file is part of libssc.
 #
 # MIT License
 #

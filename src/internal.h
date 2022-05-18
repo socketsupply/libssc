@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -32,12 +32,12 @@
 // This file is a **private** source file and will _NOT_ be gaurded with
 // #ifndef...#endif macro gaurds which prevents double defines
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #ifndef true
-#define true OPC_TRUE
+#define true SSC_TRUE
 #endif
 
 #ifndef false
-#define false OPC_FALSE
+#define false SSC_FALSE
 #endif

@@ -1,7 +1,7 @@
 {
-  "name": "@socketsupply/libopc",
+  "name": "@socketsupply/libssc",
   "version": "0.0.0",
-  "description": "Operator Framework client library written in C99.",
+  "description": "Socket SDK client library written in C99.",
   "directories": {
     "doc": "docs",
     "test": "tests"
@@ -11,21 +11,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/socketsupply/libopc.git"
+    "url": "git+https://github.com/socketsupply/libssc.git"
   },
   "keywords": [
-    "operator",
-    "framework",
+    "socket",
+    "supply",
     "client",
+    "framework",
     "library",
-    "libopc"
+    "libssc"
   ],
   "author": "Joseph Werle <joseph@socketsupply.co>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/socketsupply/libopc/issues"
+    "url": "https://github.com/socketsupply/libssc/issues"
   },
-  "homepage": "https://github.com/socketsupply/libopc#readme",
+  "homepage": "https://github.com/socketsupply/libssc#readme",
   "devDependencies": {
     "marked-man": "^0.7.0",
     "tap-parser": "^11.0.1"

@@ -1,25 +1,25 @@
-libopc
+libssc
 ======
 
-![tests](https://github.com/socketsupply/libopc/actions/workflows/tests.yml/badge.svg)
+![tests](https://github.com/socketsupply/libssc/actions/workflows/tests.yml/badge.svg)
 
-> Operator Framework Client Library (written in C99).
+> Socket SDK Client Library (written in C99).
 
 ## Installation
 
-`libopc` can be installed in a variety of ways. This section describes
+`libssc` can be installed in a variety of ways. This section describes
 in detail how to install the library and set it up for usage in your
 project.
 
 ### Install from source
 
-Installing `libopc` from source is simple and straightforward.
+Installing `libssc` from source is simple and straightforward.
 
 **Clone the repository:**
 
 ```sh
-git clone git@github.com:socketsupply/libopc.git
-cd libopc
+git clone git@github.com:socketsupply/libssc.git
+cd libssc
 ```
 
 #### Building on POSIX
@@ -47,7 +47,7 @@ scrips\build.ps1
 > TODO
 
 ```sh
-clib install socketsupply/libopc
+clib install socketsupply/libssc
 ```
 
 ### Install with `bpkg`
@@ -55,7 +55,7 @@ clib install socketsupply/libopc
 > TODO
 
 ```sh
-bpkg install socketsupply/libopc
+bpkg install socketsupply/libssc
 ```
 
 ## Usage
@@ -64,7 +64,7 @@ bpkg install socketsupply/libopc
 
 ## Documentation
 
-Developers intending to contribute to the `libopc` library should be
+Developers intending to contribute to the `libssc` library should be
 sure to check out the [Developers Guide](docs/developers.md) before
 doing so.
 
@@ -73,7 +73,7 @@ Documentation](docs/api.md) before using this library.
 
 ### See Also
 
-- [Operator Framework](https://github.com/socketsupply/operatorframework)
+- [Socket SDK](https://github.com/socketsupply/socket-sdk)
 
 ## License
 

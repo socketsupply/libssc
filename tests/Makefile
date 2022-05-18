@@ -1,7 +1,7 @@
 ##
-# `libopc` - Operator Framework Client Library
+# `libssc` - Socket SDK Client Library
 #
-# This file is part of libopc.
+# This file is part of libssc.
 #
 # MIT License
 #
@@ -53,7 +53,7 @@ CFLAGS += -Wall
 CFLAGS += -Werror
 CFLAGS += -I ../build/include -I ../deps
 CFLAGS += -L $(BUILD_LIBRARY_PATH)
-CFLAGS += -l opc
+CFLAGS += -l ssc
 
 ifeq (Darwin, $(shell uname))
   CFLAGS += -framework Foundation

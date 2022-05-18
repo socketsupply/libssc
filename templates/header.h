@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,6 +29,6 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#ifndef OPC_{{HEADER}}_H
-#define OPC_{{HEADER}}_H
+#ifndef SSC_{{HEADER}}_H
+#define SSC_{{HEADER}}_H
 #endif

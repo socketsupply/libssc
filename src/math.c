@@ -1,7 +1,7 @@
 /**
- * `libopc` - Operator Framework Client Library
+ * `libssc` - Socket SDK Client Library
  *
- * This file is part of libopc.
+ * This file is part of libssc.
  *
  * MIT License
  *
@@ -29,26 +29,26 @@
  * SPDX-FileCopyrightText: 2022 Socket Supply Co. <socketsupply.co>
  */
 
-#include <opc/opc.h>
+#include <ssc/ssc.h>
 
 #include "internal.h"
 
 unsigned long long
-opc_math_uclamp (
+ssc_math_uclamp (
   unsigned long long value,
   unsigned long long min,
   unsigned long long max
 ) {
-  return opc_math_clamp_value(value, min, max);
+  return ssc_math_clamp_value(value, min, max);
 }
 
 long long
-opc_math_clamp (long long value, long long min, long long max) {
-  return opc_math_clamp_value(value, min, max);
+ssc_math_clamp (long long value, long long min, long long max) {
+  return ssc_math_clamp_value(value, min, max);
 }
 
-OPCBoolean
-opc_math_in_urange (
+SSCBoolean
+ssc_math_in_urange (
   unsigned long long value,
   unsigned long long lo,
   unsigned long long hi
@@ -59,7 +59,7 @@ opc_math_in_urange (
   );
 }
 
-OPCBoolean
-opc_math_in_range (int value, int lo, int hi) {
+SSCBoolean
+ssc_math_in_range (int value, int lo, int hi) {
   return ((int) value >= (int) lo && (int) value <= (int) hi);
 }
