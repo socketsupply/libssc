@@ -3,7 +3,7 @@ libssc
 
 ![tests](https://github.com/socketsupply/libssc/actions/workflows/tests.yml/badge.svg)
 
-> Socket SDK Client Library (written in C99).
+> [WIP] Socket SDK Client Library (written in C99).
 
 ## Installation
 
